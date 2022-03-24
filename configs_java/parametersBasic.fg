@@ -1,0 +1,254 @@
+
+//Keep EnableInt always equal to 1! Other types should be set to 1 or 0 only.
+#SET Enableint=10
+#SET Enableshort=2
+#SET Enablebyte=2
+#SET Enablelong=5
+#SET Enablefloat=5
+#SET Enabledouble=5
+#SET EnableInteger=1
+#SET EnableShort=1
+#SET EnableByte=1
+#SET EnableLong=1
+#SET EnableFloat=1
+#SET EnableDouble=1
+
+#SET intIsPrimitiveType=1
+#SET shortIsPrimitiveType=1
+#SET byteIsPrimitiveType=1
+#SET longIsPrimitiveType=1
+#SET floatIsPrimitiveType=1
+#SET doubleIsPrimitiveType=1
+#SET IntegerIsPrimitiveType=0
+#SET ShortIsPrimitiveType=0
+#SET ByteIsPrimitiveType=0
+#SET LongIsPrimitiveType=0
+#SET FloatIsPrimitiveType=0
+#SET DoubleIsPrimitiveType=0
+
+#SET intIsFloatingPointType=0
+#SET shortIsFloatingPointType=0
+#SET byteIsFloatingPointType=0
+#SET longIsFloatingPointType=0
+#SET floatIsFloatingPointType=1
+#SET doubleIsFloatingPointType=1
+#SET IntegerIsFloatingPointType=0
+#SET ShortIsFloatingPointType=0
+#SET ByteIsFloatingPointType=0
+#SET LongIsFloatingPointType=0
+#SET FloatIsFloatingPointType=1
+#SET DoubleIsFloatingPointType=1
+
+#SET TestClass=0
+
+
+@ARRAY_MAX_LENGTH
+#BEGIN_RULE
+          `500`
+#END_RULE
+
+#SET MaxArrayCount=500
+
+#SET StatementProb=8
+#SET MaxLoopNest=3
+#SET LoopNest=0
+#SET MaxLoopCount=40
+#SET LoopCount=0
+
+#SET LoopCntLimitMin=10
+#SET LoopCntLimitMax=150
+
+#SET MaxCondCount=12
+#SET CondCount=0
+#SET MaxCondNest=3
+#SET CondNest=0
+
+#SET BinExprMaxDepth=3
+#SET ExprMaxDepth=2
+#SET ExprBlockMaxDepth=1
+
+#SET MaxLambdaCount=1
+#SET MaxListCount=2
+#SET MaxSetCount=2
+
+#SET MethodCallInExprWeight=4
+
+#SET MaxStatementsInMethodCount=20
+#SET StatementsInMethodCount=0
+
+#SET LambdaCount=0
+
+#SET UknownZeroAssigned=0
+
+#SET SwitchMatch=-10
+
+#SET MaxSynchronizedBlockNestDepth=2
+#SET SynchronizedBlockNestDepth=0
+
+#SET MaxLongLoop=1
+#SET MaxLongLoopDepth=2
+#SET LongLoop=0
+
+#SET MaxTryCatchDepth=1
+#SET TryCatchDepth=0
+
+#SET Neq=0
+
+#SET MaxMethodsInClass=4
+#SET MethodCallCount=0
+
+#SET MaxClasses=3
+#SET ClassesCount=0
+
+#SET MaxExplicitCallsInMain=5
+#SET ExplicitCallsInMain=0
+
+@SET_FLAGS_BEFORE_METHOD_
+#BEGIN_RULE
+#SET LoopCount=0
+#SET LoopNest=0
+#SET CondCount=0
+#SET CondNest=0
+#SET MethodCallCount=0
+#SET LambdaCount=0
+
+#SET StatementsInMethodCount=0
+#SET SwitchMatch=-10
+#SET MaxSynchronizedBlockNestDepth=2
+#SET SynchronizedBlockNestDepth=0
+
+
+#END_RULE
+
+
+
+ @IntegerToPrimitiveType
+#BEGIN_RULE
+    `int`
+#END_RULE
+
+@intToPrimitiveType
+#BEGIN_RULE
+    `int`
+#END_RULE
+
+@ByteToPrimitiveType
+#BEGIN_RULE
+    `byte`
+#END_RULE
+
+@byteToPrimitiveType
+#BEGIN_RULE
+    `byte`
+#END_RULE
+
+@ShortToPrimitiveType
+#BEGIN_RULE
+    `short`
+#END_RULE
+
+@shortToPrimitiveType
+#BEGIN_RULE
+    `short`
+#END_RULE
+
+@LongToPrimitiveType
+#BEGIN_RULE
+    `long`
+#END_RULE
+
+@longToPrimitiveType
+#BEGIN_RULE
+    `long`
+#END_RULE
+
+@FloatToPrimitiveType
+#BEGIN_RULE
+    `float`
+#END_RULE
+
+@floatToPrimitiveType
+#BEGIN_RULE
+    `float`
+#END_RULE
+
+@DoubleToPrimitiveType
+#BEGIN_RULE
+    `double`
+#END_RULE
+
+@doubleToPrimitiveType
+#BEGIN_RULE
+    `double`
+#END_RULE
+
+      @IntegerTointType
+#BEGIN_RULE
+    `(int)`
+#END_RULE
+
+@intTointType
+#BEGIN_RULE
+#END_RULE
+
+@ByteTointType
+#BEGIN_RULE
+    `(int)(byte)`
+#END_RULE
+
+@byteTointType
+#BEGIN_RULE
+#END_RULE
+
+@ShortTointType
+#BEGIN_RULE
+    `(int)(short)`
+#END_RULE
+
+@shortTointType
+#BEGIN_RULE
+#END_RULE
+
+@LongTointType
+#BEGIN_RULE
+    `(int)(long)`
+#END_RULE
+
+@longTointType
+#BEGIN_RULE
+    `(int)`
+#END_RULE
+
+@FloatTointType
+#BEGIN_RULE
+    `(int)(Float)`
+#END_RULE
+
+@floatTointType
+#BEGIN_RULE
+    `(int)`
+#END_RULE
+
+@DoubleTointType
+#BEGIN_RULE
+    `(int)(double)`
+#END_RULE
+
+@doubleTointType
+#BEGIN_RULE
+    `(int)`
+#END_RULE
+
+#SET LimitCheckint=257
+#SET LimitCheckshort=255
+#SET LimitCheckbyte=127
+#SET LimitChecklong=257
+#SET LimitCheckfloat=259
+#SET LimitCheckdouble=260
+#SET LimitCheckInteger=257
+#SET LimitCheckShort=255
+#SET LimitCheckByte=127
+#SET LimitCheckLong=258
+#SET LimitCheckFloat=259
+#SET LimitCheckDouble=260
+

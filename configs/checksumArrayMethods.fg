@@ -1,0 +1,33 @@
+
+@CAST_Int
+	#BEGIN_RULE
+   `` 
+	#END_RULE
+
+@CAST_Long
+	#BEGIN_RULE
+   `` 
+	#END_RULE
+
+@CAST_Long
+	#BEGIN_RULE
+   `` 
+	#END_RULE
+
+
+
+
+@DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_$1
+	#BEGIN_RULE
+        `def checksumCollectionVarsMethod$1( ` #BEGIN_SCOPE ` valuesList: List[Iterable[$1]] ): $1 = { ` \n @CHECKSUM_COLLECTION_VARS_METHOD_BODY_$1 \n ` } ` #END_SCOPE \n
+	#END_RULE
+
+@CHECKSUM_COLLECTION_VARS_METHOD_BODY_$1
+	#BEGIN_RULE
+        ` var sum : $1 = 0; ` \n
+        `for (currIndex <- valuesList.indices) { ` \n
+            ` sum += (valuesList(currIndex)).sum ` \n
+        ` }` \n
+        ` return sum ` \n
+	#END_RULE
+

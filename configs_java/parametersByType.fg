@@ -1,0 +1,80 @@
+#SET method_$1_$1Declared=0
+#SET recursive_function_$1_$1Declared=0
+
+// beginning of setting var counters to zero
+
+#SET $1IndVarDeclared=0
+#SET $1IndArraySafeVarDeclared=0
+#SET $1$2Declared=0
+#SET $1Field$2Declared=0
+#SET $1Array$2Declared=0
+#SET $1ArrayField$2Declared=0
+#SET $1ListVarDeclared=0
+#SET $1ImmutableSetVarDeclared=0
+#SET $1LambdaOneArg$2Declared=0
+#SET $1LambdaTwoArgs$2Declared=0
+#SET $1UknownZeroVarDeclared=0
+#SET AnotherClassObjVarDeclared=0
+#SET $1MethodObjVarDeclared=0
+
+#SET $1ArrayFieldValCopyOfDone=0
+#SET $1ArrayFieldVarCopyOfDone=0
+
+#SET $1ArrayValCopyOfDone=0
+#SET $1ArrayVarCopyOfDone=0
+
+@SET_GLOBAL_COUNTERS_TO_ZERO_$1_$2
+    #BEGIN_RULE
+#SET global_method_$1_$1Declared=0
+#SET global_recursive_function_$1_$1Declared=0
+#SET global_$1Field$2Declared=0
+#SET global_$1ArrayField$2Declared=0
+//Fake
+#SET global_$1Array$2Declared=0
+#SET global_$1MethodObjVarDeclared=0
+    #END_RULE
+
+#SET global_method_$1_$1Declared=0
+#SET global_recursive_function_$1_$1Declared=0
+#SET global_$1Field$2Declared=0
+#SET global_$1ArrayField$2Declared=0
+//Fake
+#SET global_$1Array$2Declared=0
+#SET global_$1MethodObjVarDeclared=0
+
+#SET $1RecursiveFunction=0
+
+
+// end of setting var counters to zero
+@SET_DECLARED_FIELDS_FLAG_TO_ZERO_$1_$2
+    #BEGIN_RULE
+        #SET $1Field$2Declared=0
+        #SET $1ArrayField$2Declared=0
+    #END_RULE
+
+@SET_DECLARED_METHOD_FLAG_TO_ZERO_$1_$1
+    #BEGIN_RULE
+        #SET method_$1_$1Declared=0
+        #SET recursive_function_$1_$1Declared=0
+    #END_RULE
+
+@SET_DECLARED_FLAG_TO_ZERO_$1_$2
+    #BEGIN_RULE
+        #SET $1IndVarDeclared=0
+        #SET $1IndArraySafeVarDeclared=0
+        #SET $1$2Declared=0
+        #SET $1Array$2Declared=0
+        #SET $1ListVarDeclared=0
+        #SET $1ImmutableSetVarDeclared=0
+        #SET $1LambdaOneArg$2Declared=0
+        #SET $1LambdaTwoArgs$2Declared=0
+        #SET $1UknownZeroVarDeclared=0
+        #SET AnotherClassObjVarDeclared=0
+        #SET $1ArrayValCopyOfDone=0
+        #SET $1ArrayVarCopyOfDone=0
+        #SET $1MethodObjVarDeclared=0
+    #END_RULE
+        
+        
+        
+        

@@ -1,0 +1,28 @@
+
+@DECLARE_PRINT_VARS_METHOD
+	#BEGIN_RULE
+		`def printVarsMethod ( ` #BEGIN_SCOPE `idStr: String, valuesList: List[AnyVal] ): Unit = { ` \n @PRINT_VARS_METHOD_BODY \n ` } ` #END_SCOPE \n
+	#END_RULE
+
+@PRINT_VARS_METHOD_BODY
+	#BEGIN_RULE
+		`val idsArray = idStr.split(",") ` \n
+    		`val sbId = new StringBuilder ` \n
+    		`val sbValue = new StringBuilder ` \n
+    		`for (currIndex <- valuesList.indices) { ` \n
+    		`  if (currIndex % 3 == 0 && currIndex != 0) { ` \n
+    		`    sbId.append("= ") ` \n
+		    `println(sbId.toString() + sbValue.toString()) `\n
+		    `sbId.clear() ` \n
+		    `sbValue.clear() ` \n
+		  `} ` \n
+		  `sbId.append(idsArray(currIndex)).append(" ") ` \n
+		  `sbValue.append(valuesList(currIndex)).append(" ") ` \n
+		`} ` \n
+		`sbId.append("= ") `\n
+		`println(sbId.toString() + sbValue.toString()) ` \n
+		`sbId.clear() ` \n
+		`sbValue.clear() `
+	#END_RULE
+
+

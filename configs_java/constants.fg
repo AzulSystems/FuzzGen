@@ -1,0 +1,304 @@
+
+@int_CONSTANT_SUFFIX[0]
+    #BEGIN_RULE
+    #END_RULE
+@int_CONSTANT[0]
+    #BEGIN_RULE:10
+        @[-128:127]
+    #END_RULE
+    #BEGIN_RULE:8
+        @[-32768:32767]
+    #END_RULE
+    #BEGIN_RULE:2
+        @[-1073741823:1073741824]
+    #END_RULE
+    #BEGIN_RULE:2
+        @[-2147483648:-2147483640]
+    #END_RULE
+    #BEGIN_RULE:2
+        @[2147483639:2147483647]
+    #END_RULE
+
+@int_CAST_OPEN[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@int_CAST_CLOSE[0]
+    #BEGIN_RULE
+    #END_RULE
+
+
+@Integer_CONSTANT_SUFFIX[0]
+    #BEGIN_RULE
+    #END_RULE
+@Integer_CONSTANT[0]
+    #BEGIN_RULE
+    @int_CONSTANT
+    #END_RULE
+
+@Integer_CAST_OPEN[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@Integer_CAST_CLOSE[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@byte_CONSTANT_SUFFIX[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@byte_CONSTANT[0]
+    #BEGIN_RULE:10
+        @[-128:127]
+    #END_RULE
+    #BEGIN_RULE:5
+        @[-128:-124]
+    #END_RULE
+    #BEGIN_RULE:5
+        @[123:127]
+    #END_RULE
+
+@byte_CAST_OPEN[0]
+    #BEGIN_RULE
+        `(byte)(`
+    #END_RULE
+
+@byte_CAST_CLOSE[0]
+    #BEGIN_RULE
+        `)`
+    #END_RULE
+
+@Byte_CONSTANT_SUFFIX[0]
+    #BEGIN_RULE
+    #END_RULE
+@Byte_CONSTANT[0]
+    #BEGIN_RULE
+    @byte_CONSTANT
+    #END_RULE
+
+@Byte_CAST_OPEN[0]
+    #BEGIN_RULE
+        `Byte.valueOf((byte)`
+    #END_RULE
+
+@Byte_CAST_CLOSE[0]
+    #BEGIN_RULE
+        `)`
+    #END_RULE
+
+@short_CONSTANT_SUFFIX[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@short_CONSTANT[0]
+    #BEGIN_RULE:10
+        @[-128:127]
+    #END_RULE
+    #BEGIN_RULE:5
+        @[-128:-124]
+    #END_RULE
+    #BEGIN_RULE:5
+        @[123:127]
+    #END_RULE
+    #BEGIN_RULE:10
+        @[-256:255]
+    #END_RULE
+    #BEGIN_RULE:4
+        @[-32768:32767]
+    #END_RULE
+    #BEGIN_RULE:4
+        @[-32768:-32764]
+    #END_RULE
+    #BEGIN_RULE:4
+        @[32763:32767]
+    #END_RULE
+ 
+@short_CAST_OPEN[0]
+    #BEGIN_RULE
+        `(short)(`
+    #END_RULE
+
+@short_CAST_CLOSE[0]
+    #BEGIN_RULE
+        `)`
+    #END_RULE
+
+@Short_CONSTANT_SUFFIX[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@Short_CONSTANT[0]
+    #BEGIN_RULE
+    @short_CONSTANT
+    #END_RULE
+
+@Short_CAST_OPEN[0]
+    #BEGIN_RULE
+        `Short.valueOf((short)`
+    #END_RULE
+
+@Short_CAST_CLOSE[0]
+    #BEGIN_RULE
+        `)`
+    #END_RULE
+
+
+@long_CONSTANT_SUFFIX[0]
+    #BEGIN_RULE
+        `L`
+    #END_RULE
+
+@long_CONSTANT[0]
+    #BEGIN_RULE:10
+    @[-128:127]
+    #END_RULE
+    #BEGIN_RULE:8
+        @[-32768:32767]
+    #END_RULE
+    #BEGIN_RULE:2
+        @[-1073741823:1073741824]
+    #END_RULE
+    #BEGIN_RULE:2
+        @[-2147483700:-2147483640]
+    #END_RULE
+    #BEGIN_RULE:2
+        @[2147483639:2147483700]
+    #END_RULE
+    #BEGIN_RULE:2
+        @[-9223372036854775808:-9223372036854775800]
+    #END_RULE
+    #BEGIN_RULE:2
+        @[9223372036854775800:9223372036854775807]
+    #END_RULE
+
+@long_CAST_OPEN[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@long_CAST_CLOSE[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@Long_CONSTANT_SUFFIX[0]
+    #BEGIN_RULE
+        @long_CONSTANT_SUFFIX
+    #END_RULE
+
+@Long_CONSTANT[0]
+    #BEGIN_RULE
+        @long_CONSTANT
+    #END_RULE
+
+@Long_CAST_OPEN[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@Long_CAST_CLOSE[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@float_CONSTANT_SUFFIX[0]
+    #BEGIN_RULE
+        `F`
+    #END_RULE
+
+@float_CONSTANT[0]
+    #BEGIN_RULE:10
+    @[-1.0:1.0]
+    #END_RULE
+    #BEGIN_RULE:10
+    @[-100.0:100.0]
+    #END_RULE
+    #BEGIN_RULE:5
+    @[-1000.0:1000.0]
+    #END_RULE
+    #BEGIN_RULE:2
+    @[-1000000.0:1000000.0]
+    #END_RULE
+
+@float_CAST_OPEN[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@float_CAST_CLOSE[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@Float_CONSTANT_SUFFIX[0]
+    #BEGIN_RULE
+        @float_CONSTANT_SUFFIX
+    #END_RULE
+
+@Float_CONSTANT[0]
+    #BEGIN_RULE
+        @float_CONSTANT
+    #END_RULE
+
+@Float_CAST_OPEN[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@Float_CAST_CLOSE[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@double_CONSTANT_SUFFIX[0]
+#BEGIN_RULE
+    `D`
+#END_RULE
+@double_CONSTANT[0]
+    #BEGIN_RULE:10
+    @[-100.0:100.0]
+    #END_RULE
+    #BEGIN_RULE:5
+    @[-1000.0:1000.0]
+    #END_RULE
+    #BEGIN_RULE:2
+    @[-1000000.0:1000000.0]
+    #END_RULE
+
+@double_CAST_OPEN[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@double_CAST_CLOSE[0]
+    #BEGIN_RULE
+    #END_RULE
+
+
+@Double_CONSTANT_SUFFIX[0]
+    #BEGIN_RULE
+        @double_CONSTANT_SUFFIX
+    #END_RULE
+
+@Double_CONSTANT[0]
+    #BEGIN_RULE
+        @double_CONSTANT
+    #END_RULE
+
+@Double_CAST_OPEN[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@Double_CAST_CLOSE[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@int_TO_ARRAY_INDEX[0]
+    #BEGIN_RULE
+    #END_RULE
+
+
+@short_TO_ARRAY_INDEX[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@byte_TO_ARRAY_INDEX[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@long_TO_ARRAY_INDEX[0]
+    #BEGIN_RULE
+        `(int)`
+    #END_RULE

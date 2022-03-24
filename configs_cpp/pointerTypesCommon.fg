@@ -1,0 +1,47 @@
+#INCLUDE "configs_cpp/constants.fg"
+
+@DECLARE_$1_POINTER
+    #BEGIN_RULE:10*$1VarDeclared
+        #SET $1PointerDeclared=$1PointerDeclared+1
+        `$1 *` @DECLARE_ID_$1_POINTER ` = &` @REUSE_ID_$1_VAR `; ` \n
+    #END_RULE
+    #BEGIN_RULE:1
+    #END_RULE
+
+@DECLARE_ID_$1_POINTER
+    #BEGIN_RULE
+        #CREATE_ID $1Pointer_
+    #END_RULE
+
+@DECLARE_LAZY_ID_$1_POINTER
+    #BEGIN_RULE
+        #CREATE_LAZY_ID $1Pointer_
+    #END_RULE
+
+@REUSE_ID_$1_POINTER
+    #BEGIN_RULE
+        #REUSE_ID $1Pointer_
+    #END_RULE
+
+@DECLARE_POINTER_OF_TYPE
+    #APPEND_RULE:10*Enable$1
+        @DECLARE_$1_POINTER
+    #END_RULE
+
+@$1_LITERAL_POINTER
+    #BEGIN_RULE:6*$1PointerDeclared
+        @REUSE_ID_$1_POINTER
+    #END_RULE
+
+@DECLARE_BASIC_POINTER
+    #APPEND_RULE:Enable$1
+        @DECLARE_$1_POINTER
+    #END_RULE
+
+@SET_OP_$1$1_POINTER
+    #BEGIN_RULE:2
+        ` = `
+    #END_RULE
+
+
+

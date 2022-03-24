@@ -1,0 +1,293 @@
+#INCLUDE "configs_java/loopsByType.fg" (int short byte long float double Integer Short Byte Long Float Double) ($1)
+#INCLUDE "configs_java/loopsIndVar.fg" ($1) (ARRAY_SAFE_VAR) (ArraySafeVar)
+#INCLUDE "configs_java/loopsIndVar.fg" ($1) (VAR) (Var)
+
+@STATEMENTS
+@STATEMENTS_SHORT
+@STATEMENT
+
+@LOOP
+    #BEGIN_RULE:0
+    #SET intValDeclared=intValDeclared+1
+    @INDUCTIVE_LOOP
+    #SET intValDeclared=intValDeclared+-1
+    #END_RULE
+    #BEGIN_RULE
+    @ANOTHER_LOOP
+    #END_RULE
+
+@INDUCTIVE_LOOP
+    #BEGIN_RULE:20
+    @FOR_LOOP
+    #END_RULE
+    #BEGIN_RULE:1*0
+    @BREAKABLE_BLOCK
+    #END_RULE
+@ANOTHER_LOOP
+    #BEGIN_RULE:20
+    @FOR_LOOP
+    #END_RULE
+    #BEGIN_RULE:4*0
+    @TRY_CATCH_LOOP_WITH_ARRAY
+    #END_RULE
+    #BEGIN_RULE:1*0
+    @TRY_BREAKABLE_BLOCK
+    #END_RULE
+     #BEGIN_RULE:10
+    @WHILE_LOOP
+    #END_RULE
+    #BEGIN_RULE:10
+    @DO_WHILE_LOOP
+    #END_RULE
+
+   
+//Can throw AIOOB exception
+@FOR_LOOP_ARRAY_UNSAFE
+    #APPEND_RULE
+    `     for ( `
+    #BEGIN_SCOPE
+            @DECLARE_LAZY_ID_$1_VAL ` <- ` @LOOP_RANGE_$1
+    #SET $1ValDeclared=$1ValDeclared+1
+    #REGISTER_LAZY_IDS
+            ` ) { ` \n @STATEMENTS_WITH_ACCESS_ARRAY_BY_LOOP_$1_INDUCTION_VAR
+    #SET $1ValDeclared=$1ValDeclared+-1
+    #END_SCOPE \n ` } ` \n
+
+    #END_RULE
+
+//TODO: @FOREACH_LOOP
+
+@SINGLE_STATEMENT_WITH_ACCESS_ARRAY_BY_LOOP_$1_INDUCTION_VAR
+    #BEGIN_RULE
+        #SET StatementsInMethodCount=StatementsInMethodCount+1
+        @SINGLE_STATEMENT_WITH_ACCESS_ARRAY_BY_LOOP_$1_INDUCTION_VAR_
+    #END_RULE
+
+@STATEMENTS_WITH_ACCESS_ARRAY_BY_LOOP_$1_INDUCTION_VAR
+    #BEGIN_RULE:3*(MaxStatementsInMethodCount+-1*StatementsInMethodCount)
+        @SINGLE_STATEMENT_WITH_ACCESS_ARRAY_BY_LOOP_$1_INDUCTION_VAR \n @STATEMENTS_WITH_ACCESS_ARRAY_BY_LOOP_$1_INDUCTION_VAR
+    #END_RULE 
+    #BEGIN_RULE:8
+    #END_RULE 
+
+@FOR_LOOP_INNER
+    #APPEND_RULE
+    #END_RULE 
+
+
+  
+@TRY_CATCH_LOOP_WITH_ARRAY
+
+
+@BREAKABLE_BLOCK
+#BEGIN_RULE
+    `scala.util.control.Breaks.breakable { ` \n
+	@FOR_WITH_BREAK
+    ` } ` \n
+#END_RULE
+
+@FOR_WITH_BREAK
+#APPEND_RULE
+    ` for ( ` 
+    #BEGIN_SCOPE
+    @DECLARE_LAZY_ID_$1_VAL ` <- ` @LOOP_RANGE_$1 
+    #REGISTER_LAZY_IDS 
+    @LOOP_CONDITION ` ) { ` \n 
+        @STATEMENTS \n @BREAK_CONDITION 
+    #END_SCOPE 
+    \n ` } ` \n
+#END_RULE
+
+@BREAK_CONDITION
+#APPEND_RULE
+    `if ( ` @Boolean_EXPRESSION ` ) scala.util.control.Breaks.break() ` \n
+#END_RULE
+
+@TRY_BREAKABLE_BLOCK
+
+@LOOP_CNT_UPPER_LIMIT_NOT_ARRAY_SAFE_$1
+#BEGIN_RULE
+@LOOP_CNT_UPPER_LIMIT_ARRAY_SAFE_$1
+#END_RULE
+#BEGIN_RULE
+@LOOP_CNT_UPPER_LIMIT_ARRAY_SAFE_$1
+#END_RULE
+
+@LOOP_CNT_UPPER_LIMIT_$1
+#BEGIN_RULE
+@LOOP_CNT_UPPER_LIMIT_ARRAY_SAFE_$1
+#END_RULE
+#BEGIN_RULE:0
+@LOOP_CNT_UPPER_LIMIT_ARRAY_SAFE_$1
+#END_RULE
+        
+@LOOP_CNT_UPPER_LIMIT_ARRAY_SAFE_$1
+    #BEGIN_RULE:15
+        @[10:20]
+    #END_RULE
+    #BEGIN_RULE:8
+        @[21:100]
+    #END_RULE
+    #BEGIN_RULE:1*(LimitCheck$1+-1*250)
+        @[101:MaxArrayCount/4]
+    #END_RULE
+
+@LOOP_CNT_LOWER_LIMIT
+    #BEGIN_RULE:10
+        @LOOP_CNT_LOWER_LIMIT_ARRAY_SAFE
+    #END_RULE
+    #BEGIN_RULE:5
+        @LOOP_CNT_LOWER_LIMIT_NOT_ARRAY_SAFE
+    #END_RULE
+
+@LOOP_CNT_LOWER_LIMIT_ARRAY_SAFE
+    #BEGIN_RULE:10
+        ` 0 `
+    #END_RULE
+    #BEGIN_RULE:2
+        @[1:2]
+    #END_RULE
+
+@LOOP_CNT_LOWER_LIMIT_NOT_ARRAY_SAFE
+    #BEGIN_RULE:1
+        @[-2:-1]
+    #END_RULE
+
+
+
+@LOOP_CONDITION
+    #BEGIN_RULE
+	` if ( ` @Boolean_EXPRESSION ` ) `
+    #END_RULE
+    #BEGIN_RULE:5
+    #END_RULE
+
+@LOOP_RANGE_STEP
+    #BEGIN_RULE
+        ` , 1 `
+    #END_RULE
+    #BEGIN_RULE
+        ` , 2 `
+    #END_RULE
+    #BEGIN_RULE:5
+    #END_RULE
+
+@LOOP_RANGE_STEP_
+    #BEGIN_RULE
+        ` 1 `
+    #END_RULE
+    #BEGIN_RULE
+        ` 2 `
+    #END_RULE
+    #BEGIN_RULE
+        ` 3 `
+    #END_RULE
+    #BEGIN_RULE
+        ` 4 `
+    #END_RULE
+    #BEGIN_RULE
+        ` 5 `
+    #END_RULE
+
+@LOOP_RANGE_STEP_NEG_
+    #BEGIN_RULE
+        ` -1 `
+    #END_RULE
+    #BEGIN_RULE
+        ` -2 `
+    #END_RULE
+    #BEGIN_RULE
+        ` -3 `
+    #END_RULE
+    #BEGIN_RULE
+        ` -4 `
+    #END_RULE
+    #BEGIN_RULE
+        ` -5 `
+    #END_RULE
+
+
+
+
+@LOOP_RANGE_STEP_NEG
+    #BEGIN_RULE
+        ` , -1 `
+    #END_RULE
+    #BEGIN_RULE
+        ` , -2 `
+    #END_RULE
+    #BEGIN_RULE:5
+    #END_RULE
+
+@TO_OR_UNTIL
+    #BEGIN_RULE:1
+        ` to `
+    #END_RULE
+    #BEGIN_RULE:1
+        ` until `
+    #END_RULE
+
+@LOOP_RANGE_ARRAY_SAFE_LIST
+    #APPEND_RULE:1
+        ` List.range ( ` @LOOP_CNT_LOWER_LIMIT_ARRAY_SAFE ` , ` @LOOP_CNT_UPPER_LIMIT_$1 @LOOP_RANGE_STEP `)`
+    #END_RULE
+
+@LOOP_RANGE_ARRAY_SAFE_SET
+    #APPEND_RULE:1
+        ` Set.range ( ` @LOOP_CNT_LOWER_LIMIT_ARRAY_SAFE ` , ` @LOOP_CNT_UPPER_LIMIT_$1 @LOOP_RANGE_STEP `)`
+    #END_RULE
+
+@LOOP_RANGE_ARRAY_SAFE_$1
+    #BEGIN_RULE:1
+        ` Range ( ` @LOOP_CNT_LOWER_LIMIT_ARRAY_SAFE ` , ` @LOOP_CNT_UPPER_LIMIT_$1 @LOOP_RANGE_STEP `)`
+    #END_RULE
+    #BEGIN_RULE:1
+        ` Range ( ` @LOOP_CNT_UPPER_LIMIT_$1 ` , ` @LOOP_CNT_LOWER_LIMIT_ARRAY_SAFE @LOOP_RANGE_STEP_NEG `)`
+    #END_RULE
+    #BEGIN_RULE:1
+         @LOOP_CNT_LOWER_LIMIT_ARRAY_SAFE @TO_OR_UNTIL @LOOP_CNT_UPPER_LIMIT_$1
+    #END_RULE
+    #BEGIN_RULE:1
+        @LOOP_CNT_UPPER_LIMIT_$1 @TO_OR_UNTIL @LOOP_CNT_LOWER_LIMIT_ARRAY_SAFE 
+    #END_RULE
+
+@LOOP_RANGE_$1
+    #BEGIN_RULE:1*intVarDeclared
+        ` Range ( ` @LOOP_CNT_LOWER_LIMIT ` ,   Math.min( Math.abs(( ` @REUSE_ID_int_VAR ` ) / 2 ), ( ` @LOOP_CNT_UPPER_LIMIT_$1 ` ))` @LOOP_RANGE_STEP `)`
+    #END_RULE
+    #BEGIN_RULE:10
+        ` Range ( ` @LOOP_CNT_LOWER_LIMIT ` , ` @LOOP_CNT_UPPER_LIMIT_$1 @LOOP_RANGE_STEP `)`
+    #END_RULE
+    #BEGIN_RULE:5
+        ` Range ( ` @LOOP_CNT_UPPER_LIMIT_$1 ` , ` @LOOP_CNT_LOWER_LIMIT @LOOP_RANGE_STEP_NEG `)`
+    #END_RULE
+    #BEGIN_RULE:3
+        ` Range ( -1* ` @LOOP_CNT_UPPER_LIMIT_$1 ` , -1* ` @LOOP_CNT_LOWER_LIMIT @LOOP_RANGE_STEP `)`
+    #END_RULE
+    #BEGIN_RULE:3
+        ` Range ( -1* ` @LOOP_CNT_LOWER_LIMIT ` , -1* ` @LOOP_CNT_UPPER_LIMIT_$1 @LOOP_RANGE_STEP_NEG `)`
+    #END_RULE
+    #BEGIN_RULE:3
+         @LOOP_CNT_LOWER_LIMIT @TO_OR_UNTIL @LOOP_CNT_UPPER_LIMIT_$1  
+    #END_RULE
+    #BEGIN_RULE:3
+         @LOOP_CNT_LOWER_LIMIT @TO_OR_UNTIL @LOOP_CNT_UPPER_LIMIT_$1 ` by ` @LOOP_RANGE_STEP_
+    #END_RULE
+    #BEGIN_RULE:3
+        @LOOP_CNT_UPPER_LIMIT_$1 @TO_OR_UNTIL @LOOP_CNT_LOWER_LIMIT  
+    #END_RULE
+    #BEGIN_RULE:3
+        @LOOP_CNT_UPPER_LIMIT_$1 @TO_OR_UNTIL @LOOP_CNT_LOWER_LIMIT ` by ` @LOOP_RANGE_STEP_NEG_
+    #END_RULE
+    #BEGIN_RULE:intListVarDeclared*10
+       @REUSE_ID_int_LIST_VAR `.filter(_ ` @OP_intint_Boolean ` ` @int_EXPRESSION ` ) `
+    #END_RULE
+    #BEGIN_RULE:intListVarDeclared*10
+        @REUSE_ID_int_LIST_VAR 
+    #END_RULE
+    #BEGIN_RULE:intImmutableSetVarDeclared*10
+        @REUSE_ID_int_IMMUTABLE_SET_VAR 
+    #END_RULE
+
+
+

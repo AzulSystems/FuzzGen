@@ -1,0 +1,274 @@
+#INCLUDE "configs_java/parameters.fg"
+#INCLUDE "configs_java/synchronizedBlock.fg"
+#INCLUDE "configs_java/methods.fg"
+#INCLUDE "configs_java/mainPrintByType.fg" (int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/utils.fg"
+
+@MAIN
+#BEGIN_RULE
+    @IMPORTS
+    @UTILS_CLASS
+    @ANOTHER_CLASS
+    @SET_GLOBAL_COUNTERS_TO_ZERO
+    #BEGIN_SCOPE
+        @OTHER_CLASSES
+        @TEST_CLASS
+    #END_SCOPE
+#END_RULE
+
+
+@IMPORTS
+    #BEGIN_RULE
+        `import java.util.Random;` \n
+        `import java.util.Arrays;` \n
+#END_RULE
+
+@OTHER_CLASSES
+    #BEGIN_RULE:2*(MaxClasses-ClassesCount)
+    @OTHER_CLASS 
+    @OTHER_CLASSES
+    #END_RULE
+    #BEGIN_RULE
+    #END_RULE
+
+
+@OTHER_CLASS
+    #BEGIN_RULE
+        #SET ClassesCount=ClassesCount+1
+        #BEGIN_SCOPE
+        @SET_DECLARED_FLAG_TO_ZERO
+        @SET_DECLARED_FIELDS_FLAG_TO_ZERO
+        @SET_DECLARED_METHOD_FLAG_TO_ZERO
+        \n \n ` class ` @OTHER_CLASS_NAME_DECLARE `{ ` \n
+        @TEST_CLASS_FIELDS
+        #SET MethodCount=0
+        //@SET_METHOD_COUNT_TO_ZERO_1[1]
+        @SET_METHOD_COUNT_TO_ZERO
+        @DECLARE_METHODS
+            @SET_DECLARED_FLAG_TO_ZERO
+            @SET_DECLARED_FIELDS_FLAG_TO_ZERO
+            @SET_DECLARED_METHOD_FLAG_TO_ZERO
+        #END_SCOPE
+
+        ` } ` \n
+    #END_RULE
+
+@SET_METHOD_COUNT_TO_ZERO_1
+    #BEGIN_RULE
+        #SET MethodCount=0
+    #END_RULE
+
+
+
+@OTHER_CLASS_NAME_DECLARE
+    #BEGIN_RULE
+        #CREATE_ID Cls_
+    #END_RULE
+
+@REUSE_OTHER_CLASS_NAME
+    #BEGIN_RULE
+        #REUSE_ID Cls_
+    #END_RULE
+
+@UTILS_CLASS_NAME
+#BEGIN_RULE
+    `FuzzUtils`
+#END_RULE
+
+@UTILS_CLASS
+#BEGIN_RULE
+` class ` @UTILS_CLASS_NAME ` { ` \n
+#BEGIN_SCOPE
+    @UTILS_FIELDS
+    @UTILS_METHODS
+        @DECLARE_CHECKSUM_COLLECTION
+        @DECLARE_PRINT_VARS_METHOD
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD
+
+#END_SCOPE
+        ` } ` \n
+#END_RULE
+
+@TEST_CLASS_NAME
+#BEGIN_RULE
+    `Test`
+#END_RULE
+
+
+@SET_METHOD_COUNT_TO_ZERO
+#BEGIN_RULE
+        #SET MethodCount=0
+#END_RULE
+
+@TEST_CLASS
+#BEGIN_RULE
+#SET TestClass=1
+    #BEGIN_SCOPE
+        `//` #CREATE_ID Test_ \n
+        ` class ` @TEST_CLASS_NAME `{ ` \n
+        @SET_DECLARED_FLAG_TO_ZERO
+        @SET_DECLARED_FIELDS_FLAG_TO_ZERO
+        @SET_DECLARED_METHOD_FLAG_TO_ZERO
+        @BASE_FIELDS
+        @TEST_CLASS_FIELDS
+        #SET MethodCount=0
+        @SET_METHOD_COUNT_TO_ZERO
+        @DECLARE_METHODS
+
+        @METHOD_MAIN_TEST
+        @METHOD_MAIN
+    #END_SCOPE
+        ` } ` \n
+#END_RULE
+
+        @METHOD_MAIN
+#BEGIN_RULE
+        ` public static void main(String[] args) { ` \n
+#BEGIN_SCOPE
+            `   try {` \n
+                `   Test _instance = new Test(); ` \n
+                    `      for (int i = 0; i < 1000; i++ ) { ` \n
+                        `            _instance.mainTest(args); ` \n
+                            `       }` \n
+                            `   } catch (Exception ex) {`     \n
+                                `        System.out.println(ex.getClass().getCanonicalName()); ` \n
+                                    `    } ` \n
+
+#END_SCOPE
+                                    `}` \n
+#END_RULE
+
+
+
+
+@BASE_FIELDS
+#BEGIN_RULE
+#END_RULE
+
+//@TEST_CLASS_FIELDS[0]
+@TEST_CLASS_FIELDS
+#BEGIN_RULE:5
+@DECLARE_FIELD_VAR_OF_TYPE @TEST_CLASS_FIELDS
+#END_RULE
+#BEGIN_RULE
+    @DECLARE_FIELD_VAR_OF_TYPE
+#END_RULE
+
+@METHOD_MAIN_TEST
+#BEGIN_RULE
+                                    \n `  public void mainTest(String[] strArr1) { ` \n
+#BEGIN_SCOPE
+     @MAIN_TEST_OBJECT_BODY
+#END_SCOPE
+                                            `}` \n
+#END_RULE
+
+@MAIN_TEST_OBJECT_BODY
+#BEGIN_RULE
+
+        #BEGIN_SCOPE
+        @SET_FLAGS_BEFORE_METHOD_
+        @SET_DECLARED_FLAG_TO_ZERO
+        #SET LambdaCount=0
+        #SET StatementsInMethodCount=0
+        #SET LoopNest=0
+        @DECLARE_VARS
+        @STATEMENTS
+        //@TEST_STATEMENT
+        @PRINTS
+        #END_SCOPE
+#END_RULE
+
+
+@DECLARE_CHECKSUM_COLLECTION
+    #BEGIN_RULE
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_int
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_short
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_byte
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_long
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_float
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_double
+
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Integer
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Short
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Byte
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Long
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Float
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Double
+    #END_RULE
+
+@DECLARE_PRINT_VARS_METHOD
+    #BEGIN_RULE
+        @DECLARE_PRINT_VARS_METHOD_int
+        @DECLARE_PRINT_VARS_METHOD_short
+        @DECLARE_PRINT_VARS_METHOD_byte
+        @DECLARE_PRINT_VARS_METHOD_long
+        @DECLARE_PRINT_VARS_METHOD_float
+        @DECLARE_PRINT_VARS_METHOD_double
+
+        @DECLARE_PRINT_VARS_METHOD_Integer
+        @DECLARE_PRINT_VARS_METHOD_Short
+        @DECLARE_PRINT_VARS_METHOD_Byte
+        @DECLARE_PRINT_VARS_METHOD_Long
+        @DECLARE_PRINT_VARS_METHOD_Float
+        @DECLARE_PRINT_VARS_METHOD_Double
+    #END_RULE
+
+@DECLARE_PRINT_COLLECTION_VARS_METHOD
+    #BEGIN_RULE
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_int
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_short
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_byte
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_long
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_float
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_double
+
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_Integer
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_Short
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_Byte
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_Long
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_Float
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_Double
+    #END_RULE
+
+
+
+@PRINTS
+    #BEGIN_RULE
+        @ASSIGN_METHODS_RESULTS
+		@ASSIGN_METHODS_RESULTS
+		@ASSIGN_METHODS_RESULTS
+		@ASSIGN_METHODS_RESULTS
+		@ASSIGN_METHODS_RESULTS
+        @PRINT_VARS
+    #END_RULE
+
+@PRINT_VARS
+    #BEGIN_RULE
+
+        @PRINT_VARS_int
+        @PRINT_VARS_byte
+        @PRINT_VARS_short
+        @PRINT_VARS_long
+        @PRINT_VARS_float
+        @PRINT_VARS_double
+        @PRINT_VARS_Integer
+        @PRINT_VARS_Byte
+        @PRINT_VARS_Short
+        @PRINT_VARS_Long
+        @PRINT_VARS_Float
+        @PRINT_VARS_Double
+    #END_RULE
+
+@ASSIGN_METHODS_RESULTS
+	#BEGIN_RULE:1*(MaxExplicitCallsInMain-ExplicitCallsInMain)
+        #SET ExplicitCallsInMain=ExplicitCallsInMain+1
+		@ASSIGN_METHOD_RESULT @ASSIGN_METHODS_RESULTS 
+	#END_RULE
+	#BEGIN_RULE:1
+	#END_RULE
+
+@ASSIGN_METHOD_RESULT
+        #APPEND_RULE:1
+	    #END_RULE
+

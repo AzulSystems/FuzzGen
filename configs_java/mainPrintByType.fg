@@ -1,0 +1,29 @@
+#INCLUDE "configs_java/parameters.fg"
+#INCLUDE "configs_java/printMethods.fg" $1
+#INCLUDE "configs_java/printVars.fg" ($1) (VAR) (Var)
+#INCLUDE "configs_java/printVars.fg" ($1) (VAL) (Val)
+#INCLUDE "configs_java/printVars.fg" ($1) (FIELD_VAR) (FieldVar)
+#INCLUDE "configs_java/printVars.fg" ($1) (FIELD_VAL) (FieldVal)
+
+
+@PRINT_VARS_$1
+    #BEGIN_RULE:100000
+        @PRINT_VAR_$1
+        @PRINT_VAL_$1
+        @PRINT_ARRAY_VAR_$1
+        @PRINT_ARRAY_VAL_$1
+        @PRINT_FIELD_VAR_$1
+        @PRINT_FIELD_VAL_$1
+        @PRINT_ARRAY_FIELD_VAR_$1
+        @PRINT_ARRAY_FIELD_VAL_$1
+    #END_RULE
+    #BEGIN_RULE:1
+        ` ` \n
+    #END_RULE    
+
+@ASSIGN_METHOD_RESULT
+	#APPEND_RULE:10000*(method_$1_$1Declared+global_method_$1_$1Declared)
+		`$1 ` #CREATE_LAZY_ID $1Val_ ` = ` @REUSE_ID_METHOD_$1_$1 ` ( `@$1_CAST_OPEN  @$1_EXPRESSION @$1_CAST_CLOSE ` ); ` #REGISTER_LAZY_IDS \n
+        #SET $1ValDeclared=$1ValDeclared+1
+    #END_RULE    
+

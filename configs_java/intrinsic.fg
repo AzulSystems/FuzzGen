@@ -1,0 +1,104 @@
+@ARRAYCOPY
+    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)
+        ` System.arraycopy(` @REUSE_ID_$1_ARRAY_VAR_OR_VAL `, ` @[0:MaxArrayCount/2] `, ` @REUSE_ID_$1_ARRAY_VAR `, ` @[0:MaxArrayCount/2] `, ` @[0:-1+MaxArrayCount/2] `);` \n
+    #END_RULE
+    #APPEND_RULE:100*TryCatchDepth*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)
+        ` System.arraycopy(` @REUSE_ID_$1_ARRAY_VAR_OR_VAL `, (` @int_EXPRESSION `)/20, ` @REUSE_ID_$1_ARRAY_VAR `, ` @int_EXPRESSION `, (` @int_EXPRESSION `) % (4 * ` @ARRAY_MAX_LENGTH `) );` \n
+    #END_RULE
+    #APPEND_RULE:1
+    ` /* no arrays declared */ ; ` \n 
+    #END_RULE
+
+@ARRAYCOPYOF
+    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$1ArrayVarDeclared*(1+-1*$1ArrayVarCopyOfDone)
+        #SET $1ArrayVarCopyOfDone=$1ArrayVarCopyOfDone+1 
+        @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` #REUSE_ID $1ArrayVar_ `, ` @[7*MaxArrayCount/8:MaxArrayCount+-1] `);` \n
+    #END_RULE
+    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$1ArrayVarDeclared*$1ArrayVarCopyOfDone
+        @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` #REUSE_ID $1ArrayVar_ `, ` #GET_LAST_ID $1ArrayVar_ `.length);` \n
+    #END_RULE
+
+    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$1ArrayValDeclared*(1+-1*$1ArrayValCopyOfDone)
+        #SET $1ArrayValCopyOfDone=$1ArrayValCopyOfDone+1 
+        @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` #REUSE_ID $1ArrayVal_ `, ` @[7*MaxArrayCount/8:MaxArrayCount+-1] `);` \n
+    #END_RULE
+    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$1ArrayValDeclared*$1ArrayValCopyOfDone
+        @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` #REUSE_ID $1ArrayVal_ `, ` #GET_LAST_ID $1ArrayVal_ `.length);` \n
+    #END_RULE
+
+    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$1ArrayFieldVarDeclared*(1+-1*$1ArrayFieldVarCopyOfDone)
+        #SET $1ArrayFieldVarCopyOfDone=$1ArrayFieldVarCopyOfDone+1 
+        @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` #REUSE_ID $1ArrayFieldVar_ `, ` @[7*MaxArrayCount/8:MaxArrayCount+-1] `);` \n
+    #END_RULE
+    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$1ArrayFieldVarDeclared*$1ArrayFieldVarCopyOfDone
+        @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` #REUSE_ID $1ArrayFieldVar_ `, ` #GET_LAST_ID $1ArrayFieldVar_ `.length);` \n
+    #END_RULE
+
+    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$1ArrayFieldValDeclared*(1+-1*$1ArrayFieldValCopyOfDone)
+        #SET $1ArrayFieldValCopyOfDone=$1ArrayFieldValCopyOfDone+1 
+        @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` #REUSE_ID $1ArrayFieldVar_ `, ` @[7*MaxArrayCount/8:MaxArrayCount+-1] `);` \n
+    #END_RULE
+    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$1ArrayFieldValDeclared*$1ArrayFieldValCopyOfDone
+        @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` #REUSE_ID $1ArrayFieldVal_ `, ` #GET_LAST_ID $1ArrayFieldVal_ `.length);` \n
+    #END_RULE
+
+    #APPEND_RULE:100*TryCatchDepth*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)
+        @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` @REUSE_ID_$1_ARRAY_VAR_OR_VAL `, (` @int_EXPRESSION `) % (4 * ` @ARRAY_MAX_LENGTH `));` \n
+    #END_RULE
+    #APPEND_RULE:1
+    ` /* no arrays declared */ ; ` \n 
+    #END_RULE
+
+@ARRAYEQUALS
+    #APPEND_RULE:100000*($1ArrayVarDeclared+$1ArrayFieldVarDeclared+$1ArrayValDeclared+$1ArrayFieldValDeclared)
+        `java.util.Arrays.equals(`@REUSE_ID_$1_ARRAY_VAR_OR_VAL `, ` @REUSE_ID_$1_ARRAY_VAR_OR_VAL `)`
+    #END_RULE
+    #APPEND_RULE
+        @boolean_CONSTANT
+    #END_RULE
+
+@MATHPOW
+    #APPEND_RULE
+        `Math.pow(` @$1_EXPRESSION `, ` @$1_EXPRESSION `)`
+    #END_RULE
+
+@MATHEXP
+    #APPEND_RULE
+        `Math.exp(` @$1_EXPRESSION `)`
+    #END_RULE
+
+@MATHLOG
+    #APPEND_RULE
+        `Math.log(` @$1_EXPRESSION `)`
+    #END_RULE
+
+
+@MATHLOG10
+    #APPEND_RULE
+        `Math.log10(` @$1_EXPRESSION `)`
+    #END_RULE
+
+@SQRT
+    #APPEND_RULE
+        `Math.sqrt(` @$1_EXPRESSION `)`
+    #END_RULE
+
+@MATHMIN_$1
+    #BEGIN_RULE
+        `Math.min(` @$1_EXPRESSION `, ` @$1_EXPRESSION `)`
+    #END_RULE
+
+@MATHMAX_$1
+    #BEGIN_RULE
+        `Math.max(` @$1_EXPRESSION `, ` @$1_EXPRESSION `)`
+    #END_RULE
+
+@MATHABS_$1
+    #BEGIN_RULE
+        `Math.abs(` @$1_EXPRESSION `)`
+    #END_RULE
+
+
+
+
+

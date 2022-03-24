@@ -1,0 +1,9 @@
+
+@ARRAY_LENGTH
+    #BEGIN_RULE
+        \n
+        `template <typename T, size_t N>` \n
+        `int32_t lengthArray(T (&Array)[N]) {` \n
+            `return N;` \n
+        `}` \n
+    #END_RULE

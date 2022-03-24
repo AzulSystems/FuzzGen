@@ -1,0 +1,114 @@
+#INCLUDE "configs/parameters.fg"
+#INCLUDE "configs/methods.fg"
+#INCLUDE "configs/mainPrintByType.fg" (Int Long Float Double)
+
+@MAIN
+    #BEGIN_RULE 
+        @SET_DECLARED_FLAG_TO_ZERO
+        @SCALA_TEST
+    #END_RULE
+
+
+@SCALA_TEST
+    #BEGIN_RULE
+        ` object Test { ` \n ` ` @MAIN_OBJECT_BODY ` ` \n ` } ` \n 
+    #END_RULE
+
+@DECLARE_CHECKSUM_COLLECTION
+    #BEGIN_RULE
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Int
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Long
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Float
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Double
+    #END_RULE
+
+
+@DECLARE_PRINT_COLLECTION_VARS_METHOD
+    #BEGIN_RULE
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_Int
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_Long
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_Double
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_Float
+    #END_RULE
+
+
+@MAIN_OBJECT_BODY
+    #BEGIN_RULE
+        #BEGIN_SCOPE
+
+		@DECLARE_PRINT_VARS_METHOD
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD
+        @DECLARE_CHECKSUM_COLLECTION
+        @DECLARE_METHODS
+        @MAIN_METHOD
+
+
+        #END_SCOPE
+    #END_RULE
+
+@MAIN_METHOD
+    #BEGIN_RULE
+        `def main(args: Array[String]): Unit = { ` \n
+            `def mainTest() { ` \n
+` try { ` \n
+                @VOID_METHOD_BODY  \n           
+` } catch {case ex: Exception => println(ex.getClass)} ` \n
+            `} ` \n
+            `wrapper() ` \n
+            `def wrapper(): Unit = { ` \n
+            `    for (ii <- 0 until 1000) mainTest() ` \n
+            `} ` \n
+        ` } ` \n
+    #END_RULE
+
+@VOID_METHOD_BODY
+    #BEGIN_RULE
+		#SET LoopCount=0
+		#SET MethodCallCount=0
+        #SET StatementsInMethodCount=0
+        #BEGIN_SCOPE
+        @SET_DECLARED_FLAG_TO_ZERO
+        #SET LambdaCount=0
+        @DECLARE_VARS
+        @STATEMENTS
+        @PRINTS
+        @SET_DECLARED_FLAG_TO_ZERO
+        #SET LambdaCount=0
+        #END_SCOPE
+    #END_RULE
+
+@PRINTS
+    #BEGIN_RULE
+        @ASSIGN_METHODS_RESULTS
+		@ASSIGN_METHODS_RESULTS
+		@ASSIGN_METHODS_RESULTS
+		@ASSIGN_METHODS_RESULTS
+		@ASSIGN_METHODS_RESULTS
+        @PRINT_VARS
+    #END_RULE
+
+@PRINT_VARS
+    #BEGIN_RULE
+        @PRINT_VARS_Int
+        @PRINT_VARS_Long
+        @PRINT_VARS_Float
+        @PRINT_VARS_Double
+
+        `printVarsMethod(" ` #GET_LOCAL_IDS_OR_EMPTY BooleanVal_ `", List( ` #GET_LOCAL_IDS_OR_EMPTY BooleanVal_` )) ` \n
+        `printVarsMethod(" ` #GET_LOCAL_IDS_OR_EMPTY BooleanVar_ `", List( ` #GET_LOCAL_IDS_OR_EMPTY BooleanVar_ ` )) ` \n
+       `printVarsMethod(" ` #GET_LOCAL_IDS_OR_EMPTY IntIndVar_ `", List( ` #GET_LOCAL_IDS_OR_EMPTY IntIndVar_ ` )) ` \n
+
+    #END_RULE
+
+@ASSIGN_METHODS_RESULTS
+	#BEGIN_RULE:5
+		@ASSIGN_METHOD_RESULT ` ` @ASSIGN_METHODS_RESULTS 
+	#END_RULE
+	#BEGIN_RULE:2
+	#END_RULE
+
+
+@ASSIGN_METHOD_RESULT
+	#APPEND_RULE:1
+    #END_RULE    
+	

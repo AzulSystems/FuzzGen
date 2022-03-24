@@ -1,0 +1,27 @@
+#INCLUDE "configs_llvm_ir/aux_functions.fg"
+#INCLUDE "configs_llvm_ir/function.fg"
+
+@MAIN[0]
+#BEGIN_RULE
+    #BEGIN_SCOPE
+        @TARGET_INFO \n\n
+        @DECLARE_GLOBALS \n\n
+        @AUX_FUNCTON_DEFS \n\n
+        @MAIN_FUNCTION
+    #END_SCOPE
+#END_RULE
+
+@MAIN_FUNCTION[0]
+#BEGIN_RULE
+    @FUNCTION
+#END_RULE
+
+@TARGET_INFO
+#BEGIN_RULE
+    `; TODO: Here will be target info`
+#END_RULE
+
+@DECLARE_GLOBALS
+#BEGIN_RULE
+    `; TODO: Here will be globals declaration section`
+#END_RULE

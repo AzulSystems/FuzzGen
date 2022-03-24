@@ -1,0 +1,34 @@
+@PREDICATE
+#BEGIN_RULE
+    `eq`
+#END_RULE
+#BEGIN_RULE
+    `ne`
+#END_RULE
+#BEGIN_RULE:8
+    @SU @GL @TE
+#END_RULE
+
+@SU
+#BEGIN_RULE
+    `s`
+#END_RULE
+#BEGIN_RULE
+    `u`
+#END_RULE
+
+@GL
+#BEGIN_RULE
+    `g`
+#END_RULE
+#BEGIN_RULE
+    `l`
+#END_RULE
+
+@TE
+#BEGIN_RULE
+    `t`
+#END_RULE
+#BEGIN_RULE
+    `e`
+#END_RULE

@@ -1,0 +1,142 @@
+#INCLUDE "configs_cpp/constants.fg"
+
+#INCLUDE "configs_cpp/loopsContainer.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/loopsByType.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/loopsBorders.fg" (bool) (0) (1) (0) (1)
+#INCLUDE "configs_cpp/loopsBorders.fg" (int8_t) (-20) (20) (1) (5)
+#INCLUDE "configs_cpp/loopsBorders.fg" (uint8_t) (10) (20) (1) (5)
+#INCLUDE "configs_cpp/loopsBorders.fg" (int16_t) (-500) (500) (10) (20)
+#INCLUDE "configs_cpp/loopsBorders.fg" (uint16_t) (100) (500) (10) (20)
+#INCLUDE "configs_cpp/loopsBorders.fg" (int32_t) (-1000) (1000) (10) (20)
+#INCLUDE "configs_cpp/loopsBorders.fg" (uint32_t) (100) (1000) (10) (20)
+#INCLUDE "configs_cpp/loopsBorders.fg" (int64_t) (-1000) (1000) (10) (20)
+#INCLUDE "configs_cpp/loopsBorders.fg" (uint64_t) (100) (1000) (10) (20)
+
+@STATEMENTS
+
+@LOOP
+    #BEGIN_RULE:3
+        @WHILE
+    #END_RULE
+    #BEGIN_RULE:2
+        @FOR
+    #END_RULE
+
+@WHILE
+    #BEGIN_RULE:3
+        @WHILE_LOOP
+    #END_RULE
+    #BEGIN_RULE:2
+        @DO_WHILE_LOOP
+    #END_RULE
+
+@FOR
+    #BEGIN_RULE:5
+        @FOR_LOOP
+    #END_RULE
+    #BEGIN_RULE:3
+        @FOREACH
+    #END_RULE
+
+@LESS
+    #BEGIN_RULE
+        ` < `
+    #END_RULE 
+    #BEGIN_RULE
+        ` <= `
+    #END_RULE
+
+
+@GREATER
+    #BEGIN_RULE
+        ` > `
+    #END_RULE 
+    #BEGIN_RULE
+        ` >= `
+    #END_RULE 
+
+@LOOP_IND_VAR_SET_LOW_$1
+    #BEGIN_RULE
+    ` $1 ` @DECLARE_ID_$1_IND_VAR ` = ` @LOOP_BOTTOM_BORDER_$1 `; ` \n
+    #END_RULE
+
+@LOOP_IND_VAR_SET_UP_$1
+    #BEGIN_RULE
+    ` $1 ` @DECLARE_ID_$1_IND_VAR ` = ` @LOOP_TOP_BORDER_$1 `; ` \n
+    #END_RULE
+
+@WHILE_CONDITION_LESS_$1
+    #BEGIN_RULE
+        ` while ( ` @REUSE_$1_IND_VAR @LESS @LOOP_TOP_BORDER_$1  ` )`
+    #END_RULE
+
+@WHILE_CONDITION_GREATER_$1
+    #BEGIN_RULE
+        ` while ( ` @REUSE_$1_IND_VAR @GREATER @LOOP_BOTTOM_BORDER_$1  ` )`
+    #END_RULE
+
+@WHILE_LOOP
+    #APPEND_RULE
+        #BEGIN_SCOPE
+        @LOOP_IND_VAR_SET_LOW_$1
+        @WHILE_CONDITION_LESS_$1   `{ ` \n
+            @REUSE_$1_IND_VAR ` = ` @REUSE_$1_IND_VAR ` + ` @LOOP_RANGE_STEP_$1 `; ` \n
+            @STATEMENTS \n
+            #END_SCOPE \n ` } ` \n
+        #SET $1IndVarDeclared=$1IndVarDeclared-1
+    #END_RULE
+    #APPEND_RULE
+        #BEGIN_SCOPE
+        @LOOP_IND_VAR_SET_UP_$1
+        @WHILE_CONDITION_GREATER_$1 `{ ` \n
+            @REUSE_$1_IND_VAR ` = ` @REUSE_$1_IND_VAR ` - ` @LOOP_RANGE_STEP_$1 `; ` \n
+            @STATEMENTS \n
+            #END_SCOPE \n ` } ` \n
+        #SET $1IndVarDeclared=$1IndVarDeclared-1
+    #END_RULE
+
+@DO_WHILE_LOOP
+    #APPEND_RULE
+        #BEGIN_SCOPE
+        @LOOP_IND_VAR_SET_LOW_$1
+        `do { ` #BEGIN_SCOPE \n
+            @STATEMENTS \n
+            #END_SCOPE \n
+            @REUSE_$1_IND_VAR ` = ` @REUSE_$1_IND_VAR ` + ` @LOOP_RANGE_STEP_$1 `; ` \n
+            `} `
+        ` while ( ` @REUSE_$1_IND_VAR @LESS @LOOP_TOP_BORDER_$1  ` ); ` \n
+        #END_SCOPE
+        #SET $1IndVarDeclared=$1IndVarDeclared-1
+    #END_RULE
+    #APPEND_RULE
+        #BEGIN_SCOPE
+        @LOOP_IND_VAR_SET_UP_$1
+        `do { ` #BEGIN_SCOPE \n
+            @STATEMENTS \n
+            #END_SCOPE \n
+            @REUSE_$1_IND_VAR ` = ` @REUSE_$1_IND_VAR ` - ` @LOOP_RANGE_STEP_$1 `; ` \n
+            `} `
+        ` while ( ` @REUSE_$1_IND_VAR @GREATER @LOOP_BOTTOM_BORDER_$1  ` ); ` \n
+        #END_SCOPE
+        #SET $1IndVarDeclared=$1IndVarDeclared-1
+    #END_RULE
+
+@FOR_LOOP
+    #APPEND_RULE
+        `for (` #BEGIN_SCOPE @LOOP_IND_VAR_SET_LOW_$1
+                @REUSE_$1_IND_VAR @LESS @LOOP_TOP_BORDER_$1 `; `
+                @REUSE_$1_IND_VAR ` = ` @REUSE_$1_IND_VAR ` + ` @LOOP_RANGE_STEP_$1 `) { ` \n
+            @STATEMENTS \n
+            #END_SCOPE \n
+            #SET $1IndVarDeclared=$1IndVarDeclared-1
+            ` } ` \n
+    #END_RULE
+    #APPEND_RULE
+        `for (` #BEGIN_SCOPE @LOOP_IND_VAR_SET_UP_$1
+                @REUSE_$1_IND_VAR @GREATER @LOOP_BOTTOM_BORDER_$1 `; `
+                @REUSE_$1_IND_VAR ` = ` @REUSE_$1_IND_VAR ` - ` @LOOP_RANGE_STEP_$1 `) { ` \n
+            @STATEMENTS \n
+            #END_SCOPE \n
+            #SET $1IndVarDeclared=$1IndVarDeclared-1
+            ` } ` \n
+    #END_RULE

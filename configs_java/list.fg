@@ -1,0 +1,44 @@
+#INCLUDE "configs_java/parametersBasic.fg"
+#INCLUDE "configs_java/parametersByType.fg" ( $1 ) (Var)
+
+@OP_$1$1_$1
+
+@int_EXPRESSION
+@short_EXPRESSION
+@byte_EXPRESSION
+@long_EXPRESSION
+@float_EXPRESSION
+@double_EXPRESSION
+@Integer_EXPRESSION
+@Short_EXPRESSION
+@Byte_EXPRESSION
+@Long_EXPRESSION
+@Float_EXPRESSION
+@Double_EXPRESSION
+
+#SET LowerLimit=-100
+#SET UpperLimit=100
+
+@DECLARE_$1_LIST_VAR
+#BEGIN_RULE
+    ` var ` @DECLARE_ID_$1_LIST_VAR `: List[$1]  = List.tabulate[$1](` @[0:UpperLimit] `)(n => n ` @OP_$1$1_$1 `  ` @$1_EXPRESSION ` )`  \n #REGISTER_LAZY_IDS
+    #SET $1ListVarDeclared=$1ListVarDeclared+1
+#END_RULE
+
+@DECLARE_ID_$1_LIST_VAR
+#BEGIN_RULE
+    #CREATE_LAZY_ID $1ListVar_
+#END_RULE
+
+
+@REUSE_ID_$1_LIST_VAR
+#BEGIN_RULE
+    #REUSE_ID $1ListVar_
+#END_RULE
+
+
+@DECLARE_LIST_VAR
+#APPEND_RULE:Enable$1
+    @DECLARE_$1_LIST_VAR ` ` \n
+#END_RULE
+

@@ -1,0 +1,14 @@
+
+@RANDOM_SEED
+    #BEGIN_RULE
+        \n `uint64_t seed = $1;` \n
+    #END_RULE
+
+@CREATE_RANDOM_FUNC
+    #BEGIN_RULE
+        \n
+        `uint64_t random() {` \n
+        `    seed = (uint32_t)(seed * 73129 + 95121);` \n
+        `    return seed;` \n
+        `}` \n \n
+    #END_RULE

@@ -1,0 +1,144 @@
+#INCLUDE "configs/parameters.fg"
+#INCLUDE "configs/statementsByType.fg" (Int Long Float Double)
+#INCLUDE "configs/loops.fg" 
+
+@Boolean_EXPRESSION
+
+@STATEMENTS
+    #BEGIN_RULE:(StatementProb+-2*LoopNest)*(MaxStatementsInMethodCount+-1*StatementsInMethodCount)
+        @STATEMENT @STATEMENTS
+    #END_RULE
+    #BEGIN_RULE:10
+    #END_RULE
+
+@STATEMENT
+    #BEGIN_RULE
+        #SET StatementsInMethodCount=StatementsInMethodCount+1
+        @STATEMENT_
+    #END_RULE
+
+@STATEMENT_
+    #BEGIN_RULE:20*(MaxLoopCount+-1*LoopCount)+3
+        @ASSIGN
+    #END_RULE
+   #BEGIN_RULE:5*(MaxCondCount+-1*CondCount)*(MaxCondNest+-1*CondNest)
+        #SET CondNest=CondNest+1
+        #SET CondCount=CondCount+1
+        @CONDITIONAL
+         #SET CondNest=CondNest+-1
+    #END_RULE                                               
+  
+    #BEGIN_RULE:2*(MaxLoopCount+-1*LoopCount)*(MaxLoopNest+-1*LoopNest)                       
+	#SET LoopCount=LoopCount+1
+        #SET LoopNest=LoopNest+1
+        @LOOP
+        #SET LoopNest=LoopNest+-1
+    #END_RULE
+
+ 
+    #BEGIN_RULE:(MaxLoopCount+-1*LoopCount)+1
+	@MATCH
+    #END_RULE
+
+    #BEGIN_RULE:1*(MaxLoopCount/2+-2*LoopCount)+5
+	@TRY_CATCH
+    #END_RULE
+
+    #BEGIN_RULE:20+-1*MethodCallCount
+	#SET MethodCallCount=MethodCallCount+1
+	@METHOD_MAP
+    #END_RULE
+
+    #BEGIN_RULE
+	@LAMBDA_MAP
+    #END_RULE
+
+    #BEGIN_RULE
+	@COLLECTION_VAL
+    #END_RULE
+
+@STATEMENT1
+    #BEGIN_RULE:30*(MaxLoopCount+-1*LoopCount)+3
+        @ASSIGN
+    #END_RULE
+    #BEGIN_RULE:(MaxCondCount+-1*CondCount)*(MaxCondNest+-1*CondNest)
+        #SET CondNest=CondNest+1
+        #SET CondCount=CondCount+1
+        @CONDITIONAL
+         #SET CondNest=CondNest+-1
+    #END_RULE                                               
+
+    @ASSIGN
+        #APPEND_RULE:40*BooleanVarDeclared
+        @ASSIGN_Boolean_VAR
+    #END_RULE
+
+@ASSIGN_Boolean_VAR
+    #BEGIN_RULE
+        @REUSE_ID_Boolean_VAR ` = ` @Boolean_EXPRESSION \n
+    #END_RULE
+    
+@CONDITIONAL
+    #BEGIN_RULE:10
+        `if ( ` @Boolean_EXPRESSION ` ) `  @STATEMENT1 \n
+    #END_RULE
+    #BEGIN_RULE:10
+        `if ( ` @Boolean_EXPRESSION ` ) { ` @STATEMENT ` } else { ` @STATEMENT ` } ` \n
+    #END_RULE
+    #BEGIN_RULE:7
+        `if ( ` @Boolean_EXPRESSION ` ) { ` \n @STATEMENTS  \n ` } ` \n
+    #END_RULE
+    #BEGIN_RULE:7
+        `if ( ` @Boolean_EXPRESSION ` ) { ` \n @STATEMENTS \n ` } else { ` \n @STATEMENTS \n ` } ` \n
+    #END_RULE  
+
+
+@MATCH
+    #APPEND_RULE:4
+       \n ` ; ` \n
+    #END_RULE  
+
+@MATCH_STRING
+    #APPEND_RULE:4
+        \n ` ; ` \n
+    #END_RULE  
+
+@TRY_CATCH
+    #APPEND_RULE:4
+        \n ` ; ` \n
+    #END_RULE  
+
+@EXCEPTION
+#BEGIN_RULE
+    ` ArithmeticException `
+#END_RULE
+#BEGIN_RULE
+    ` IndexOutOfBoundsException `
+#END_RULE
+#BEGIN_RULE
+    ` ArrayIndexOutOfBoundsException `
+#END_RULE
+#BEGIN_RULE
+    ` StringIndexOutOfBoundsException `
+#END_RULE
+#BEGIN_RULE
+    ` java.io.IOException `
+#END_RULE
+#BEGIN_RULE
+    ` NullPointerException `
+#END_RULE
+#BEGIN_RULE
+    ` NumberFormatException `
+#END_RULE
+
+@METHOD_MAP
+#APPEND_RULE
+        \n ` ; ` \n
+#END_RULE
+
+@LAMBDA_MAP
+#APPEND_RULE
+        \n ` ; ` \n
+#END_RULE
+
+

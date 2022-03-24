@@ -1,0 +1,38 @@
+// $1 - type
+@MAYBE_ATOMIC
+
+@ALLOCA_$1
+#BEGIN_RULE
+    `  %`
+    #CREATE_LAZY_ID ptr_$1_
+    ` = alloca $1`
+    #SET NUM_ALLOCAS=NUM_ALLOCAS+1
+    #SET NUM_PTRS_$1=NUM_PTRS_$1+1
+    #REGISTER_LAZY_IDS
+#END_RULE
+
+@POINTER_INSTRUCTION_$1
+#BEGIN_RULE
+    @LOAD_$1
+#END_RULE
+#BEGIN_RULE
+    @STORE_$1
+#END_RULE
+
+@LOAD_$1
+#BEGIN_RULE
+    `  %`
+    #CREATE_LAZY_ID val_$1_
+    ` = load $1, $1* `
+    @POINTER_$1
+    #SET NUM_VALUES_$1=NUM_VALUES_$1+1
+    #REGISTER_LAZY_IDS
+#END_RULE
+
+@STORE_$1
+#BEGIN_RULE
+    `  store $1 `
+    @EXPRESSION_$1
+    `, $1* `
+    @POINTER_$1
+#END_RULE

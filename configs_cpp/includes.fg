@@ -1,0 +1,13 @@
+
+@INCLUDE_FIELD
+#BEGIN_RULE
+    `#include <iostream>` \n
+    `#include <string>` \n
+    `#include <cstring>` \n
+    `#include <cstdint>` \n
+    `#include <vector>` \n
+    `#include <map>` \n
+    `#include <set>` \n
+    `#include <algorithm>` \n
+    `#include <cmath>` \n \n
+#END_RULE

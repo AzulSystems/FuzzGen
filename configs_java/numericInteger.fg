@@ -1,0 +1,53 @@
+
+@OP_MOD
+    #APPEND_RULE
+       `%`
+    #END_RULE
+
+@OP_DIV_INTEGER
+    #APPEND_RULE
+       `/`
+    #END_RULE
+
+
+
+@OP_BITWISE
+   #APPEND_RULE:1
+       `&`
+    #END_RULE
+    #APPEND_RULE:1
+       `|`
+    #END_RULE
+    #APPEND_RULE:1
+       `^`
+    #END_RULE
+
+@OP_BITSHIFT
+#APPEND_RULE:1
+       `>>`
+#END_RULE
+#APPEND_RULE:1
+       `>>>`
+#END_RULE
+#APPEND_RULE:1
+       `<<`
+#END_RULE
+
+@OP_INTEGER
+#APPEND_RULE:5
+       @OP_BITSHIFT
+#END_RULE
+#APPEND_RULE:5
+       @OP_BITWISE
+#END_RULE
+#APPEND_RULE:1+100*TryCatchDepth
+       @OP_MOD
+#END_RULE
+#APPEND_RULE:1+100*TryCatchDepth
+       @OP_DIV_INTEGER
+#END_RULE
+
+@OP_$1$1_$1_
+#APPEND_RULE:5
+       @OP_INTEGER
+#END_RULE

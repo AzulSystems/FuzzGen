@@ -1,0 +1,7 @@
+#INCLUDE "configs_llvm_ir/expression_typed.fg" (i1 i8 i16 i32 i64)
+#INCLUDE "configs_llvm_ir/constants_typed.fg" (i1) (0) (2)
+#INCLUDE "configs_llvm_ir/constants_typed.fg" (i8) (-128) (128)
+#INCLUDE "configs_llvm_ir/constants_typed.fg" (i16) (-32768) (32768)
+#INCLUDE "configs_llvm_ir/constants_typed.fg" (i32) (-2147483648) (2147483648)
+// FIXME: Implementation of nextLong doesn't allow us to use full-scale long bounds, need to re-implement.
+#INCLUDE "configs_llvm_ir/constants_typed.fg" (i64) (-4223372036854775808 ) (4223372036854775808)

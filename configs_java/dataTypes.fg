@@ -1,0 +1,75 @@
+#INCLUDE "configs_java/booleanType.fg" (boolean Boolean)  (int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/numericTypesCommon.fg" (int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/objectType.fg" (int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/lambda.fg" int short byte long float double Integer Short Byte Long Float Double
+#INCLUDE "configs_java/list.fg" int short byte long float double Integer Short Byte Long Float Double
+#INCLUDE "configs_java/set.fg" int short byte long float double Integer Short Byte Long Float Double
+
+
+
+@DECLARE_VARS
+    #BEGIN_RULE:10
+        @DECLARE_VAR \n @DECLARE_VARS
+    #END_RULE
+    #BEGIN_RULE
+         @DECLARE_BASIC_VAR \n
+    #END_RULE
+
+@DECLARE_VAR
+    #BEGIN_RULE:80
+        @DECLARE_VAR_OF_TYPE
+    #END_RULE
+    #BEGIN_RULE:20
+        @DECLARE_boolean_VAR
+    #END_RULE
+    #BEGIN_RULE:2
+        @DECLARE_boolean_VAL
+    #END_RULE
+    #BEGIN_RULE:2
+        @DECLARE_Boolean_VAR
+    #END_RULE
+    #BEGIN_RULE:2
+        @DECLARE_Boolean_VAL
+    #END_RULE
+    #BEGIN_RULE:1
+        @DECLARE_ANOTHER_CLASS_OBJ
+    #END_RULE
+//    #BEGIN_RULE:3
+//        @DECLARE_LAMBDA_VAR
+//    #END_RULE
+//    #BEGIN_RULE:3
+//        @DECLARE_LIST_VAR
+//    #END_RULE
+//    #BEGIN_RULE:3
+//        @DECLARE_IMMUTABLE_SET_VAR
+//    #END_RULE
+
+@DECLARE_BASIC_VAR
+        
+@DECLARE_LAMBDA_VAR
+    #BEGIN_RULE
+        @DECLARE_LAMBDA_ONE_ARG_VAR ` `\n
+    #END_RULE
+    #BEGIN_RULE
+        @DECLARE_LAMBDA_TWO_ARGS_VAR ` `\n
+    #END_RULE
+    #BEGIN_RULE
+        @DECLARE_LAMBDA_ONE_ARG_VAL ` `\n
+    #END_RULE
+    #BEGIN_RULE
+        @DECLARE_LAMBDA_TWO_ARGS_VAL ` `\n
+    #END_RULE
+
+
+@DECLARE_COLLECTION_VAL
+    #BEGIN_RULE
+        #SET collectionValDeclared=1
+        `val `@DECLARE_ID_COLLECTION_VAL
+    #END_RULE
+
+@DECLARE_ID_COLLECTION_VAL
+    #BEGIN_RULE
+        #CREATE_ID collectionVal_
+    #END_RULE
+
+

@@ -1,0 +1,71 @@
+#INCLUDE "configs_cpp/operationsWithMap.fg" ($1) (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+
+@$1$1_CONTAINERS_CMP
+    #APPEND_RULE:100*$1VectorDeclared*($1VectorDeclared+-1)
+        `(`@REUSE_ID_$1_VECTOR ` ` @OP_CONTAINERS_bool ` ` @REUSE_ID_$1_VECTOR `)`
+    #END_RULE
+    #APPEND_RULE:100*$1SetDeclared*($1SetDeclared+-1)
+        `(`@REUSE_ID_$1_SET ` ` @OP_CONTAINERS_bool ` ` @REUSE_ID_$1_SET `)`
+    #END_RULE
+    #APPEND_RULE:1
+        @bool_LITERAL
+    #END_RULE
+
+@$1_GET_ELEMENT_FROM_CONTAINER
+    #BEGIN_RULE:100*$1ArrayVarDeclared
+        @REUSE_ID_$1_ARRAY_VAR`[($1) (`@$1_EXPRESSION`) % lengthArray(` #GET_LAST_ID $1ArrayVar_ `)]`
+    #END_RULE
+    #BEGIN_RULE:50*$1VectorDeclared
+        @REUSE_ID_$1_VECTOR`.at(($1) (`@$1_EXPRESSION`) % ` #GET_LAST_ID $1Vector_`.size())`
+    #END_RULE
+    #BEGIN_RULE:50*$1VectorDeclared
+        @REUSE_ID_$1_VECTOR`[($1) (`@$1_EXPRESSION`) % ` #GET_LAST_ID $1Vector_`.size()]`
+    #END_RULE
+    #BEGIN_RULE:3*$1VectorDeclared
+        @REUSE_ID_$1_VECTOR`.front()`
+    #END_RULE
+    #BEGIN_RULE:3*$1VectorDeclared
+        @REUSE_ID_$1_VECTOR`.back()`
+    #END_RULE
+    #BEGIN_RULE:1
+        @$1_LITERAL
+    #END_RULE
+
+@CONTAINER_IS_EMPTY_$1
+    #APPEND_RULE:100*$1VectorDeclared
+        @REUSE_ID_$1_VECTOR`.empty()`
+    #END_RULE
+    #APPEND_RULE:100*$1SetDeclared
+        @REUSE_ID_$1_SET`.empty()`
+    #END_RULE
+    #APPEND_RULE:1
+        @bool_LITERAL
+    #END_RULE
+
+@CONTAINERS_CAPACITY_INFO_$1
+    #APPEND_RULE:100*$1VectorDeclared
+        `(($1)`@REUSE_ID_$1_VECTOR`.size())`
+    #END_RULE
+    #APPEND_RULE:100*$1SetDeclared
+        `(($1)`@REUSE_ID_$1_SET`.size())`
+    #END_RULE
+    #APPEND_RULE:100*$1VectorDeclared
+        `(($1)`@REUSE_ID_$1_VECTOR`.max_size())`
+    #END_RULE
+    #APPEND_RULE:100*$1SetDeclared
+        `(($1)`@REUSE_ID_$1_SET`.max_size())`
+    #END_RULE
+    #APPEND_RULE:100*$1VectorDeclared
+        `(($1)`@REUSE_ID_$1_VECTOR`.capacity())`
+    #END_RULE
+    #APPEND_RULE:1
+        @$1_LITERAL
+    #END_RULE
+
+@MAP_SET_COUNT_$1
+    #APPEND_RULE:100*$1SetDeclared
+        `(($1)`@REUSE_ID_$1_SET`.count((` @$1_EXPRESSION`)))`
+    #END_RULE
+    #APPEND_RULE:1
+        @$1_LITERAL
+    #END_RULE

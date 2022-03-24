@@ -1,0 +1,50 @@
+#INCLUDE "configs_cpp/operationsWithMap.fg" ($1) (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+
+@PRINTS
+    #APPEND_RULE:100*$1VarDeclared
+        @PRINT_VARS_$1
+    #END_RULE
+    #APPEND_RULE:100*$1PointerDeclared
+        @PRINT_POINTERS_$1
+    #END_RULE
+    #APPEND_RULE:100*$1ArrayVarDeclared
+        @PRINT_ARRAYS_$1
+    #END_RULE
+    #APPEND_RULE:100*$1VectorDeclared
+        @PRINT_VECTORS_$1
+    #END_RULE
+    #APPEND_RULE:100*$1SetDeclared
+        @PRINT_SETS_$1
+    #END_RULE
+    #APPEND_RULE:1
+    #END_RULE
+
+@PRINT_VARS_$1
+    #BEGIN_RULE
+		`result += "` #GET_LOCAL_IDS_OR_EMPTY $1Var_ ` " + to_string(` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1Var_ ") + to_string(" `); ` \n
+		#SET $1VarDeclared=0
+    #END_RULE
+
+@PRINT_POINTERS_$1
+    #BEGIN_RULE
+		`result += "` #GET_LOCAL_IDS_OR_EMPTY $1Pointer_ ` " + to_string(*` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1Pointer_ ") + to_string(*" `); ` \n
+		#SET $1PointerDeclared=0
+    #END_RULE
+
+@PRINT_ARRAYS_$1
+    #BEGIN_RULE
+        `result += "` #GET_LOCAL_IDS_OR_EMPTY $1ArrayVar_ ` " + to_string(print(` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1ArrayVar_ ")) + to_string(print(" `)); ` \n
+        #SET $1ArrayVarDeclared=0
+    #END_RULE
+
+@PRINT_VECTORS_$1
+    #BEGIN_RULE
+        `result += "` #GET_LOCAL_IDS_OR_EMPTY $1Vector_ ` " + to_string(print(` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1Vector_ ")) + to_string(print(" `)); ` \n
+        #SET $1VectorDeclared=0
+    #END_RULE
+
+@PRINT_SETS_$1
+    #BEGIN_RULE
+        `result += "` #GET_LOCAL_IDS_OR_EMPTY $1Set_ ` " + to_string(print(` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1Set_ ")) + to_string(print(" `)); ` \n
+        #SET $1SetDeclared=0
+    #END_RULE

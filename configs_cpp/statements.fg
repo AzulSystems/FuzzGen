@@ -1,0 +1,128 @@
+#INCLUDE "configs_cpp/dataTypes.fg"
+#INCLUDE "configs_cpp/statementsByType.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/statementsByContainers.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/expressions.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t) (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/loops.fg" (int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+
+
+@STATEMENTS
+    #BEGIN_RULE:MaxStatementsInFuncCount+-1*StatementsInFuncCount
+        @STATEMENT @STATEMENTS
+    #END_RULE
+    #BEGIN_RULE:1
+    #END_RULE
+
+@STATEMENT
+    #BEGIN_RULE
+        #SET StatementsInFuncCount=StatementsInFuncCount+1
+        @STATEMENT_ `  `
+    #END_RULE
+
+@STATEMENT_
+    #BEGIN_RULE:20*LoopCount*CondCount+50
+        @ASSIGN
+    #END_RULE
+    #BEGIN_RULE:10*(MaxCondCount+-1*CondCount)*(MaxCondNest+-1*CondNest)
+        #SET CondNest=CondNest+1
+        #SET CondCount=CondCount+1
+        @CONDITIONAL
+        #SET CondNest=CondNest+-1
+    #END_RULE
+    #BEGIN_RULE:10*(MaxLoopCount+-1*LoopCount)*(MaxLoopNest+-1*LoopNest)
+	    #SET LoopCount=LoopCount+1
+        #SET LoopNest=LoopNest+1
+        @LOOP
+        #SET LoopNest=LoopNest+-1
+    #END_RULE
+    #BEGIN_RULE:(10*LoopCount*CondCount+5)*(1+-1*ForEachCount)
+        @REINITIALIZATION
+    #END_RULE
+    #BEGIN_RULE:(10*LoopCount*CondCount+5)*(1+-1*ForEachCount)
+        @CLEAR_CONTAINERS
+    #END_RULE
+    #BEGIN_RULE:(15*LoopCount*CondCount+25)*(1+-1*ForEachCount)
+        @ADD_ELEMENT_CONTAINERS
+    #END_RULE
+    #BEGIN_RULE:(4*LoopCount*CondCount+8)*(1+-1*ForEachCount)
+        @SWAP_CONTAINERS
+    #END_RULE
+    #BEGIN_RULE:(2*LoopCount*CondCount+6)*(1+-1*ForEachCount)
+        @VECTOR_RESIZE
+    #END_RULE
+    #BEGIN_RULE:(2*LoopCount*CondCount+5)*(1+-1*ForEachCount)
+        @VECTOR_POP_BACK
+    #END_RULE
+    #BEGIN_RULE:(2*LoopCount*CondCount+6)*(1+-1*ForEachCount)
+        @VECTOR_SORT
+    #END_RULE
+    #BEGIN_RULE:30*LoopNest
+        @LOOP_CONTROL_FOR
+    #END_RULE
+    #BEGIN_RULE:40*LoopNest*ForEachCount
+        @FOREACH_STATEMENTS
+    #END_RULE
+    #BEGIN_RULE:1
+    #END_RULE
+
+@LOOP_CONTROL_FOR
+    #BEGIN_RULE:1
+        `if (` @bool_EXPRESSION `) {` \n
+            #BEGIN_SCOPE \n
+            @STATEMENTS
+            #END_SCOPE \n
+            `break;` \n
+        ` } ` \n
+    #END_RULE
+    #BEGIN_RULE:1
+        `if (` @bool_EXPRESSION `) {` \n
+            #BEGIN_SCOPE \n
+            @STATEMENTS
+            #END_SCOPE \n
+            `continue;` \n
+        ` } ` \n
+    #END_RULE
+
+@IF_CONDITIONAL
+    #BEGIN_RULE:7
+        `if ( ` @bool_EXPRESSION ` ) { `
+            #BEGIN_SCOPE \n
+            @STATEMENTS
+            #END_SCOPE \n
+        ` } ` \n
+    #END_RULE
+    #BEGIN_RULE:11
+        `if ( ` @bool_EXPRESSION ` ) { `
+            #BEGIN_SCOPE \n
+            @STATEMENTS
+            #END_SCOPE \n
+        ` } else { `
+            #BEGIN_SCOPE \n
+            @STATEMENTS
+            #END_SCOPE \n
+        ` } ` \n
+    #END_RULE  
+
+@SWITCH_CONDITIONAL
+    #BEGIN_RULE:10*int8_tVarDeclared
+        @SWITCH_int8_t
+    #END_RULE
+    #BEGIN_RULE:10*int16_tVarDeclared
+        @SWITCH_int16_t
+    #END_RULE
+    #BEGIN_RULE:10*int32_tVarDeclared
+        @SWITCH_int32_t
+    #END_RULE
+    #BEGIN_RULE:10*int64_tVarDeclared
+        @SWITCH_int64_t
+    #END_RULE
+    #BEGIN_RULE:1
+        @STATEMENT_
+    #END_RULE
+
+@CONDITIONAL
+    #BEGIN_RULE:3
+        @IF_CONDITIONAL
+    #END_RULE
+    #BEGIN_RULE:1
+        @SWITCH_CONDITIONAL
+    #END_RULE

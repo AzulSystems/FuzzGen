@@ -1,0 +1,457 @@
+@STATEMENTS
+@STATEMENTS_SHORT
+@$1_EXPRESSION
+
+@REUSE_$1_IND_$2
+    #BEGIN_RULE
+        #REUSE_LOCAL_ID $1Ind$3_
+    #END_RULE
+
+@DECLARE_$1_IND_$2
+    #APPEND_RULE
+        #SET $1Ind$3Declared=$1Ind$3Declared+1
+        ` $1 ` @DECLARE_ID_$1_IND_$2 ` = ` @$1_CONSTANT @$1_CONSTANT_SUFFIX `; `
+    #END_RULE
+
+@DECLARE_LAZY_$1_IND_$2
+    #APPEND_RULE
+        ` $1 ` @DECLARE_LAZY_ID_$1_IND_$2 ` = ` @$1_CONSTANT @$1_CONSTANT_SUFFIX `; `
+        #SET $1Ind$3Declared=$1Ind$3Declared+1
+    #END_RULE
+
+@DECLARE_ID_$1_IND_$2
+    #BEGIN_RULE
+        #CREATE_ID $1Ind$3_
+    #END_RULE
+
+@DECLARE_LAZY_ID_$1_IND_$2
+    #BEGIN_RULE
+        #CREATE_LAZY_ID $1Ind$3_
+    #END_RULE
+
+
+@REUSE_ID_$1_IND_$2
+    #BEGIN_RULE
+        #REUSE_ID $1Ind$3_
+    #END_RULE
+
+@DECLARE_$1_IND_$2_SET_LOW
+    #BEGIN_RULE
+    #SET $1Ind$3Declared=$1Ind$3Declared+1
+    ` $1 ` @DECLARE_ID_$1_IND_$2 ` = ` @LOOP_CNT_LOWER_LIMIT_$2 `; ` \n
+    #END_RULE
+
+@DECLARE_$1_IND_$2_SET_UP
+    #BEGIN_RULE
+    #SET $1Ind$3Declared=$1Ind$3Declared+1
+    ` $1 ` @DECLARE_ID_$1_IND_$2 ` = ` @LOOP_CNT_UPPER_LIMIT_$2_$1 `; ` \n
+    #END_RULE
+
+@WHILE_LOOP
+    #APPEND_RULE
+        #BEGIN_SCOPE
+        @UNKNOWN_ZERO_ASSIGN_$1
+        #BEGIN_SCOPE
+        @DECLARE_$1_IND_$2_SET_LOW
+        ` while ( ` @REUSE_$1_IND_$2 @LTETNEQ @LOOP_CNT_UPPER_LIMIT_$2_$1 @UNKNOWN_ZERO_ADD_$1 ` ) { ` \n @STATEMENTS \n
+            @WHILE_LOOP_IND_$2_INC_$1
+            #END_SCOPE \n ` } ` \n  
+    #END_SCOPE
+    #SET $1Ind$3Declared=$1Ind$3Declared+-1
+    #END_RULE 
+#APPEND_RULE
+#BEGIN_SCOPE
+        @UNKNOWN_ZERO_ASSIGN_$1
+        #BEGIN_SCOPE
+        @DECLARE_$1_IND_$2_SET_UP
+        ` while ( `   @REUSE_$1_IND_$2 @GTETNEQ @LOOP_CNT_LOWER_LIMIT_$2 @UNKNOWN_ZERO_ADD_$1 ` ) { ` \n @STATEMENTS \n
+            @WHILE_LOOP_IND_$2_DEC_$1
+            #END_SCOPE \n ` } ` \n
+    #END_SCOPE
+    #SET $1Ind$3Declared=$1Ind$3Declared+-1
+    #END_RULE 
+
+@DO_WHILE_LOOP
+    #APPEND_RULE
+         #BEGIN_SCOPE
+        @UNKNOWN_ZERO_ASSIGN_$1
+        @DECLARE_$1_IND_$2_SET_LOW
+        `do { ` #BEGIN_SCOPE
+        \n @STATEMENTS \n
+        #END_SCOPE
+            @WHILE_LOOP_IND_$2_INC_$1
+             \n ` } `
+        ` while ( ` @REUSE_$1_IND_$2 @LTET ` 0 ` @UNKNOWN_ZERO_ADD_$1  ` + ` @LOOP_CNT_UPPER_LIMIT_$2_$1 ` ); ` \n 
+    #END_SCOPE
+    #SET $1Ind$3Declared=$1Ind$3Declared+-1
+    #END_RULE 
+#APPEND_RULE
+#BEGIN_SCOPE
+        @UNKNOWN_ZERO_ASSIGN_$1
+        @DECLARE_$1_IND_$2_SET_UP
+         `do { ` #BEGIN_SCOPE
+        \n @STATEMENTS \n
+        #END_SCOPE
+            @WHILE_LOOP_IND_$2_DEC_$1
+        \n ` } `
+        ` while ( `  @REUSE_$1_IND_$2  @GTET ` 0 ` @UNKNOWN_ZERO_ADD_$1 ` + ` @LOOP_CNT_LOWER_LIMIT_$2 ` ); ` \n 
+    #END_SCOPE
+    #SET $1Ind$3Declared=$1Ind$3Declared+-1
+    #END_RULE 
+
+@WHILE_LOOP_IND_$2_INC_$1
+    #BEGIN_RULE:(1+-1*Neq)
+        @REUSE_$1_IND_$2 ` = ` @$1_CAST_OPEN @REUSE_$1_IND_$2 ` + ` @LOOP_RANGE_STEP_ @$1_CAST_CLOSE `; ` \n
+    #END_RULE
+    #BEGIN_RULE:Neq
+        @REUSE_$1_IND_$2 ` = ` @$1_CAST_OPEN @REUSE_$1_IND_$2 ` + 1` @$1_CAST_CLOSE `; ` \n
+        #SET Neq=0
+    #END_RULE
+    #BEGIN_RULE:(1+-1*Neq)
+        @REUSE_$1_IND_$2 @INCREMENT `; ` \n
+    #END_RULE
+    #BEGIN_RULE:(1+-1*Neq)
+        @INCREMENT @REUSE_$1_IND_$2 `; ` \n
+    #END_RULE
+
+@WHILE_LOOP_IND_$2_DEC_$1
+    #BEGIN_RULE:(1+-1*Neq)
+        @REUSE_$1_IND_$2 ` = ` @$1_CAST_OPEN @REUSE_$1_IND_$2 ` - ` @LOOP_RANGE_STEP_ @$1_CAST_CLOSE `; ` \n
+    #END_RULE
+    #BEGIN_RULE:Neq
+        @REUSE_$1_IND_$2 ` = ` @$1_CAST_OPEN @REUSE_$1_IND_$2 ` - 1` @$1_CAST_CLOSE `; ` \n
+        #SET Neq=0
+    #END_RULE
+    #BEGIN_RULE:(1+-1*Neq)
+        @REUSE_$1_IND_$2 @DECREMENT `; ` \n
+    #END_RULE
+    #BEGIN_RULE:(1+-1*Neq)
+        @DECREMENT @REUSE_$1_IND_$2 `; ` \n
+    #END_RULE
+
+
+
+@FOR_LOOP_IND_$2_INC_$1
+    #BEGIN_RULE:(1+-1*Neq)
+        @REUSE_$1_IND_$2 ` = ` @$1_CAST_OPEN @REUSE_$1_IND_$2 ` + ` @LOOP_RANGE_STEP_ @$1_CAST_CLOSE
+    #END_RULE
+    #BEGIN_RULE:Neq
+        @REUSE_$1_IND_$2 ` = ` @$1_CAST_OPEN @REUSE_$1_IND_$2 ` + 1`  @$1_CAST_CLOSE
+        #SET Neq=0
+    #END_RULE
+    #BEGIN_RULE:(1+-1*Neq)
+        @REUSE_$1_IND_$2 @INCREMENT
+    #END_RULE
+    #BEGIN_RULE:(1+-1*Neq)
+        @INCREMENT @REUSE_$1_IND_$2
+    #END_RULE
+
+@FOR_LOOP_IND_$2_DEC_$1
+    #BEGIN_RULE:(1+-1*Neq)
+        @REUSE_$1_IND_$2 ` = ` @$1_CAST_OPEN @REUSE_$1_IND_$2 ` - ` @LOOP_RANGE_STEP_ @$1_CAST_CLOSE
+    #END_RULE
+    #BEGIN_RULE:Neq
+        @REUSE_$1_IND_$2 ` = ` @$1_CAST_OPEN @REUSE_$1_IND_$2 ` - 1` @$1_CAST_CLOSE
+        #SET Neq=0
+    #END_RULE
+    #BEGIN_RULE:(1+-1*Neq)
+        @REUSE_$1_IND_$2 @DECREMENT
+    #END_RULE
+    #BEGIN_RULE:(1+-1*Neq)
+        @DECREMENT @REUSE_$1_IND_$2
+    #END_RULE
+
+@UNKNOWN_ZERO_ASSIGN_$1
+    #BEGIN_RULE:1
+        ` $1 `  #CREATE_ID $1UnknownZeroVar_ ` = ` @$1_CAST_OPEN @UNKNOWN_ZERO @$1_CAST_CLOSE `;` \n
+        #SET $1UknownZeroVarDeclared=1
+    #END_RULE
+    #BEGIN_RULE:5
+    #END_RULE
+
+@UNKNOWN_ZERO_ADD_$1
+    #BEGIN_RULE:50*$1UknownZeroVarDeclared
+        ` + ` #GET_LAST_ID $1UnknownZeroVar_ ` * ` @$1_EXPRESSION 
+        #SET $1UknownZeroVarDeclared=0
+    #END_RULE
+    #BEGIN_RULE:1
+        #SET $1UknownZeroVarDeclared=0
+    #END_RULE
+   
+@$1_LITERAL
+    #APPEND_RULE:10*$1Ind$3Declared
+        #REUSE_ID $1Ind$3_
+    #END_RULE
+
+
+@OUT_OF_BOUNDS_TRY_$1
+    #BEGIN_RULE:1
+        #SET OutOfBoundsTry=1
+        #SET LongLoop=LongLoop+1
+        ` try { ` \n #BEGIN_SCOPE
+    #END_RULE
+
+@OUT_OF_BOUNDS_CATCH
+    #BEGIN_RULE:1
+        #END_SCOPE
+        ` } catch (ArrayIndexOutOfBoundsException ` #CREATE_ID exceptionVar_ `) { ` \n #BEGIN_SCOPE
+        @STATEMENTS
+        #END_SCOPE
+        `} ` \n
+    #END_RULE
+
+
+@OUT_OF_BOUNDS_ADD_$1
+    #BEGIN_RULE:1
+            ` + ` @ARRAY_MAX_LENGTH
+    #END_RULE
+
+@OUT_OF_BOUNDS_SUB_$1
+    #BEGIN_RULE:1
+            ` - ` @ARRAY_MAX_LENGTH
+    #END_RULE
+
+
+@FOR_LOOP
+    #APPEND_RULE:40
+        @UNKNOWN_ZERO_ASSIGN_$1
+        ` for ( ` #BEGIN_SCOPE  @DECLARE_$1_IND_$2_SET_LOW @REUSE_$1_IND_$2 @LTETNEQ @LOOP_CNT_UPPER_LIMIT_$2_$1 @UNKNOWN_ZERO_ADD_$1  ` ; `  @FOR_LOOP_IND_$2_INC_$1
+        ` ) { ` \n 
+            @STATEMENTS
+        #END_SCOPE 
+        #SET $1Ind$3Declared=$1Ind$3Declared+-1
+        \n ` } ` \n
+        #SET LongLoop=LongLoop*(LoopNest+-1)
+    #END_RULE
+    #APPEND_RULE:40
+        @UNKNOWN_ZERO_ASSIGN_$1
+        ` for ( ` 
+        #BEGIN_SCOPE 
+        @DECLARE_$1_IND_$2_SET_UP @REUSE_$1_IND_$2 @GTETNEQ  @LOOP_CNT_LOWER_LIMIT_$2 @UNKNOWN_ZERO_ADD_$1 ` ; `  @FOR_LOOP_IND_$2_DEC_$1
+        ` ) { ` \n 
+            @STATEMENTS
+        #END_SCOPE 
+        #SET $1Ind$3Declared=$1Ind$3Declared+-1
+        \n ` } ` \n
+        #SET LongLoop=LongLoop*(LoopNest+-1)
+    #END_RULE
+     #APPEND_RULE:0*($1ArrayVarDeclared+$1ArrayFieldVarDeclared+$1ArrayValDeclared+$1ArrayFieldValDeclared)
+        @OUT_OF_BOUNDS_TRY_$1
+        @UNKNOWN_ZERO_ASSIGN_$1
+        ` for ( ` #BEGIN_SCOPE  @DECLARE_$1_IND_$2_SET_LOW @REUSE_$1_IND_$2 @LTETNEQ @LOOP_CNT_UPPER_LIMIT_$2_$1 @UNKNOWN_ZERO_ADD_$1 @OUT_OF_BOUNDS_ADD_$1 ` ; `  @FOR_LOOP_IND_$2_INC_$1
+        ` ) { ` \n 
+            @STATEMENTS_SHORT
+            @STMT_WITH_ARRAY_ACCESS_BY_IND_$2_$1
+            @STATEMENTS_SHORT
+
+        #END_SCOPE 
+        #SET $1Ind$3Declared=$1Ind$3Declared+-1
+        \n ` } ` \n
+        #SET LongLoop=LongLoop*(LoopNest+-1)
+        @OUT_OF_BOUNDS_CATCH
+    #END_RULE
+    #APPEND_RULE:0*($1ArrayVarDeclared+$1ArrayFieldVarDeclared+$1ArrayValDeclared+$1ArrayFieldValDeclared)
+        @OUT_OF_BOUNDS_TRY_$1
+        ` for ( ` #BEGIN_SCOPE  @DECLARE_$1_IND_$2_SET_UP @REUSE_$1_IND_$2 @GTETNEQ @LOOP_CNT_UPPER_LIMIT_$2_$1 @UNKNOWN_ZERO_ADD_$1 @OUT_OF_BOUNDS_ADD_$1 ` ; `  @FOR_LOOP_IND_$2_DEC_$1
+        ` ) { ` \n 
+            @STATEMENTS_SHORT
+            @STMT_WITH_ARRAY_ACCESS_BY_IND_$2_$1
+            @STATEMENTS_SHORT
+
+        #END_SCOPE 
+        #SET $1Ind$3Declared=$1Ind$3Declared+-1
+        \n ` } ` \n
+        #SET LongLoop=LongLoop*(LoopNest+-1)
+        @OUT_OF_BOUNDS_CATCH
+    #END_RULE
+   
+    
+@STMT_WITH_ARRAY_ACCESS_BY_IND_$2_$1
+    #BEGIN_RULE:($1ArrayVarDeclared+$1ArrayFieldVarDeclared+$1ArrayValDeclared+$1ArrayFieldValDeclared)
+            @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[` @$1_TO_ARRAY_INDEX #REUSE_ID $1Ind$3_ `] ` @SET_OR_SET_OP_$1 #REUSE_ID $1Ind$3_ `; ` \n
+    #END_RULE
+    #BEGIN_RULE:2*$1VarDeclared
+            @REUSE_ID_$1_VAR @SET_OR_SET_OP_$1 @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[` @$1_TO_ARRAY_INDEX #REUSE_ID $1Ind$3_ `] `  `; ` \n
+    #END_RULE
+
+
+@TRY_CATCH_LOOP_WITH_ARRAY
+
+
+@TRY_BREAKABLE_BLOCK
+
+    @LOOP_CNT_UPPER_LIMIT_VAR_$1
+        #BEGIN_RULE:4
+            @LOOP_CNT_UPPER_LIMIT_ARRAY_SAFE_VAR_$1
+        #END_RULE
+        #BEGIN_RULE:8
+            @LOOP_CNT_UPPER_LIMIT_NOT_ARRAY_SAFE_VAR_$1
+        #END_RULE
+        
+@LOOP_CNT_UPPER_LIMIT_ARRAY_SAFE_VAR_LONG_LOOP_$1
+    #BEGIN_RULE:200*(LimitCheck$1+-1*250)
+        #SET LongLoop=LongLoop+1
+        @[101:200]
+        `/* LOOP_CNT_UPPER_LIMIT_ARRAY_SAFE_VAR_LONG_LOOP */`
+        //@[123:124]
+    #END_RULE
+    #BEGIN_RULE:1+(-1*MaxLongLoop+LongLoop)+(250+-1*LimitCheck$1)
+        @[51:120]
+       // @[55:56]
+    #END_RULE
+
+
+@LOOP_CNT_UPPER_LIMIT_ARRAY_SAFE_VAR_$1
+    #BEGIN_RULE:10
+        @[20:50]
+    #END_RULE
+    #BEGIN_RULE:20
+        @[51:100]
+    #END_RULE
+    #BEGIN_RULE:20*(MaxLongLoopDepth+-1*LoopNest)*(MaxLongLoop+-1*LongLoop)
+        @LOOP_CNT_UPPER_LIMIT_ARRAY_SAFE_VAR_LONG_LOOP_$1
+    #END_RULE
+
+@LOOP_CNT_UPPER_LIMIT_NOT_ARRAY_SAFE_VAR_LONG_LOOP_$1
+    #BEGIN_RULE:200*(LimitCheck$1+-1*250)
+        #SET LongLoop=LongLoop+1
+        @[151:5000]
+        `/* LOOP_CNT_UPPER_LIMIT_NOT_ARRAY_SAFE_VAR_LONG_LOOP */`
+    #END_RULE
+    #BEGIN_RULE:(250+-1*LimitCheck$1)
+        @[101:120]
+    #END_RULE
+
+
+@LOOP_CNT_UPPER_LIMIT_NOT_ARRAY_SAFE_VAR_$1
+    #BEGIN_RULE:1*(-1*LimitCheck$1+250)
+        @[51:100]
+//        @[66:67]
+    #END_RULE
+    #BEGIN_RULE:1
+        @[51:100]
+    #END_RULE
+    #BEGIN_RULE:200*(MaxLongLoopDepth+-1*LoopNest)*(MaxLongLoop+-1*LongLoop)
+        @LOOP_CNT_UPPER_LIMIT_NOT_ARRAY_SAFE_VAR_LONG_LOOP_$1
+    #END_RULE
+
+
+@LOOP_CNT_LOWER_LIMIT_VAR
+    #BEGIN_RULE:10
+        @LOOP_CNT_LOWER_LIMIT_ARRAY_SAFE_VAR
+    #END_RULE
+    #BEGIN_RULE:5
+        @LOOP_CNT_LOWER_LIMIT_NOT_ARRAY_SAFE
+    #END_RULE
+
+@LOOP_CNT_LOWER_LIMIT_ARRAY_SAFE_VAR
+    #BEGIN_RULE:10
+        ` 1 `
+    #END_RULE
+    #BEGIN_RULE:2
+        @[2:9]
+    #END_RULE
+
+@LOOP_CNT_LOWER_LIMIT_NOT_ARRAY_SAFE
+    #BEGIN_RULE:1
+        @[-2:-1]
+    #END_RULE
+
+
+
+@LOOP_CONDITION
+    #BEGIN_RULE
+	` if ( ` @Boolean_EXPRESSION ` ) `
+    #END_RULE
+    #BEGIN_RULE:5
+    #END_RULE
+
+@LOOP_RANGE_STEP
+    #BEGIN_RULE
+        ` , 1 `
+    #END_RULE
+    #BEGIN_RULE
+        ` , 2 `
+    #END_RULE
+    #BEGIN_RULE:5
+    #END_RULE
+
+@LOOP_RANGE_STEP_
+    #BEGIN_RULE
+        ` 1 `
+    #END_RULE
+    #BEGIN_RULE
+        ` 2 `
+    #END_RULE
+    #BEGIN_RULE
+        ` 3 `
+    #END_RULE
+    #BEGIN_RULE
+        ` 4 `
+    #END_RULE
+    #BEGIN_RULE
+        ` 5 `
+    #END_RULE
+
+@LOOP_RANGE_STEP_NEG_
+    #BEGIN_RULE
+        ` -1 `
+    #END_RULE
+    #BEGIN_RULE
+        ` -2 `
+    #END_RULE
+    #BEGIN_RULE
+        ` -3 `
+    #END_RULE
+    #BEGIN_RULE
+        ` -4 `
+    #END_RULE
+    #BEGIN_RULE
+        ` -5 `
+    #END_RULE
+
+
+
+
+@LOOP_RANGE_STEP_NEG
+    #BEGIN_RULE
+        ` , -1 `
+    #END_RULE
+    #BEGIN_RULE
+        ` , -2 `
+    #END_RULE
+    #BEGIN_RULE:5
+    #END_RULE
+
+@TO_OR_UNTIL
+    #BEGIN_RULE:1
+        ` to `
+    #END_RULE
+    #BEGIN_RULE:1
+        ` until `
+    #END_RULE
+
+//@LOOP_RANGE_ARRAY_SAFE_LIST
+//    #APPEND_RULE:1
+//    #END_RULE
+//
+//@LOOP_RANGE_ARRAY_SAFE_SET
+//    #APPEND_RULE:1
+//    #END_RULE
+//
+//@LOOP_RANGE_ARRAY_SAFE_$1
+//    #BEGIN_RULE:1
+//    #END_RULE
+//    #BEGIN_RULE:1
+//    #END_RULE
+//    #BEGIN_RULE:1
+//    #END_RULE
+//    #BEGIN_RULE:1
+//    #END_RULE
+//
+//@LOOP_RANGE_$1
+//    #BEGIN_RULE:1
+//     #END_RULE
+//
+//
+//

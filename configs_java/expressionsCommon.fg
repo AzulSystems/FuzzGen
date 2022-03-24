@@ -1,0 +1,210 @@
+#INCLUDE "configs_java/intrinsic.fg"  $1
+
+@bool_EXPRESSION
+    #BEGIN_RULE:2
+        @boolean_EXPRESSION
+    #END_RULE
+    #BEGIN_RULE:1
+        @Boolean_EXPRESSION
+    #END_RULE
+
+@OP_$1$1_bool
+    #BEGIN_RULE:2
+        @OP_$1$1_boolean
+    #END_RULE
+    #BEGIN_RULE:1
+        @OP_$1$1_Boolean
+    #END_RULE
+
+@REUSE_ID_$1_ARRAY_VAR_OR_VAL_BY_IND_ARRAY_SAFE_VAR
+    #BEGIN_RULE:($1ArrayVarDeclared+$1ArrayFieldValDeclared+$1ArrayVarDeclared+$1ArrayFieldValDeclared)*intIndArraySafeVarDeclared
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[` #REUSE_ID  intIndArraySafeVar_ ` ]`
+    #END_RULE
+    #BEGIN_RULE:($1ArrayVarDeclared+$1ArrayFieldValDeclared+$1ArrayVarDeclared+$1ArrayFieldValDeclared)*byteIndArraySafeVarDeclared
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[` #REUSE_ID  byteIndArraySafeVar_ ` ]`
+    #END_RULE
+    #BEGIN_RULE:($1ArrayVarDeclared+$1ArrayFieldValDeclared+$1ArrayVarDeclared+$1ArrayFieldValDeclared)*shortIndArraySafeVarDeclared
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[` #REUSE_ID  shortIndArraySafeVar_ ` ]`
+    #END_RULE
+    #BEGIN_RULE:($1ArrayVarDeclared+$1ArrayFieldValDeclared+$1ArrayVarDeclared+$1ArrayFieldValDeclared)*longIndArraySafeVarDeclared
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[(int)` #REUSE_ID  longIndArraySafeVar_ ` ]`
+    #END_RULE
+
+@REUSE_ID_$1_ARRAY_VAR_OR_VAL_BY_IND_VAR
+    #BEGIN_RULE:($1ArrayVarDeclared+$1ArrayFieldValDeclared+$1ArrayVarDeclared+$1ArrayFieldValDeclared)*intIndVarDeclared
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[` #REUSE_ID  intIndVar_ ` ]`
+    #END_RULE
+    #BEGIN_RULE:($1ArrayVarDeclared+$1ArrayFieldValDeclared+$1ArrayVarDeclared+$1ArrayFieldValDeclared)*byteIndVarDeclared
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[` #REUSE_ID  byteIndVar_ ` ]`
+    #END_RULE
+    #BEGIN_RULE:($1ArrayVarDeclared+$1ArrayFieldValDeclared+$1ArrayVarDeclared+$1ArrayFieldValDeclared)*shortIndVarDeclared
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[` #REUSE_ID  shortIndVar_ ` ]`
+    #END_RULE
+    #BEGIN_RULE:($1ArrayVarDeclared+$1ArrayFieldValDeclared+$1ArrayVarDeclared+$1ArrayFieldValDeclared)*longIndVarDeclared
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[(int)` #REUSE_ID  longIndVar_ ` ]`
+    #END_RULE
+
+
+@REUSE_ID_$1_ANY_IND_VAR 
+    #BEGIN_RULE:$1IndVarDeclared
+        #REUSE_ID $1IndVar_
+    #END_RULE
+    #BEGIN_RULE:$1IndArraySafeVarDeclared
+        #REUSE_ID $1IndArraySafeVar_
+    #END_RULE
+
+@REUSE_ID_ANY_IND_VAR 
+    #APPEND_RULE
+        @REUSE_ID_$1_ANY_IND_VAR
+    #END_RULE
+
+@RECURSIVE_FUNCTION_ARG_LIMITATION
+    #BEGIN_RULE
+        @[2:5]
+    #END_RULE
+
+
+@$1_EXPRESSION_RECURSIVE
+    #BEGIN_RULE:1*($1ArrayVarDeclared+$1ArrayValDeclared)/2
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[ Math.min( Math.abs(( ` @int_EXPRESSION ` ) / 2 ), ( ` @[MaxArrayCount/2:3*MaxArrayCount/4] `  )) ]`
+    #END_RULE
+    #BEGIN_RULE:1*($1ArrayVarDeclared+$1ArrayValDeclared)
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[(` @int_EXPRESSION ` >>> 1) % ` @[MaxArrayCount/2:3*MaxArrayCount/4] `]`
+    #END_RULE
+    #BEGIN_RULE:1*($1ArrayVarDeclared+$1ArrayFieldVarDeclared+$1ArrayValDeclared+$1ArrayFieldValDeclared)*TryCatchDepth*300
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[` @int_EXPRESSION `]`
+    #END_RULE
+    #BEGIN_RULE:5*($1ArrayVarDeclared+$1ArrayValDeclared+$1VarDeclared)
+        @UNARY_EXPR_$1_$1
+    #END_RULE
+    #BEGIN_RULE:100
+       @BIN_EXPR_$1$1_$1
+   #END_RULE
+   #BEGIN_RULE:5
+        `((` @bool_EXPRESSION `) ? ` @$1_EXPRESSION ` : ` @$1_EXPRESSION ` )`
+    #END_RULE
+   //#BEGIN_RULE:3*(MethodCallInExprWeight+-2*MethodCallCount)*method_$1_$1Declared*(MaxLoopNest+-1*LoopNest)
+   #BEGIN_RULE:5*(MethodCallInExprWeight+-1*MethodCallCount)*(MaxLoopNest+-1*LoopNest)*(method_$1_$1Declared+global_method_$1_$1Declared)*(1+-1*$1RecursiveFunction)
+    #SET MethodCallCount=MethodCallCount+1
+        @REUSE_ID_METHOD_$1_$1 ` ( ` @$1_CAST_OPEN  @$1_EXPRESSION @$1_CAST_CLOSE ` )`
+    #END_RULE
+   #BEGIN_RULE:5*(MethodCallInExprWeight+-1*MethodCallCount)*(MaxLoopNest+-1*LoopNest)*(recursive_function_$1_$1Declared+global_recursive_function_$1_$1Declared)*(1+-1*$1RecursiveFunction)
+    #SET MethodCallCount=MethodCallCount+1
+        @REUSE_ID_RECURSIVE_FUNCTION_$1_$1 ` ( ` @$1_CAST_OPEN  `(` @$1_EXPRESSION ` % ` @RECURSIVE_FUNCTION_ARG_LIMITATION  `)` @$1_CAST_CLOSE  ` )`
+    #END_RULE
+   #BEGIN_RULE:50*(MethodCallInExprWeight+-1*MethodCallCount)*(MaxLoopNest+-1*LoopNest)*(recursive_function_$1_$1Declared+global_recursive_function_$1_$1Declared)*$1RecursiveFunction
+    #SET MethodCallCount=MethodCallCount+3
+        #GET_LAST_ID recursive_function_$1_$1_ ` ( ` @$1_CAST_OPEN `(` #GET_LAST_ID $1RecursiveFlagVar_  ` - 1) ` @$1_CAST_CLOSE `) `
+    #END_RULE
+    #BEGIN_RULE:1
+        @MATHMIN_$1
+    #END_RULE
+    #BEGIN_RULE:1
+        @MATHMAX_$1
+    #END_RULE
+    #BEGIN_RULE:1
+        @MATHABS_$1
+    #END_RULE
+    #BEGIN_RULE:4*0
+    	@$1_EXPRESSION_BLOCK
+    #END_RULE
+   #BEGIN_RULE:4*(MaxLambdaCount+-1*LambdaCount)*($1LambdaOneArgVarDeclared+$1LambdaOneArgValDeclared)*0
+    #SET LambdaCount=LambdaCount+1
+        @REUSE_ID_$1_LAMBDA_ONE_ARG_VAR_OR_VAL `( ` @$1_EXPRESSION ` )`
+    #END_RULE
+    #BEGIN_RULE:4*(MaxLambdaCount+-1*LambdaCount)*($1LambdaTwoArgsVarDeclared+$1LambdaTwoArgsValDeclared)*0
+    #SET LambdaCount=LambdaCount+1
+        @REUSE_ID_$1_LAMBDA_TWO_ARGS_VAR_OR_VAL `( ` @$1_EXPRESSION `, ` @$1_EXPRESSION ` )`
+    #END_RULE
+    #BEGIN_RULE:4*$1ListVarDeclared*0
+        @REUSE_ID_$1_LIST_VAR `.filter(_ ` @OP_$1$1_bool ` ` @$1_EXPRESSION ` ).sum` 
+    #END_RULE
+
+@$1_EXPRESSION_NOT_RECURSIVE
+    #BEGIN_RULE:50
+        @$1_LITERAL
+    #END_RULE
+    #BEGIN_RULE:($1ArrayVarDeclared+$1ArrayValDeclared)/2
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[ Math.min( Math.abs(( ` @int_LITERAL ` ) / 2 ), ( ` @[MaxArrayCount/2:3*MaxArrayCount/4] ` )) ]`
+    #END_RULE
+     #BEGIN_RULE:20*($1ArrayVarDeclared+$1ArrayFieldValDeclared+$1ArrayVarDeclared+$1ArrayFieldValDeclared)*(intIndArraySafeVarDeclared+byteIndArraySafeVarDeclared+shortIndArraySafeVarDeclared+longIndArraySafeVarDeclared)
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL_BY_IND_ARRAY_SAFE_VAR
+    #END_RULE
+    #BEGIN_RULE:1*($1IndVarDeclared+$1IndArraySafeVarDeclared)*(1+20*TryCatchDepth)
+        @REUSE_ID_$1_ANY_IND_VAR
+    #END_RULE
+    #BEGIN_RULE:20*($1ArrayVarDeclared+$1ArrayFieldValDeclared+$1ArrayVarDeclared+$1ArrayFieldValDeclared)*TryCatchDepth*100*(intIndVarDeclared+byteIndVarDeclared+shortIndVarDeclared+longIndVarDeclared)*(1+LongLoop*100)
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL_BY_IND_VAR
+    #END_RULE
+
+@$1_EXPRESSION_COMMON
+    #BEGIN_RULE:2*(ExprMaxDepth+-1*ExprDepth)
+    #SET ExprDepth=ExprDepth+1
+    @$1_EXPRESSION_RECURSIVE
+    #SET ExprDepth=ExprDepth+-1
+    #END_RULE
+    #BEGIN_RULE:5
+    @$1_EXPRESSION_NOT_RECURSIVE
+    #END_RULE
+
+@UNARY_EXPR_$1_$1
+    #BEGIN_RULE:1*$1VarDeclared
+        @PREFIX_OP_$1_$1 @REUSE_ID_$1_VAR
+    #END_RULE
+    #BEGIN_RULE:1*$1VarDeclared
+        @REUSE_ID_$1_VAR @POSTFIX_OP_$1_$1
+    #END_RULE
+    #BEGIN_RULE:1*($1ArrayVarDeclared+$1ArrayValDeclared)
+        @PREFIX_OP_$1_$1 @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[(` @int_EXPRESSION ` >>> 1) % ` @[MaxArrayCount/2:3*MaxArrayCount/4] `]`
+    #END_RULE
+    #BEGIN_RULE:1*($1ArrayVarDeclared+$1ArrayValDeclared)
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[(` @int_EXPRESSION ` >>> 1) % ` @[MaxArrayCount/2:3*MaxArrayCount/4] `]` @POSTFIX_OP_$1_$1
+    #END_RULE
+        
+       
+@BIN_EXPR_$1$1_$1
+    #BEGIN_RULE:BinExprMaxDepth+-1*BinExprDepth
+        #SET BinExprDepth=BinExprDepth+1
+        `( `@$1_EXPRESSION @OP_$1$1_$1 @$1_EXPRESSION ` )`
+        #SET BinExprDepth=BinExprDepth+-1
+    #END_RULE
+    #BEGIN_RULE:1+-1*(BinExprMaxDepth+-1*BinExprDepth)
+        `( `@$1_CONSTANT @$1_CONSTANT_SUFFIX @OP_$1$1_$1 @$1_CONSTANT @$1_CONSTANT_SUFFIX ` )`
+    #END_RULE
+
+@$1_EXPRESSION_BLOCK
+    #BEGIN_RULE:100*(ExprBlockMaxDepth+-1*ExprBlockDepth)
+    #SET ExprBlockDepth=ExprBlockDepth+1
+        ` { ` #BEGIN_SCOPE \n
+   	@DECLARE_$1_VAR
+    	`for ( ` #BEGIN_SCOPE @DECLARE_LAZY_ID_int_VAL  ` <- Range(0, `@[10:20]` ) ) { ` #REGISTER_LAZY_IDS \n
+            #SET intValDeclared=intValDeclared+1
+    	     @$1_EXPRESSION #END_SCOPE \n` } `\n
+            #SET intValDeclared=intValDeclared+-1
+    	@REUSE_ID_$1_VAR \n
+    	#END_SCOPE ` } ` \n
+    #SET $1VarDeclared=$1VarDeclared+-1
+    #SET ExprBlockDepth=ExprBlockDepth+-1
+    #END_RULE
+    #BEGIN_RULE:1
+    ` { ` #BEGIN_SCOPE \n
+        @$1_CONSTANT  @$1_CONSTANT_SUFFIX 
+    	#END_SCOPE ` } ` \n
+        #END_RULE
+
+
+@BIN_EXPR_$1$1_boolean
+    #BEGIN_RULE:100*(BinExprMaxDepth+-1*BinExprDepth)
+        #SET BinExprDepth=BinExprDepth+1
+        `( ` @$1_EXPRESSION ` ` @OP_$1$1_bool ` ` @$1_EXPRESSION ` )`
+    #SET BinExprDepth=BinExprDepth+-1
+    #END_RULE
+    #BEGIN_RULE:1
+        `( `@$1_CONSTANT @$1_CONSTANT_SUFFIX @OP_$1$1_bool @$1_CONSTANT @$1_CONSTANT_SUFFIX ` )`
+    #END_RULE
+
+
+@BIN_EXPR_$1$1_Boolean
+    #BEGIN_RULE:1
+        @BIN_EXPR_$1$1_boolean
+    #END_RULE

@@ -1,0 +1,75 @@
+#INCLUDE "configs_java/parametersBasic.fg"
+#INCLUDE "configs_java/parametersByType.fg" ( $2 ) (Val Var)
+#INCLUDE "configs_java/constants.fg"
+
+@UTILS_CLASS_NAME
+@PRINT_GLOBALS
+@PRINT_GLOBALS_0
+@PRINT_GLOBALS_1
+
+@$1_CHECKSUM_$2_LIST_VAR
+ #BEGIN_RULE:1000000*$2ListVarDeclared*Enable$2
+ `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( List( ` #GET_LOCAL_IDS_OR_EMPTY $2ListVar_ ` )) `
+#END_RULE
+#BEGIN_RULE
+ ` 0 `
+#END_RULE
+
+@$1_CHECKSUM_$2_IMMUTABLE_SET_VAR
+  #BEGIN_RULE:1000*$2ImmutableSetVarDeclared*Enable$2
+  `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( List( ` #GET_LOCAL_IDS_OR_EMPTY $2ImmutableSetVar_ ` )) `
+#END_RULE
+#BEGIN_RULE
+ ` 0 `
+#END_RULE
+
+@$1_RETURN_STATEMENT_$2_VAR
+#BEGIN_RULE:100000*$2VarDeclared
+ `  ( ` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $2Var_ " + " ` ) + `
+#END_RULE
+#BEGIN_RULE:1
+//` 0 `
+#END_RULE
+
+@$1_RETURN_STATEMENT_$2_VAL
+#BEGIN_RULE:100000*$2ValDeclared
+ `  ( ` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $2Val_ " + " ` ) + `
+#END_RULE
+#BEGIN_RULE:1
+//` 0 `
+#END_RULE
+
+@$1_RETURN_STATEMENT_$2_ARRAY_VAR
+#BEGIN_RULE:100000*$2ArrayVarDeclared
+    `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( new $2[][]{` #GET_LOCAL_IDS_OR_EMPTY $2ArrayVar_ `}) + `
+#END_RULE
+#BEGIN_RULE:1
+//` 0 `
+#END_RULE
+
+@$1_RETURN_STATEMENT_$2_ARRAY_VAL
+#BEGIN_RULE:100000*$2ArrayValDeclared
+    `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( new $2[][]{` #GET_LOCAL_IDS_OR_EMPTY $2ArrayVal_ `}) + `
+#END_RULE
+#BEGIN_RULE:1
+//` 0 `
+#END_RULE
+
+
+
+@$1_RETURN_STATEMENT_$2
+#BEGIN_RULE:100000*Enable$2
+    @$1_RETURN_STATEMENT_$2_VAR 
+    @$1_RETURN_STATEMENT_$2_VAL 
+    @$1_RETURN_STATEMENT_$2_ARRAY_VAR 
+    @$1_RETURN_STATEMENT_$2_ARRAY_VAL ` 0` \n
+
+//         `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( new $2[][]{` #GET_LOCAL_IDS_OR_EMPTY $2ArrayVar_ `})` ` + ` \n
+  //       `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( new $2[][]{` #GET_LOCAL_IDS_OR_EMPTY $2ArrayVal_ `})` \n
+         //@$1_CHECKSUM_$2_LIST_VAR ` + ` \n
+         //@$1_CHECKSUM_$2_IMMUTABLE_SET_VAR  `  ` 
+#END_RULE
+#BEGIN_RULE:1
+ ` 0 `
+#END_RULE
+

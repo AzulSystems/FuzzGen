@@ -1,0 +1,15 @@
+
+@OP_FLOATPOINT
+#APPEND_RULE:1
+       @OP_DIV
+#END_RULE
+
+@OP_DIV
+    #APPEND_RULE:3
+       `/`
+    #END_RULE
+
+@OP_$1$1_$1_
+#APPEND_RULE:1
+       @OP_FLOATPOINT
+#END_RULE

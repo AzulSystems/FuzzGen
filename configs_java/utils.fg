@@ -1,0 +1,55 @@
+#INCLUDE "configs_java/utilsByType.fg" (int short byte long float double Integer Short Byte Long Float Double)
+
+@UTILS_FIELDS
+    #BEGIN_RULE
+        ` public static Random random = new Random(1);` \n
+        ` public static long seed = 1L;` \n
+        ` public static int UnknownZero = 0;` \n 
+
+    #END_RULE
+
+@UTILS_METHODS
+    #APPEND_RULE
+        @UTILS_INIT_ARRAY
+    #END_RULE
+
+
+@UTILS_INIT_SEED
+    #BEGIN_RULE
+        ` public static void seed(long seed){ ` \n
+        `   random = new Random(seed); ` \n
+        `   FuzzUtils.seed = seed; ` \n
+        ` }` \n
+
+    #END_RULE
+
+@INIT_ARRAY_METHOD_ID
+    #BEGIN_RULE
+        `FuzzUtils.init`
+    #END_RULE
+
+@SEED_METHOD_ID
+    #BEGIN_RULE
+        `FuzzUtils.seed`
+    #END_RULE
+
+@UNKNOWN_ZERO
+    #BEGIN_RULE
+        `FuzzUtils.UnknownZero`
+    #END_RULE
+
+@UTILS_INIT_ARRAY
+    #BEGIN_RULE
+    @UTILS_INIT_ARRAY_int
+    @UTILS_INIT_ARRAY_short
+    @UTILS_INIT_ARRAY_byte
+    @UTILS_INIT_ARRAY_long
+    @UTILS_INIT_ARRAY_float
+    @UTILS_INIT_ARRAY_double
+    @UTILS_INIT_ARRAY_Integer
+    @UTILS_INIT_ARRAY_Short
+    @UTILS_INIT_ARRAY_Byte
+    @UTILS_INIT_ARRAY_Long
+    @UTILS_INIT_ARRAY_Float
+    @UTILS_INIT_ARRAY_Double
+    #END_RULE

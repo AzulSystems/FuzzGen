@@ -1,0 +1,121 @@
+#INCLUDE "configs_java/checksumTestMethod.fg" ($1) (int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/parametersBasic.fg"
+
+
+@CREATE_ID_METHOD_$1_$1
+@SET_DECLARED_FLAG_TO_ZERO
+@STATEMENTS
+@$1_EXPRESSION
+@DECLARE_ID_$1_VAL
+@DECLARE_VARS
+
+
+@DECLARE_METHOD
+    #APPEND_RULE:Enable$1
+    \n \n ` public static $1 ` @CREATE_ID_METHOD_$1_$1 ` ( `
+    #BEGIN_SCOPE ` $1 ` @DECLARE_ID_$1_VAL_ARG ` ) { ` \n
+    #SET global_method_$1_$1Declared=global_method_$1_$1Declared+1*(1-TestClass)
+//        ` // ` #CREATE_ID $1MethodObjVar_ \n
+            @$1_METHOD_BODY \n ` } ` 
+
+        #END_SCOPE
+            @MAKE_METHOD_CALLABLE_$1 \n
+    #SET method_$1_$1Declared=method_$1_$1Declared+1
+  //  #SET global_$1MethodObjVarDeclared=global_$1MethodObjVarDeclared+1
+    #END_RULE
+
+@DECLARE_RECURSIVE_FUNCTION
+    #APPEND_RULE:Enable$1
+    \n \n ` public static $1 ` @CREATE_ID_RECURSIVE_FUNCTION_$1_$1 ` ( `
+    #BEGIN_SCOPE ` $1 ` @DECLARE_ID_$1_VAL_ARG ` ) { ` \n
+    #SET global_recursive_function_$1_$1Declared=global_recursive_function_$1_$1Declared+1*(1-TestClass)
+    #SET recursive_function_$1_$1Declared=recursive_function_$1_$1Declared+1
+            @$1_RECURSIVE_FUNCTION_BODY \n ` } ` 
+        #END_SCOPE
+    #END_RULE
+
+
+
+
+
+@$1_METHOD_BODY
+    #BEGIN_RULE
+        @SET_FLAGS_BEFORE_METHOD_
+        @SET_DECLARED_FLAG_TO_ZERO
+        //#SET $1ValDeclared=$1ValDeclared+1
+        @DECLARE_VARS
+
+        @STATEMENTS
+        @$1_RETURN_STATEMENT
+
+
+        #END_RULE
+
+@$1_RECURSIVE_FUNCTION_BODY
+    #BEGIN_RULE
+        #SET $1RecursiveFunction=$1RecursiveFunction+1
+        @SET_FLAGS_BEFORE_METHOD_
+        ` $1 ` #CREATE_ID $1RecursiveFlagVar_ ` = ` #GET_LAST_ID $1Val_ ` ; ` \n
+        @SET_DECLARED_FLAG_TO_ZERO
+        //#SET $1ValDeclared=$1ValDeclared+1
+        @DECLARE_VARS
+
+         ` if ( ` #REUSE_LOCAL_ID $1RecursiveFlagVar_ ` > 0 ) { ` \n 
+             `// $1RecursiveFunction=` @[$1RecursiveFunction:$1RecursiveFunction+1] \n
+        @STATEMENTS
+        ` } ` \n
+        @$1_RETURN_STATEMENT
+
+        #SET $1RecursiveFunction=$1RecursiveFunction+-1
+        #END_RULE
+
+
+
+@$1_RETURN_CAST_PREFIX
+#BEGIN_RULE:$1IsPrimitiveType
+    `( $1 )(`
+#END_RULE
+#BEGIN_RULE:1+-1*$1IsPrimitiveType
+                `new $1( (`@$1ToPrimitiveType `)`
+#END_RULE
+
+@$1_RETURN_CAST_SUFFIX
+#BEGIN_RULE
+                        `)`
+#END_RULE
+
+
+@$1_RETURN_STATEMENT
+    #BEGIN_RULE:10
+        `return `@$1_RETURN_CAST_PREFIX  ` (0 + ` \n
+        @$1_RETURN_STATEMENT_int ` + ` \n
+        @$1_RETURN_STATEMENT_short ` + ` \n
+        @$1_RETURN_STATEMENT_byte ` + ` \n
+        @$1_RETURN_STATEMENT_long ` + ` \n
+        @$1_RETURN_STATEMENT_float ` + ` \n
+        @$1_RETURN_STATEMENT_double ` + `  \n
+  @$1_RETURN_STATEMENT_Integer ` + ` \n
+        @$1_RETURN_STATEMENT_Short ` + ` \n
+        @$1_RETURN_STATEMENT_Byte ` + ` \n
+        @$1_RETURN_STATEMENT_Long ` + ` \n
+        @$1_RETURN_STATEMENT_Float ` + ` \n
+        @$1_RETURN_STATEMENT_Double ` + `  \n
+       `  0) `
+       @$1_RETURN_CAST_SUFFIX `; ` \n
+        #END_RULE
+    #BEGIN_RULE:1*(1-$1RecursiveFunction)
+        `return ` @$1_RETURN_CAST_PREFIX  @$1_EXPRESSION @$1_RETURN_CAST_SUFFIX `; ` \n
+    #END_RULE
+
+
+@MAKE_METHOD_CALLABLE_$1
+    #BEGIN_RULE
+//    #SET method_$1_$1Declared=method_$1_$1Declared+1
+    //#SET global_method_$1_$1Declared=global_method_$1_$1Declared+1*(1+-1*TestClass)
+  //  #SET global_method_$1_$1Declared=global_method_$1_$1Declared+1
+    //#SET method_$1_$1Declared=method_$1_$1Declared+1
+    //@PRINT_GLOBALS_1
+    //\n ` // global counter: ` @[global_method_$1_$1Declared:global_method_$1_$1Declared+1] \n
+    #REGISTER_LAZY_IDS
+    #END_RULE
+

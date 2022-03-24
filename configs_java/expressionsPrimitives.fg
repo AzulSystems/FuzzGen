@@ -1,0 +1,11 @@
+#INCLUDE "configs_java/expressions.fg"
+
+@$1_EXPRESSION_SPECIFIC
+
+@$1_EXPRESSION
+    #BEGIN_RULE:20
+        @$1_EXPRESSION_COMMON
+    #END_RULE
+    #BEGIN_RULE
+        @$1_EXPRESSION_SPECIFIC
+    #END_RULE

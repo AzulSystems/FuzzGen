@@ -1,0 +1,1234 @@
+import java.util.Random;
+import java.util.Arrays;
+ class FuzzUtils { 
+ public static Random random = new Random(1);
+ public static long seed = 1L;
+ public static int UnknownZero = 0;
+ public static void init(int[] a, int seed) { 
+   for (int j = 0; j < a.length; j++) { 
+        a[j] = ((j % 2 == 0) ? seed + j : seed - j); 
+   }
+ }
+ public static void init(short[] a, short seed) { 
+   for (int j = 0; j < a.length; j++) { 
+        a[j] = (short)(((j % 2 == 0) ? seed + j : seed - j)); 
+   }
+ }
+ public static void init(byte[] a, byte seed) { 
+   for (int j = 0; j < a.length; j++) { 
+        a[j] = (byte)(((j % 2 == 0) ? seed + j : seed - j)); 
+   }
+ }
+ public static void init(long[] a, long seed) { 
+   for (int j = 0; j < a.length; j++) { 
+        a[j] = ((j % 2 == 0) ? seed + j : seed - j); 
+   }
+ }
+ public static void init(float[] a, float seed) { 
+   for (int j = 0; j < a.length; j++) { 
+        a[j] = ((j % 2 == 0) ? seed + j : seed - j); 
+   }
+ }
+ public static void init(double[] a, double seed) { 
+   for (int j = 0; j < a.length; j++) { 
+        a[j] = ((j % 2 == 0) ? seed + j : seed - j); 
+   }
+ }
+ public static void init(Integer[] a, Integer seed) { 
+   for (int j = 0; j < a.length; j++) { 
+        a[j] = ((j % 2 == 0) ? seed + j : seed - j); 
+   }
+ }
+ public static void init(Short[] a, Short seed) { 
+   for (int j = 0; j < a.length; j++) { 
+        a[j] = Short.valueOf((short)((j % 2 == 0) ? seed + j : seed - j)); 
+   }
+ }
+ public static void init(Byte[] a, Byte seed) { 
+   for (int j = 0; j < a.length; j++) { 
+        a[j] = Byte.valueOf((byte)((j % 2 == 0) ? seed + j : seed - j)); 
+   }
+ }
+ public static void init(Long[] a, Long seed) { 
+   for (int j = 0; j < a.length; j++) { 
+        a[j] = ((j % 2 == 0) ? seed + j : seed - j); 
+   }
+ }
+ public static void init(Float[] a, Float seed) { 
+   for (int j = 0; j < a.length; j++) { 
+        a[j] = ((j % 2 == 0) ? seed + j : seed - j); 
+   }
+ }
+ public static void init(Double[] a, Double seed) { 
+   for (int j = 0; j < a.length; j++) { 
+        a[j] = ((j % 2 == 0) ? seed + j : seed - j); 
+   }
+ }
+ } 
+ class AnotherClass { 
+     public int field;
+     public void meth() {field = 1;} 
+ } 
+ class Test{ 
+ static  int intArrayFieldVar_0[]  = new int [500];
+static { 
+FuzzUtils.init(intArrayFieldVar_0, -23);
+ } 
+public static float floatFieldVar_1 = -53.58577743810176F; 
+public static final long longFieldVal_2 = -118L; 
+ static  final  Double DoubleArrayFieldVal_3[]  = new Double [500];
+static { 
+FuzzUtils.init(DoubleArrayFieldVal_3, -41.20265825450205D);
+ } 
+public long checksumCollectionVarsMethodint(  int[][] valuesList) { 
+long sum = 0; 
+ for (int i = 0; i < valuesList.length; i++) { 
+ for (int j = 0; j < valuesList[i].length; j++)  { 
+ sum +=  valuesList[i][j]; 
+    } 
+ } 
+ return sum; 
+
+ } 
+public long checksumCollectionVarsMethodshort(  short[][] valuesList) { 
+long sum = 0; 
+ for (int i = 0; i < valuesList.length; i++) { 
+ for (int j = 0; j < valuesList[i].length; j++)  { 
+ sum +=  valuesList[i][j]; 
+    } 
+ } 
+ return sum; 
+
+ } 
+public long checksumCollectionVarsMethodbyte(  byte[][] valuesList) { 
+long sum = 0; 
+ for (int i = 0; i < valuesList.length; i++) { 
+ for (int j = 0; j < valuesList[i].length; j++)  { 
+ sum +=  valuesList[i][j]; 
+    } 
+ } 
+ return sum; 
+
+ } 
+public long checksumCollectionVarsMethodlong(  long[][] valuesList) { 
+long sum = 0; 
+ for (int i = 0; i < valuesList.length; i++) { 
+ for (int j = 0; j < valuesList[i].length; j++)  { 
+ sum +=  valuesList[i][j]; 
+    } 
+ } 
+ return sum; 
+
+ } 
+public double checksumCollectionVarsMethodfloat(  float[][] valuesList) { 
+double sum = 0; 
+ for (int i = 0; i < valuesList.length; i++) { 
+ for (int j = 0; j < valuesList[i].length; j++)  { 
+ sum +=  ( valuesList[i][j]); 
+    } 
+ } 
+ return sum; 
+
+ } 
+public double checksumCollectionVarsMethoddouble(  double[][] valuesList) { 
+double sum = 0; 
+ for (int i = 0; i < valuesList.length; i++) { 
+ for (int j = 0; j < valuesList[i].length; j++)  { 
+ sum +=  ( valuesList[i][j]); 
+    } 
+ } 
+ return sum; 
+
+ } 
+public long checksumCollectionVarsMethodInteger(  Integer[][] valuesList) { 
+long sum = 0; 
+ for (int i = 0; i < valuesList.length; i++) { 
+ for (int j = 0; j < valuesList[i].length; j++)  { 
+ sum =  (sum + valuesList[i][j]); 
+    } 
+ } 
+ return sum; 
+
+ } 
+public long checksumCollectionVarsMethodShort(  Short[][] valuesList) { 
+long sum = 0; 
+ for (int i = 0; i < valuesList.length; i++) { 
+ for (int j = 0; j < valuesList[i].length; j++)  { 
+ sum =  (sum + valuesList[i][j]); 
+    } 
+ } 
+ return sum; 
+
+ } 
+public long checksumCollectionVarsMethodByte(  Byte[][] valuesList) { 
+long sum = 0; 
+ for (int i = 0; i < valuesList.length; i++) { 
+ for (int j = 0; j < valuesList[i].length; j++)  { 
+ sum =  (sum + valuesList[i][j]); 
+    } 
+ } 
+ return sum; 
+
+ } 
+public long checksumCollectionVarsMethodLong(  Long[][] valuesList) { 
+long sum = 0; 
+ for (int i = 0; i < valuesList.length; i++) { 
+ for (int j = 0; j < valuesList[i].length; j++)  { 
+ sum =  (sum + valuesList[i][j]); 
+    } 
+ } 
+ return sum; 
+
+ } 
+public double checksumCollectionVarsMethodFloat(  Float[][] valuesList) { 
+double sum = 0; 
+ for (int i = 0; i < valuesList.length; i++) { 
+ for (int j = 0; j < valuesList[i].length; j++)  { 
+ sum =  (sum + valuesList[i][j].doubleValue()); 
+    } 
+ } 
+ return sum; 
+
+ } 
+public double checksumCollectionVarsMethodDouble(  Double[][] valuesList) { 
+double sum = 0; 
+ for (int i = 0; i < valuesList.length; i++) { 
+ for (int j = 0; j < valuesList[i].length; j++)  { 
+ sum =  (sum + valuesList[i][j].doubleValue()); 
+    } 
+ } 
+ return sum; 
+
+ } 
+void printVarsMethod ( String idStr, int[] valuesList ) { 
+String[] idsArray = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsArray[currIndex]).append(" "); 
+sbValue.append(valuesList[currIndex]).append(" "); 
+} 
+sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printVarsMethod ( String idStr, short[] valuesList ) { 
+String[] idsArray = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsArray[currIndex]).append(" "); 
+sbValue.append(valuesList[currIndex]).append(" "); 
+} 
+sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printVarsMethod ( String idStr, byte[] valuesList ) { 
+String[] idsArray = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsArray[currIndex]).append(" "); 
+sbValue.append(valuesList[currIndex]).append(" "); 
+} 
+sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printVarsMethod ( String idStr, long[] valuesList ) { 
+String[] idsArray = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsArray[currIndex]).append(" "); 
+sbValue.append(valuesList[currIndex]).append(" "); 
+} 
+sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printVarsMethod ( String idStr, float[] valuesList ) { 
+String[] idsArray = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsArray[currIndex]).append(" "); 
+sbValue.append(valuesList[currIndex]).append(" "); 
+} 
+sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printVarsMethod ( String idStr, double[] valuesList ) { 
+String[] idsArray = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsArray[currIndex]).append(" "); 
+sbValue.append(valuesList[currIndex]).append(" "); 
+} 
+sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printVarsMethod ( String idStr, Integer[] valuesList ) { 
+String[] idsArray = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsArray[currIndex]).append(" "); 
+sbValue.append(valuesList[currIndex]).append(" "); 
+} 
+sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printVarsMethod ( String idStr, Short[] valuesList ) { 
+String[] idsArray = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsArray[currIndex]).append(" "); 
+sbValue.append(valuesList[currIndex]).append(" "); 
+} 
+sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printVarsMethod ( String idStr, Byte[] valuesList ) { 
+String[] idsArray = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsArray[currIndex]).append(" "); 
+sbValue.append(valuesList[currIndex]).append(" "); 
+} 
+sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printVarsMethod ( String idStr, Long[] valuesList ) { 
+String[] idsArray = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsArray[currIndex]).append(" "); 
+sbValue.append(valuesList[currIndex]).append(" "); 
+} 
+sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printVarsMethod ( String idStr, Float[] valuesList ) { 
+String[] idsArray = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsArray[currIndex]).append(" "); 
+sbValue.append(valuesList[currIndex]).append(" "); 
+} 
+sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printVarsMethod ( String idStr, Double[] valuesList ) { 
+String[] idsArray = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsArray[currIndex]).append(" "); 
+sbValue.append(valuesList[currIndex]).append(" "); 
+} 
+sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printCollectionVarsMethod_int ( String idStr, int[][] valuesList ) { 
+String[] idsCollection = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsCollection[currIndex]).append(" "); 
+          sbValue.append(checksumCollectionVarsMethodint(new int[][]{valuesList[currIndex]})).append(" ");
+ }
+sbId.append("= "); 
+ System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printCollectionVarsMethod_short ( String idStr, short[][] valuesList ) { 
+String[] idsCollection = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsCollection[currIndex]).append(" "); 
+          sbValue.append(checksumCollectionVarsMethodshort(new short[][]{valuesList[currIndex]})).append(" ");
+ }
+sbId.append("= "); 
+ System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printCollectionVarsMethod_byte ( String idStr, byte[][] valuesList ) { 
+String[] idsCollection = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsCollection[currIndex]).append(" "); 
+          sbValue.append(checksumCollectionVarsMethodbyte(new byte[][]{valuesList[currIndex]})).append(" ");
+ }
+sbId.append("= "); 
+ System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printCollectionVarsMethod_long ( String idStr, long[][] valuesList ) { 
+String[] idsCollection = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsCollection[currIndex]).append(" "); 
+          sbValue.append(checksumCollectionVarsMethodlong(new long[][]{valuesList[currIndex]})).append(" ");
+ }
+sbId.append("= "); 
+ System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printCollectionVarsMethod_float ( String idStr, float[][] valuesList ) { 
+String[] idsCollection = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsCollection[currIndex]).append(" "); 
+          sbValue.append(checksumCollectionVarsMethodfloat(new float[][]{valuesList[currIndex]})).append(" ");
+ }
+sbId.append("= "); 
+ System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printCollectionVarsMethod_double ( String idStr, double[][] valuesList ) { 
+String[] idsCollection = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsCollection[currIndex]).append(" "); 
+          sbValue.append(checksumCollectionVarsMethoddouble(new double[][]{valuesList[currIndex]})).append(" ");
+ }
+sbId.append("= "); 
+ System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printCollectionVarsMethod_Integer ( String idStr, Integer[][] valuesList ) { 
+String[] idsCollection = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsCollection[currIndex]).append(" "); 
+          sbValue.append(checksumCollectionVarsMethodInteger(new Integer[][]{valuesList[currIndex]})).append(" ");
+ }
+sbId.append("= "); 
+ System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printCollectionVarsMethod_Short ( String idStr, Short[][] valuesList ) { 
+String[] idsCollection = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsCollection[currIndex]).append(" "); 
+          sbValue.append(checksumCollectionVarsMethodShort(new Short[][]{valuesList[currIndex]})).append(" ");
+ }
+sbId.append("= "); 
+ System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printCollectionVarsMethod_Byte ( String idStr, Byte[][] valuesList ) { 
+String[] idsCollection = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsCollection[currIndex]).append(" "); 
+          sbValue.append(checksumCollectionVarsMethodByte(new Byte[][]{valuesList[currIndex]})).append(" ");
+ }
+sbId.append("= "); 
+ System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printCollectionVarsMethod_Long ( String idStr, Long[][] valuesList ) { 
+String[] idsCollection = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsCollection[currIndex]).append(" "); 
+          sbValue.append(checksumCollectionVarsMethodLong(new Long[][]{valuesList[currIndex]})).append(" ");
+ }
+sbId.append("= "); 
+ System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printCollectionVarsMethod_Float ( String idStr, Float[][] valuesList ) { 
+String[] idsCollection = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsCollection[currIndex]).append(" "); 
+          sbValue.append(checksumCollectionVarsMethodFloat(new Float[][]{valuesList[currIndex]})).append(" ");
+ }
+sbId.append("= "); 
+ System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+void printCollectionVarsMethod_Double ( String idStr, Double[][] valuesList ) { 
+String[] idsCollection = idStr.split(","); 
+StringBuilder sbId = new StringBuilder(); 
+StringBuilder sbValue = new StringBuilder(); 
+for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { 
+  if (currIndex % 3 == 0 && currIndex != 0) { 
+    sbId.append("= "); 
+System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+} 
+sbId.append(idsCollection[currIndex]).append(" "); 
+          sbValue.append(checksumCollectionVarsMethodDouble(new Double[][]{valuesList[currIndex]})).append(" ");
+ }
+sbId.append("= "); 
+ System.out.println(sbId.toString() + sbValue.toString()); 
+sbId = new StringBuilder(); 
+sbValue = new StringBuilder(); 
+
+ } 
+ public short method_short_short_4 (  short shortVal_5 ) { 
+ double doubleArrayVar_6[]  = new double [500];
+FuzzUtils.init(doubleArrayVar_6, 399.45934209521965D);
+
+long longVar_7 = -16L; 
+
+ for (  long longIndVar_8 = 65; 
+longIndVar_8 < -2 ; longIndVar_8 = longIndVar_8 -  4  ) { 
+ int intIndVar_9 = 96; 
+ while ( intIndVar_9 <  1  ) { 
+if ( java.util.Arrays.equals(Test.intArrayFieldVar_0, Test.intArrayFieldVar_0) ) { 
+if ( ( ( -79.64787122623183D - -485.2530078463933D )  ==  -35.53954604775625D ) ) { 
+ /* no arrays declared */ ; 
+  for (  int intIndVar_10 = 62; 
+intIndVar_10 <  1  ; --intIndVar_10 ) { 
+longVar_7 += ( longVar_7 - ((false) ? longVar_7 : longVar_7 ) ); 
+ longVar_7 *= ( ( (long)(intIndVar_9) | longVar_7 ) - ( longVar_7 - longVar_7 ) ); 
+ if ( (( ( 89.05220696788038D * ( -39.36401436636772D - 102.77151009438535D ) )  <  -46.72700673557766D )) ? false : ( 0.4940435476056364F  ==  78.14082976381815F ) ) { 
+longVar_7 += longIndVar_8; 
+ longVar_7 -= longVar_7; 
+ doubleArrayVar_6 = doubleArrayVar_6; 
+ longVar_7 += ( longVar_7 - ( longVar_7 - longVar_7 ) ); 
+ 
+ } else { 
+longVar_7 -= ( longVar_7 - longVar_7 ); 
+ 
+ } 
+ doubleArrayVar_6[(( intIndVar_10 ^ intIndVar_9 ) >>> 1) % 267] += ( doubleArrayVar_6[(intIndVar_9 >>> 1) % 339]++ - 51.811773463877216D ); 
+ 
+ } 
+ longVar_7 *= ( ( longVar_7 + longVar_7 ) + longVar_7 ); 
+  for (  int intIndArraySafeVar_11 = 51; 
+intIndArraySafeVar_11 <  1  ; --intIndArraySafeVar_11 ) { 
+if ( ( ( 55.48121372289029F * 93.61754189035418F )  !=  -76.96880502625095F ) ) { longVar_7 = ( longVar_7 + ( longVar_7 + longVar_7 ) ); 
+  } else { longVar_7 >>>= ( longVar_7 + longIndVar_8 ); 
+  } 
+ 
+ } 
+ 
+ } 
+ 
+ } 
+ 
+intIndVar_9 = intIndVar_9 -  1 ; 
+
+ } 
+ 
+ } 
+ return ( short )( (0 + 
+ 0
+ + 
+  ( shortVal_5 ) +  0
+ + 
+ 0
+ + 
+  ( longVar_7 ) +  0
+ + 
+ 0
+ + 
+   checksumCollectionVarsMethoddouble( new double[][]{doubleArrayVar_6}) +  0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+  0) ); 
+
+ } 
+
+ public float method_float_float_12 (  float floatVal_13 ) { 
+Integer IntegerVar_14 = 2147483642; 
+
+float floatVar_15 = 0.7363083020996377F; 
+
+floatVar_15 *= floatVar_15; 
+   int intIndArraySafeVar_16 =  1 ; 
+ while ( intIndArraySafeVar_16 < 31 ) { 
+floatVar_15 -= floatVar_15; 
+ if ( ( ( -9223372036854775801L * ( 12L + 30L ) )  >=  ( 45L - ( -9223372036854775807L + -122L ) ) ) ) {   } else { floatVar_15 -= -261.9157118643541F; 
+  } 
+ if ( ( 12.115418409013287D  >  ( (double)(763288914L) / 36.2824417413828D ) ) ) { if ( ( 132.5784811537642D  ==  ( ( 85.12270537517728D - -77.65286636001247D ) - -831767.8647651332D ) ) ) {  for (  short shortIndVar_17 = 8; 
+shortIndVar_17 < 54 ; shortIndVar_17 = (short)(shortIndVar_17 +  1 ) ) { 
+Test.floatFieldVar_1 = 71677.7745848631F; 
+ IntegerVar_14 = (int)(( ( intIndArraySafeVar_16 * intIndArraySafeVar_16 ) * -23226 )); 
+ floatVar_15 += ( ( floatVar_15 - 0.9004012889336601F ) - ( floatVar_15 - floatVar_15 ) ); 
+ 
+ } 
+  } else {  byte byteIndArraySafeVar_18 = 3; 
+ while ( byteIndArraySafeVar_18 != 38 ) { 
+floatVar_15 += ( Test.floatFieldVar_1 - floatVar_15 ); 
+ if ( ( intIndArraySafeVar_16  !=  -520043367 ) ) { 
+
+ } 
+  long longIndArraySafeVar_19 = 2; 
+ while ( longIndArraySafeVar_19 <= 23 ) { 
+
+longIndArraySafeVar_19 = longIndArraySafeVar_19 + 1; 
+
+ } 
+ floatVar_15 = Test.floatFieldVar_1; 
+ if ( ( ( 1559 + ((( -16095  ==  98 )) ? intIndArraySafeVar_16 : -16973 ) )  <  ( byteIndArraySafeVar_18 + -25184 ) ) ) { 
+
+ } 
+ 
+byteIndArraySafeVar_18++; 
+
+ } 
+  } 
+  } else {  for (  byte byteIndArraySafeVar_20 =  1 ; 
+byteIndArraySafeVar_20 < 84 ; ++byteIndArraySafeVar_20 ) { 
+
+ } 
+  } 
+ 
+++intIndArraySafeVar_16; 
+
+ } 
+ return ( float )( (0 + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+  ( floatVar_15 ) +   ( floatVal_13 ) +  0
+ + 
+ 0
+ + 
+  ( IntegerVar_14 ) +  0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+  0) ); 
+
+ } 
+
+ public double method_double_double_21 (  double doubleVal_22 ) { 
+ int intArrayVar_23[]  = new int [500];
+FuzzUtils.init(intArrayVar_23, -89);
+
+final int intVal_24 = 56; 
+
+int intVar_25 = -87; 
+
+float floatVar_26 = 627626.8433461741F; 
+
+int intVar_27 = -2147483643; 
+
+ int intArrayVar_28[]  = new int [500];
+FuzzUtils.init(intArrayVar_28, intVar_27);
+
+Long LongVar_29 = -27L; 
+
+ short shortIndArraySafeVar_30 = 84; 
+ while ( shortIndArraySafeVar_30 < 7 ) { 
+if ( ( ( intArrayVar_28[shortIndArraySafeVar_30 ] + intArrayVar_28[shortIndArraySafeVar_30 ] )  ==  ++intVar_27 ) ) { 
+if ( ( ( ( -0.21728450675099964F + 0.3276949903654074F ) + ( -476.0949641477448F * -411.1483028246927F ) )  ==  ( 0.5561801613598707F - -0.008111994844938408F ) ) ) { if ( false ) {  int intUnknownZeroVar_31 = FuzzUtils.UnknownZero;
+ for (  int intIndArraySafeVar_32 = 78; 
+intIndArraySafeVar_32 <  1  + intUnknownZeroVar_31 * ( intArrayVar_28[shortIndArraySafeVar_30 ] + intArrayVar_23[intIndArraySafeVar_32 ] ) ; --intIndArraySafeVar_32 ) { 
+ byte byteIndArraySafeVar_33 = 77; 
+do { 
+intVar_27 += intVar_25++; 
+ intVar_27 >>= ( intVar_27++ + intArrayVar_23[shortIndArraySafeVar_30 ] ); 
+ intArrayVar_28 = intArrayVar_28; 
+ intVar_25 += intArrayVar_28[shortIndArraySafeVar_30 ]; 
+ intArrayVar_28 = intArrayVar_28; 
+ intVar_25 -= intArrayVar_28[intIndArraySafeVar_32 ]; 
+ intVar_25 *= intArrayVar_23[intIndArraySafeVar_32 ]; 
+ Test.floatFieldVar_1 = floatVar_26; 
+ intVar_27 -= intArrayVar_28[byteIndArraySafeVar_33 ]; 
+ intVar_27 += intArrayVar_28[shortIndArraySafeVar_30 ]; 
+ intVar_25 = intArrayVar_23[intIndArraySafeVar_32 ]; 
+ intVar_25 = intVar_25--; 
+ 
+--byteIndArraySafeVar_33; 
+
+ }  while ( byteIndArraySafeVar_33 >=  0  + 7 ); 
+ floatVar_26 = Test.floatFieldVar_1; 
+ intArrayVar_23[shortIndArraySafeVar_30 ] += intArrayVar_28[intIndArraySafeVar_32 ]; 
+ 
+ } 
+  } else {  int intIndVar_34 = 83; 
+ while ( intIndVar_34 !=  1  ) { 
+
+intIndVar_34 = intIndVar_34 - 1; 
+
+ } 
+  } 
+  } else { if ( ( intArrayVar_28[shortIndArraySafeVar_30 ]  <=  Math.abs(intArrayVar_23[shortIndArraySafeVar_30 ]) ) ) { 
+
+ } else { 
+
+ } 
+  } 
+ 
+ } 
+ 
+shortIndArraySafeVar_30 = (short)(shortIndArraySafeVar_30 -  5 ); 
+
+ } 
+ return ( double )( (0 + 
+  ( intVar_25 + intVar_27 ) +   ( intVal_24 ) +    checksumCollectionVarsMethodint( new int[][]{intArrayVar_23,intArrayVar_28}) +  0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+  ( floatVar_26 ) +  0
+ + 
+  ( doubleVal_22 ) +  0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+  ( LongVar_29 ) +  0
+ + 
+ 0
+ + 
+ 0
+ + 
+  0) ); 
+
+ } 
+
+ public float method_float_float_35 (  float floatVal_36 ) { 
+ Float FloatArrayVar_37[]  = new Float [500];
+FuzzUtils.init(FloatArrayVar_37, 27.600123846202408F);
+
+Float FloatVar_38 = -0.9011970551855162F; 
+
+  short shortIndVar_39 = 1174/* LOOP_CNT_UPPER_LIMIT_NOT_ARRAY_SAFE_VAR_LONG_LOOP */; 
+do { 
+ byte byteIndArraySafeVar_40 =  1 ; 
+do { 
+FloatVar_38 = FloatArrayVar_37[byteIndArraySafeVar_40 ]; 
+ if ( ( 126  <  126 ) ) { if ( ( -2147483644  <  71 ) ) { if ( ( floatVal_36  >=  41.71786979693161F ) ) { FloatArrayVar_37 = FloatArrayVar_37; 
+  } else { FloatVar_38 = ( floatVal_36 * -639.3355751449492F ); 
+  } 
+  } else {  System.arraycopy(Test.intArrayFieldVar_0, 208, Test.intArrayFieldVar_0, 110, 224);
+  } 
+  } else { if ( java.util.Arrays.equals(Test.DoubleArrayFieldVal_3, Test.DoubleArrayFieldVal_3) ) { 
+FloatVar_38 = ( FloatVar_38 + FloatArrayVar_37[(-38 >>> 1) % 286]-- ); 
+ if ( java.util.Arrays.equals(Test.DoubleArrayFieldVal_3, Test.DoubleArrayFieldVal_3) ) { 
+FloatVar_38 = FloatArrayVar_37[byteIndArraySafeVar_40 ]; 
+ 
+ } else { 
+FloatVar_38 = FloatArrayVar_37[(( -99 << 24634 ) >>> 1) % 257]; 
+ FloatVar_38 = FloatArrayVar_37[byteIndArraySafeVar_40 ]; 
+ FloatVar_38 = FloatArrayVar_37[byteIndArraySafeVar_40 ]; 
+ FloatVar_38 = FloatArrayVar_37[byteIndArraySafeVar_40 ]; 
+ 
+ } 
+ if ( ( -3  <=  -32767 ) ) { 
+FloatArrayVar_37 = FloatArrayVar_37; 
+ 
+ } else { 
+
+ } 
+ 
+ } else { 
+
+ } 
+  } 
+ 
+++byteIndArraySafeVar_40; 
+
+ }  while ( byteIndArraySafeVar_40 <  0  + 23 ); 
+ 
+shortIndVar_39--; 
+
+ }  while ( shortIndVar_39 >  0  + -2 ); 
+ return ( float )( (0 + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+  ( floatVal_36 ) +  0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+  ( FloatVar_38 ) +    checksumCollectionVarsMethodFloat( new Float[][]{FloatArrayVar_37}) +  0
+ + 
+ 0
+ + 
+  0) ); 
+
+ } 
+
+ public float method_float_float_41 (  float floatVal_42 ) { 
+Long LongVar_43 = 100L; 
+
+boolean booleanVar_44 = true; 
+
+ float floatArrayVar_45[]  = new float [500];
+FuzzUtils.init(floatArrayVar_45, floatVal_42);
+
+final int intVal_46 = 39; 
+
+ long longArrayVar_47[]  = new long [500];
+FuzzUtils.init(longArrayVar_47, 41L);
+
+double doubleVar_48 = 52.2702760336627D; 
+
+doubleVar_48 += ( doubleVar_48 * doubleVar_48 ); 
+ return ( float )(( -0.40612543425742254F - 50.9510036749503F )); 
+
+ } 
+
+ public int method_int_int_49 (  int intVal_50 ) { 
+ long longArrayVar_51[]  = new long [500];
+FuzzUtils.init(longArrayVar_51, 24222L);
+
+byte byteVar_52 = -54; 
+
+int intVar_53 = 44; 
+
+intVar_53 += intVar_53; 
+ return ( int )(intVal_50); 
+
+ } 
+
+ public int method_int_int_54 (  int intVal_55 ) { 
+ long longArrayVar_56[]  = new long [500];
+FuzzUtils.init(longArrayVar_56, 9223372036854775803L);
+
+short shortVar_57 = 32765; 
+
+if ( ( -1317  !=  -100 ) ) { 
+try { 
+ short shortIndVar_58 = 61; 
+ while ( shortIndVar_58 <  1  ) { 
+ byte byteIndVar_59 = 5; 
+ while ( byteIndVar_59 != 87 ) { 
+if ( ( 546006.654288816D  <=  ( -92.04413503455953D * -87.02315190892963D ) ) ) { 
+shortVar_57 -= (short)(shortIndVar_58); 
+ shortVar_57 *= (short)(-17); 
+ if ( ( ( ( 2147483677L + -4211L ) / 2147483673L )  <  -54L ) ) { 
+longArrayVar_56[(-2147483645 >>> 1) % 337] -= ( 9223372036854775802L + 19L ); 
+ longArrayVar_56 = Arrays.copyOf(longArrayVar_56, 460);
+  System.arraycopy(longArrayVar_56, (Test.intArrayFieldVar_0[Test.intArrayFieldVar_0[intVal_55]])/20, longArrayVar_56, intVal_55, (( shortVar_57 + -128 )) % (4 * 500) );
+ shortVar_57 *= (short)(shortVar_57); 
+ longArrayVar_56 = Arrays.copyOf(longArrayVar_56, (intVal_55) % (4 * 500));
+ 
+ } else { 
+shortVar_57 = (short)(( shortVar_57 + ( shortVar_57 + -53 ) )); 
+  System.arraycopy(longArrayVar_56, (Test.intArrayFieldVar_0[82])/20, longArrayVar_56, intVal_55, (Test.intArrayFieldVar_0[intVal_55]) % (4 * 500) );
+ longArrayVar_56 = Arrays.copyOf(longArrayVar_56, (Test.intArrayFieldVar_0[intVal_55]) % (4 * 500));
+ 
+ } 
+ shortVar_57 += (short)(method_short_short_4 ( (short)(( shortVar_57 + shortIndVar_58 )) )); 
+ if ( ( 585.3003397774639F  <  -0.31638727116039544F ) ) { 
+
+ } 
+ 
+ } else if ( ((( longArrayVar_56[shortIndVar_58 ]  >  longArrayVar_56[shortIndVar_58 ] )) ? ( Test.DoubleArrayFieldVal_3[2147483641]  !=  Test.DoubleArrayFieldVal_3[byteIndVar_59 ] ) : ( 41L  <=  ( ( 114L - 51L ) - -57L ) )) ? false : ( ( -15.3709122175284F * -618153.3887032352F )  >=  86.47233138858621F ) ) { if ( true ) { shortVar_57 += (short)(( shortIndVar_58 + ( shortVar_57 + -65 ) )); 
+  } else { shortVar_57 *= (short)((short)(longArrayVar_56[byteIndVar_59 ])); 
+  } 
+  } else {  switch (( shortVar_57 - -27329 )) {
+          case -3: shortVar_57 += (short)(( ( shortIndVar_58 * (short)(intVal_55) ) / shortIndVar_58 )); 
+      case -2:  System.arraycopy(Test.intArrayFieldVar_0, (Test.intArrayFieldVar_0[intVal_55])/20, Test.intArrayFieldVar_0, ((( -2147483644  >  -89 )) ? intVal_55 : intVal_55 ), (-108) % (4 * 500) );
+      break; 
+     case 0: shortVar_57 -= (short)(124); 
+      break; 
+     case 2: shortVar_57 += (short)(shortVar_57); 
+      break; 
+     case 4: shortVar_57 -= (short)(( ( shortVar_57 * shortVar_57 ) + method_short_short_4 ( (short)(shortVar_57) ) )); 
+      break; 
+          default : longArrayVar_56 = Arrays.copyOf(longArrayVar_56, (intVal_55) % (4 * 500));
+      break; 
+ }
+  } 
+ 
+byteIndVar_59 = (byte)(byteIndVar_59 + 1); 
+
+ } 
+ 
+--shortIndVar_58; 
+
+ } 
+ 
+} catch (Exception exVar_60 ) {
+//  System.out.println(exVar_60.getClass().getCanonicalName());  
+} 
+ finally { 
+ switch (( ( shortVar_57 - shortVar_57 ) - shortVar_57 )) {
+          case -3: if ( ( ((java.util.Arrays.equals(Test.intArrayFieldVar_0, Test.intArrayFieldVar_0)) ? ( 125L + 192728914L ) : ( 17032L * -67L ) )  <=  -34L ) ) { 
+
+ } else { 
+
+ } 
+      break; 
+     case -2: shortVar_57 = (short)(38); 
+      break; 
+     case 1: shortVar_57 += (short)(Math.min(shortVar_57, shortVar_57)); 
+      break; 
+     case 2:  System.arraycopy(Test.intArrayFieldVar_0, 144, Test.intArrayFieldVar_0, 174, 75);
+      break; 
+     case 5: shortVar_57 *= (short)(shortVar_57); 
+      break; 
+     case 6:  for (  long longIndVar_61 =  1 ; 
+longIndVar_61 <= 56 ; longIndVar_61++ ) { 
+
+ } 
+      break; 
+          default :  byte byteIndArraySafeVar_62 = 97; 
+ while ( byteIndArraySafeVar_62 <  1  ) { 
+
+byteIndArraySafeVar_62 = (byte)(byteIndArraySafeVar_62 -  3 ); 
+
+ } 
+      break; 
+ }
+ ; 
+ } 
+ 
+ } 
+ return ( int )( (0 + 
+  ( intVal_55 ) +  0
+ + 
+  ( shortVar_57 ) +  0
+ + 
+ 0
+ + 
+   checksumCollectionVarsMethodlong( new long[][]{longArrayVar_56}) +  0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+ 0
+ + 
+  0) ); 
+
+ } 
+
+  public void mainTest(String[] strArr1) { 
+ long longArrayVar_63[]  = new long [500];
+FuzzUtils.init(longArrayVar_63, 10L);
+
+ int intArrayVar_64[]  = new int [500];
+FuzzUtils.init(intArrayVar_64, -41);
+
+long longVar_65 = -2147483671L; 
+
+if ( ( 496.35345176065357D  >=  -268405.12816435937D ) ) {   } else { try { 
+ for (  long longIndVar_66 =  1 ; 
+longIndVar_66 < 138/* LOOP_CNT_UPPER_LIMIT_ARRAY_SAFE_VAR_LONG_LOOP */ ; longIndVar_66 = longIndVar_66 +  1  ) { 
+ for (  int intIndArraySafeVar_67 = 60; 
+intIndArraySafeVar_67 <= 2 ; intIndArraySafeVar_67 = intIndArraySafeVar_67 -  4  ) { 
+if ( ( longArrayVar_63[(int)longIndVar_66 ]  >  ( longArrayVar_63[(int)longIndVar_66 ] - longArrayVar_63[(int)longIndVar_66 ] ) ) ) { longVar_65 += ( longArrayVar_63[(int)longIndVar_66 ] + longArrayVar_63[intArrayVar_64[(int)longIndVar_66 ]] ); 
+  } else { Test.intArrayFieldVar_0 = intArrayVar_64; 
+  } 
+ if ( ( -125  >  25 ) ) { if ( ( intArrayVar_64[(int)longIndVar_66 ]  >  intArrayVar_64[(int)longIndVar_66 ] ) ) { 
+longArrayVar_63 = Arrays.copyOf(longArrayVar_63, (intArrayVar_64[(int)longIndVar_66 ]) % (4 * 500));
+  System.arraycopy(longArrayVar_63, (Test.intArrayFieldVar_0[Test.intArrayFieldVar_0[(int)longIndVar_66 ]])/20, longArrayVar_63, intArrayVar_64[(int)longIndVar_66 ], (intArrayVar_64[(int)longIndVar_66 ]) % (4 * 500) );
+ Test.intArrayFieldVar_0 = Arrays.copyOf(intArrayVar_64, (intArrayVar_64[intArrayVar_64[(int)longIndVar_66 ]]) % (4 * 500));
+ intArrayVar_64 = Arrays.copyOf(intArrayVar_64, (((( 10150  ==  20752 )) ? -126 : intArrayVar_64[intArrayVar_64[(int)longIndVar_66 ]] )) % (4 * 500));
+ intArrayVar_64 = Arrays.copyOf(intArrayFieldVar_0, 438);
+ 
+ } else { 
+intArrayVar_64 = Arrays.copyOf(Test.intArrayFieldVar_0, (intArrayVar_64[(int)longIndVar_66 ]) % (4 * 500));
+ intArrayVar_64 = Test.intArrayFieldVar_0; 
+ longVar_65 %= longArrayVar_63[(int)longIndVar_66 ]; 
+ longVar_65 -= longArrayVar_63[intArrayVar_64[(int)longIndVar_66 ]]; 
+ 
+ } 
+  } else { longVar_65 = longArrayVar_63[(int)longIndVar_66 ]; 
+  } 
+ 
+ } 
+ 
+ } 
+ 
+} catch (Exception exVar_68 ) {
+//  System.out.println(exVar_68.getClass().getCanonicalName());  
+} 
+  } 
+ short shortVal_69 = method_short_short_4 ( (short)(( 57 + 32764 )) ); 
+ float floatVal_70 = method_float_float_12 ( 0.09521885155742349F ); 
+ int intVal_71 = method_int_int_54 ( ( -90 + ( 40 - -2147483643 ) ) ); 
+ short shortVal_72 = method_short_short_4 ( (short)(-23356) ); 
+ float floatVal_73 = method_float_float_35 ( 0.17298801983243117F ); 
+ float floatVal_74 = method_float_float_12 ( method_float_float_12 ( floatVal_73 ) ); 
+ float floatVal_75 = method_float_float_35 ( floatVal_73 ); 
+ printVarsMethod(" intVal_71", new int[]{ intVal_71 }); 
+printCollectionVarsMethod_int(" intArrayVar_64", new int[][]{ intArrayVar_64  }); 
+printCollectionVarsMethod_int(" intArrayFieldVar_0", new int[][]{ intArrayFieldVar_0  }); 
+printVarsMethod(" shortVal_69,shortVal_72", new short[]{ shortVal_69,shortVal_72 }); 
+printVarsMethod(" longVar_65", new long[]{ longVar_65 }); 
+printCollectionVarsMethod_long(" longArrayVar_63", new long[][]{ longArrayVar_63  }); 
+printVarsMethod(" longFieldVal_2", new long[]{ longFieldVal_2 }); 
+printVarsMethod(" floatVal_70,floatVal_73,floatVal_74,floatVal_75", new float[]{ floatVal_70,floatVal_73,floatVal_74,floatVal_75 }); 
+printVarsMethod(" floatFieldVar_1", new float[]{ floatFieldVar_1 }); 
+printCollectionVarsMethod_Double(" DoubleArrayFieldVal_3", new Double[][]{ DoubleArrayFieldVal_3  }); 
+}
+ public static void main(String[] args) { 
+   try {
+   Test _instance = new Test(); 
+      for (int i = 0; i < 1000; i++ ) { 
+            _instance.mainTest(args); 
+       }
+   } catch (Exception ex) {
+        System.out.println(ex.getClass().getCanonicalName()); 
+    } 
+}
+ } 
+

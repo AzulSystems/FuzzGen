@@ -1,0 +1,4 @@
+@AUX_FUNCTON_DEFS
+#BEGIN_RULE
+    `; TODO: Here will be aux function defs`
+#END_RULE

@@ -1,0 +1,72 @@
+#INCLUDE "configs_cpp/loopsIterTypes.fg" (MAP) ($1)
+
+@STATEMENTS
+
+@FOREACH
+    #APPEND_RULE:10*$1$2MapDeclared
+        #BEGIN_SCOPE
+        `for (` @DECLARE_SOME_FOREACH_ITERATOR_MAP_$1 `: ` @REUSE_ID_$1$2_MAP `) {` \n
+            #SET ForEachCount=ForEachCount+1
+            @STATEMENTS \n
+            @SET_DECLARED_ITERATOR_TO_ZERO_MAP_$1
+            #SET ForEachCount=ForEachCount+-1
+        `} ` \n
+        #END_SCOPE
+    #END_RULE
+
+@REINITIALIZATION
+    #APPEND_RULE:10*$1$2MapDeclared*($1$2MapDeclared+-1)
+        @REUSE_ID_$1$2_MAP ` = ` @REUSE_ID_$1$2_MAP `; `\n
+    #END_RULE
+
+@CLEAR_CONTAINERS
+    #APPEND_RULE:10*$1$2MapDeclared
+        @REUSE_ID_$1$2_MAP `.clear(); `\n
+    #END_RULE
+
+@ADD_ELEMENT_CONTAINERS
+    #APPEND_RULE:10*$1$2MapDeclared
+        @REUSE_ID_$1$2_MAP `.insert({(` @$1_EXPRESSION `), (`@$2_EXPRESSION`)}); `\n
+    #END_RULE
+    #APPEND_RULE:10*$1$2MapDeclared
+        @REUSE_ID_$1$2_MAP `.emplace((` @$1_EXPRESSION `), (`@$2_EXPRESSION`)); `\n
+    #END_RULE
+
+@SWAP_CONTAINERS
+    #APPEND_RULE:10*$1$2MapDeclared*($1$2MapDeclared+-1)
+        @REUSE_ID_$1$2_MAP `.swap(` @REUSE_ID_$1$2_MAP `); `\n
+    #END_RULE
+
+@$1$1_CONTAINERS_CMP
+    #APPEND_RULE:100*$1$2MapDeclared*($1$2MapDeclared+-1)
+        `(`@REUSE_ID_$1$2_MAP ` ` @OP_CONTAINERS_bool ` ` @REUSE_ID_$1$2_MAP `)`
+    #END_RULE
+
+@CONTAINER_IS_EMPTY_$1
+    #APPEND_RULE:100*$1$2MapDeclared
+        @REUSE_ID_$1$2_MAP`.empty()`
+    #END_RULE
+
+@CONTAINERS_CAPACITY_INFO_$1
+    #APPEND_RULE:100*$1$2MapDeclared
+        `(($1)`@REUSE_ID_$1$2_MAP`.size())`
+    #END_RULE
+    #APPEND_RULE:100*$1$2MapDeclared
+        `(($1)`@REUSE_ID_$1$2_MAP`.max_size())`
+    #END_RULE
+
+@MAP_SET_COUNT_$1
+    #APPEND_RULE:100*$1$2MapDeclared
+        `(($1)`@REUSE_ID_$1$2_MAP`.count((` @$1_EXPRESSION `)))`
+    #END_RULE
+
+@PRINTS
+    #APPEND_RULE:100*$1$2MapDeclared
+        @PRINT_MAPS_$1_$2
+    #END_RULE
+
+@PRINT_MAPS_$1_$2
+    #BEGIN_RULE
+        `result += "` #GET_LOCAL_IDS_OR_EMPTY $1$2Map_ ` " + to_string(print(` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1$2Map_ ")) + to_string(print(" `)); ` \n
+        #SET $1$2MapDeclared=0
+    #END_RULE

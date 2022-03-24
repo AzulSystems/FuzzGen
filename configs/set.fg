@@ -1,0 +1,32 @@
+#INCLUDE "configs/parameters.fg"
+
+@OP_$1$1_$1
+@Int_EXPRESSION
+@Long_EXPRESSION
+@Float_EXPRESSION
+@Double_EXPRESSION
+
+#SET $1_IMMUTABLE_SET_VAR=0
+
+#SET LowerLimit=-100
+#SET UpperLimit=100
+
+@DECLARE_IMMUTABLE_SET_VAR
+#APPEND_RULE:Enable$1
+    ` var ` @DECLARE_ID_$1_IMMUTABLE_SET_VAR ` : scala.collection.immutable.Set[$1] = List.tabulate[$1](` @[0:UpperLimit] `)(n => n ` @OP_$1$1_$1 `  ` @$1_EXPRESSION ` ).toSet`  \n #REGISTER_LAZY_IDS
+    #SET $1ImmutableSetVarDeclared=$1ImmutableSetVarDeclared+1 
+#END_RULE
+
+@DECLARE_ID_$1_IMMUTABLE_SET_VAR
+#BEGIN_RULE
+    #CREATE_LAZY_ID $1ImmutableSetVar_
+#END_RULE
+
+
+@REUSE_ID_$1_IMMUTABLE_SET_VAR
+#BEGIN_RULE
+    #REUSE_ID $1ImmutableSetVar_
+#END_RULE
+
+
+

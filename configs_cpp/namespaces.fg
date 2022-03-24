@@ -1,0 +1,5 @@
+
+@NAMESPACE_FIELD
+    #BEGIN_RULE
+        `using namespace std;` \n \n
+    #END_RULE

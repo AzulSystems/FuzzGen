@@ -1,0 +1,91 @@
+#INCLUDE "configs_cpp/operationsWithMap.fg" ($1) (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+
+@STATEMENT_
+
+@FOREACH_STATEMENTS
+    #APPEND_RULE:1000*ARRAY_VAR$1RefIterator
+        #REUSE_ID ARRAY_VAR$1RefIterator_ ` = ($1)(` @$1_EXPRESSION `); ` \n
+        #SET ARRAY_VAR$1RefIterator=ARRAY_VAR$1RefIterator+-1
+    #END_RULE
+    #APPEND_RULE:1000*VECTOR$1RefIterator
+        #REUSE_ID VECTOR$1RefIterator_ ` = ($1)(` @$1_EXPRESSION `); ` \n
+        #SET VECTOR$1RefIterator=VECTOR$1RefIterator+-1
+    #END_RULE
+    #APPEND_RULE:1
+        @STATEMENT_
+    #END_RULE
+
+@REINITIALIZATION
+    #APPEND_RULE:10*$1VectorDeclared*($1VectorDeclared+-1)
+        @REUSE_ID_$1_VECTOR ` = ` @REUSE_ID_$1_VECTOR `; `\n
+    #END_RULE
+    #APPEND_RULE:10*$1SetDeclared*($1SetDeclared+-1)
+        @REUSE_ID_$1_SET ` = ` @REUSE_ID_$1_SET `; `\n
+    #END_RULE
+    #APPEND_RULE:1
+        @STATEMENT_
+    #END_RULE
+
+@CLEAR_CONTAINERS
+    #APPEND_RULE:10*$1VectorDeclared
+        @REUSE_ID_$1_VECTOR `.clear(); `\n
+    #END_RULE
+    #APPEND_RULE:10*$1SetDeclared
+        @REUSE_ID_$1_SET `.clear(); `\n
+    #END_RULE
+    #APPEND_RULE:1
+        @STATEMENT_
+    #END_RULE
+
+@ADD_ELEMENT_CONTAINERS
+    #APPEND_RULE:10*$1SetDeclared
+        @REUSE_ID_$1_SET `.insert(` @$1_EXPRESSION `); `\n
+    #END_RULE
+    #APPEND_RULE:10*$1SetDeclared
+        @REUSE_ID_$1_SET `.emplace(` @$1_EXPRESSION `); `\n
+    #END_RULE
+    #APPEND_RULE:10*$1VectorDeclared
+        @REUSE_ID_$1_VECTOR `.push_back(` @$1_EXPRESSION `); `\n
+    #END_RULE
+    #APPEND_RULE:10*$1VectorDeclared*(1+-1*Bool_$1)
+        @REUSE_ID_$1_VECTOR `.emplace_back(` @$1_EXPRESSION `); `\n
+    #END_RULE
+    #APPEND_RULE:1
+        @STATEMENT_
+    #END_RULE
+
+@SWAP_CONTAINERS
+    #APPEND_RULE:10*$1VectorDeclared*($1VectorDeclared+-1)
+        @REUSE_ID_$1_VECTOR `.swap(` @REUSE_ID_$1_VECTOR `); `\n
+    #END_RULE
+    #APPEND_RULE:10*$1SetDeclared*($1SetDeclared+-1)
+        @REUSE_ID_$1_SET `.swap(` @REUSE_ID_$1_SET `); `\n
+    #END_RULE
+    #APPEND_RULE:1
+        @STATEMENT_
+    #END_RULE
+
+@VECTOR_RESIZE
+    #APPEND_RULE:10*$1VectorDeclared
+        @REUSE_ID_$1_VECTOR `.resize( random() % ` @ARRAY_MAX_LENGTH `, (` @$1_EXPRESSION `)); `\n
+    #END_RULE
+    #APPEND_RULE:1
+        @STATEMENT_
+    #END_RULE
+
+@VECTOR_POP_BACK
+    #APPEND_RULE:10*$1VectorDeclared
+        `if (` @REUSE_ID_$1_VECTOR `.size() > 0)` \n
+        `    ` #GET_LAST_ID $1Vector_ `.pop_back(); `\n
+    #END_RULE
+    #APPEND_RULE:1
+        @STATEMENT_
+    #END_RULE
+
+@VECTOR_SORT
+    #APPEND_RULE:10*$1VectorDeclared
+        `sort(`@REUSE_ID_$1_VECTOR`.begin(), ` #GET_LAST_ID $1Vector_`.end());` \n
+    #END_RULE
+    #APPEND_RULE:1
+        @STATEMENT_
+    #END_RULE

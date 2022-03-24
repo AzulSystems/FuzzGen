@@ -1,0 +1,38 @@
+
+@DECLARE_PRINT_COLLECTION_VARS_METHOD_$1
+	#BEGIN_RULE
+		`def printCollectionVarsMethod_$1 ( ` #BEGIN_SCOPE `idStr: String, valuesList: List[Iterable[$1]] ): Unit = { ` \n @PRINT_COLLECTION_VARS_METHOD_BODY_$1 \n ` } ` #END_SCOPE \n
+	#END_RULE
+
+@PRINT_COLLECTION_VARS_METHOD_BODY_$1
+	#BEGIN_RULE
+		`val idsCollection = idStr.split(",") ` \n
+    		`val sbId = new StringBuilder ` \n
+    		`val sbValue = new StringBuilder ` \n
+    		`var sbType : String = "" ` \n
+            `var i = 0 ` \n
+            `for (currIndex <- valuesList.indices) { ` \n
+                `  if (currIndex % 3 == 0 && currIndex != 0) { ` \n
+                    `    sbId.append("= ") ` \n
+                        `println(sbId.toString() + sbValue.toString()) `\n
+                        `sbId.clear() ` \n
+                        `sbValue.clear() ` \n
+                    `} ` \n
+
+
+
+                    `sbId.append(idsCollection(currIndex)).append(" ") ` \n
+              `          sbValue.append(valuesList(currIndex).sum.toString()).append(" ")` \n
+
+           ` }` \n
+
+           
+           
+		`sbId.append("= ") `\n
+        ` println(sbId.toString() + sbValue.toString()) ` \n
+              `  sbId.clear() ` \n
+             `   sbValue.clear() ` \n
+
+			#END_RULE
+
+

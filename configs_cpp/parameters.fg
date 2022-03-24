@@ -1,0 +1,28 @@
+#INCLUDE "configs_cpp/parametersByType.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t) (Var Pointer)
+#INCLUDE "configs_cpp/parametersBasic.fg"
+
+
+@SET_DECLARED_FLAG_TO_ZERO
+    #BEGIN_RULE
+        @SET_DECLARED_FLAG_TO_ZERO_bool_Var
+        @SET_DECLARED_FLAG_TO_ZERO_int8_t_Var
+        @SET_DECLARED_FLAG_TO_ZERO_int16_t_Var
+        @SET_DECLARED_FLAG_TO_ZERO_int32_t_Var
+        @SET_DECLARED_FLAG_TO_ZERO_int64_t_Var
+        @SET_DECLARED_FLAG_TO_ZERO_uint8_t_Var
+        @SET_DECLARED_FLAG_TO_ZERO_uint16_t_Var
+        @SET_DECLARED_FLAG_TO_ZERO_uint32_t_Var
+        @SET_DECLARED_FLAG_TO_ZERO_uint64_t_Var
+
+        @SET_DECLARED_FLAG_TO_ZERO_bool_Pointer
+        @SET_DECLARED_FLAG_TO_ZERO_int8_t_Pointer
+        @SET_DECLARED_FLAG_TO_ZERO_int16_t_Pointer
+        @SET_DECLARED_FLAG_TO_ZERO_int32_t_Pointer
+        @SET_DECLARED_FLAG_TO_ZERO_int64_t_Pointer
+        @SET_DECLARED_FLAG_TO_ZERO_uint8_t_Pointer
+        @SET_DECLARED_FLAG_TO_ZERO_uint16_t_Pointer
+        @SET_DECLARED_FLAG_TO_ZERO_uint32_t_Pointer
+        @SET_DECLARED_FLAG_TO_ZERO_uint64_t_Pointer
+    #END_RULE
+
+       

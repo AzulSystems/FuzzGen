@@ -1,0 +1,18 @@
+#INCLUDE "configs_llvm_ir/params.fg"
+
+// Params:
+// $1 - returned function type.
+// 2 - equals to 1 for void functions and 0 for anything else.
+
+@FUNCTION_PARAMETERS
+@FUNCTION_BODY
+
+@DEFINE_$1_FUNCTION[1]
+#BEGIN_RULE
+    `define $1 @` #CREATE_ID function_ @FUNCTION_PARAMETERS ` {` \n
+        #SET  FUNCTION_RETURNED_TYPE_$1=1
+        #BEGIN_SCOPE
+            @FUNCTION_BODY
+        #END_SCOPE
+    `}`\n
+#END_RULE

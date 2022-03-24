@@ -1,0 +1,40 @@
+@STATEMENTS_SHORT
+
+@ANOTHER_CLASS_NAME
+    #BEGIN_RULE
+        `AnotherClass`
+    #END_RULE
+
+@ANOTHER_CLASS
+    #BEGIN_RULE
+    ` class `  @ANOTHER_CLASS_NAME ` { ` \n
+    `     public int field;` \n
+    `     public void meth() {field = 1;} ` \n
+    ` } ` \n
+    #END_RULE
+
+@DECLARE_ANOTHER_CLASS_OBJ_ID
+    #BEGIN_RULE
+        #CREATE_ID AnotherClassObjVar_
+    #END_RULE
+
+@REUSE_ANOTHER_CLASS_OBJ_ID
+    #BEGIN_RULE
+        #REUSE_ID AnotherClassObjVar_
+    #END_RULE
+
+@DECLARE_ANOTHER_CLASS_OBJ
+    #BEGIN_RULE
+         #SET AnotherClassObjVarDeclared=AnotherClassObjVarDeclared+1
+         @ANOTHER_CLASS_NAME ` ` @DECLARE_ANOTHER_CLASS_OBJ_ID ` = ` `new ` @ANOTHER_CLASS_NAME `();` \n
+    #END_RULE
+
+@SYNCHRONIZED_BLOCK
+    #BEGIN_RULE:AnotherClassObjVarDeclared
+        #SET SynchronizedBlockNestDepth=SynchronizedBlockNestDepth+1
+        `synchronized(` @REUSE_ANOTHER_CLASS_OBJ_ID `) {` \n
+            @STATEMENTS_SHORT
+        `} ` \n
+        #SET SynchronizedBlockNestDepth=SynchronizedBlockNestDepth+-1
+    #END_RULE
+    

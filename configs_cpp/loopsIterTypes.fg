@@ -1,0 +1,146 @@
+
+#SET $1$2Iterator=0
+#SET $1$2ConstIterator=0
+#SET $1$2RefIterator=0
+#SET $1$2ConstRefIterator=0
+
+@DECLARE_SOME_FOREACH_ITERATOR_$1_$2
+    #BEGIN_RULE:1
+        #SET $1$2Iterator=$1$2Iterator+1
+        `auto ` #CREATE_ID $1$2Iterator_
+    #END_RULE
+    #BEGIN_RULE:1
+        #SET $1$2ConstIterator=$1$2ConstIterator+1
+        `const auto ` #CREATE_ID $1$2ConstIterator_
+    #END_RULE
+    #BEGIN_RULE:100
+        #SET $1$2RefIterator=$1$2RefIterator+1
+        `auto &` #CREATE_ID $1$2RefIterator_
+    #END_RULE
+    #BEGIN_RULE:1
+        #SET $1$2ConstRefIterator=$1$2ConstRefIterator+1
+        `const auto &` #CREATE_ID $1$2ConstRefIterator_
+    #END_RULE
+
+
+@SET_DECLARED_ITERATOR_TO_ZERO_$1_$2
+    #BEGIN_RULE
+        #SET $1$2Iterator=0
+        #SET $1$2ConstIterator=0
+        #SET $1$2RefIterator=0
+        #SET $1$2ConstRefIterator=0
+    #END_RULE
+
+@REUSE_ITERATION_VAR_$2
+    #BEGIN_RULE:1
+        @REUSE_ITERATION_VAR_ARRAY_VAR_$2
+    #END_RULE
+    #BEGIN_RULE:1
+        @REUSE_ITERATION_VAR_VECTOR_$2
+    #END_RULE
+    #BEGIN_RULE:1
+        @REUSE_ITERATION_VAR_SET_$2
+    #END_RULE
+    #BEGIN_RULE:1
+        @REUSE_ITERATION_VAR_MAP_$2
+    #END_RULE
+
+@REUSE_ITERATION_VAR_ARRAY_VAR_$2
+    #APPEND_RULE:100*ARRAY_VAR$2Iterator
+        `($2)` #REUSE_ID ARRAY_VAR$2Iterator_
+        #SET ARRAY_VAR$2Iterator=ARRAY_VAR$2Iterator+-1
+    #END_RULE
+    #APPEND_RULE:100*ARRAY_VAR$2ConstIterator
+        `($2)` #REUSE_ID ARRAY_VAR$2ConstIterator_
+        #SET ARRAY_VAR$2ConstIterator_=ARRAY_VAR$2ConstIterator+-1
+    #END_RULE
+    #APPEND_RULE:100*ARRAY_VAR$2RefIterator
+        `($2)` #REUSE_ID ARRAY_VAR$2RefIterator_
+        #SET ARRAY_VAR$2RefIterator_=ARRAY_VAR$2RefIterator+-1
+    #END_RULE
+    #APPEND_RULE:100*ARRAY_VAR$2ConstRefIterator
+        `($2)` #REUSE_ID ARRAY_VAR$2ConstRefIterator_
+        #SET ARRAY_VAR$2ConstRefIterator_=ARRAY_VAR$2ConstRefIterator+-1
+    #END_RULE
+    #APPEND_RULE:1
+        `($2)` @$2_LITERAL
+    #END_RULE
+
+@REUSE_ITERATION_VAR_VECTOR_$2
+    #APPEND_RULE:100*VECTOR$2Iterator
+        `($2)` #REUSE_ID VECTOR$2Iterator_
+        #SET VECTOR$2Iterator=VECTOR$2Iterator+-1
+    #END_RULE
+    #APPEND_RULE:100*VECTOR$2ConstIterator
+        `($2)` #REUSE_ID VECTOR$2ConstIterator_
+        #SET VECTOR$2ConstIterator=VECTOR$2ConstIterator+-1
+    #END_RULE
+    #APPEND_RULE:100*VECTOR$2RefIterator
+        `($2)` #REUSE_ID VECTOR$2RefIterator_
+        #SET VECTOR$2RefIterator=VECTOR$2RefIterator+-1
+    #END_RULE
+    #APPEND_RULE:100*VECTOR$2ConstRefIterator
+        `($2)` #REUSE_ID VECTOR$2ConstRefIterator_
+        #SET VECTOR$2ConstRefIterator=VECTOR$2ConstRefIterator+-1
+    #END_RULE
+    #APPEND_RULE:1
+        @$2_LITERAL
+    #END_RULE
+
+@REUSE_ITERATION_VAR_SET_$2
+    #APPEND_RULE:100*SET$2Iterator
+        `($2)` #REUSE_ID SET$2Iterator_
+        #SET SET$2Iterator=SET$2Iterator+-1
+    #END_RULE
+    #APPEND_RULE:100*SET$2ConstIterator
+        `($2)` #REUSE_ID SET$2ConstIterator_
+        #SET SET$2ConstIterator=SET$2ConstIterator+-1
+    #END_RULE
+    #APPEND_RULE:100*SET$2RefIterator
+        `($2)` #REUSE_ID SET$2RefIterator_
+        #SET SET$2RefIterator=SET$2RefIterator+-1
+    #END_RULE
+    #APPEND_RULE:100*SET$2ConstRefIterator
+        `($2) `#REUSE_ID SET$2ConstRefIterator_
+        #SET SET$2ConstRefIterator=SET$2ConstRefIterator+-1
+    #END_RULE
+    #APPEND_RULE:1
+        @$2_LITERAL
+    #END_RULE
+
+@REUSE_ITERATION_VAR_MAP_$2
+    #APPEND_RULE:100*MAP$2Iterator
+        `($2)(` #REUSE_ID MAP$2Iterator_ `.first)`
+        #SET MAP$2Iterator=MAP$2Iterator+-1
+    #END_RULE
+    #APPEND_RULE:100*MAP$2ConstIterator
+        `($2)(` #REUSE_ID MAP$2ConstIterator_ `.first)`
+        #SET MAP$2ConstIterator=MAP$2ConstIterator+-1
+    #END_RULE
+    #APPEND_RULE:100*MAP$2RefIterator
+        `($2)(` #REUSE_ID MAP$2RefIterator_ `.first)`
+        #SET MAP$2RefIterator=MAP$2RefIterator+-1
+    #END_RULE
+    #APPEND_RULE:100*MAP$2ConstRefIterator
+        `($2)(` #REUSE_ID MAP$2ConstRefIterator_ `.first)`
+        #SET MAP$2ConstRefIterator=MAP$2ConstRefIterator+-1
+    #END_RULE
+    #APPEND_RULE:100*MAP$2Iterator
+        `($2)(` #REUSE_ID MAP$2Iterator_ `.second)`
+        #SET MAP$2Iterator=MAP$2Iterator+-1
+    #END_RULE
+    #APPEND_RULE:100*MAP$2ConstIterator
+        `($2)(` #REUSE_ID MAP$2ConstIterator_ `.second)`
+        #SET MAP$2ConstIterator=MAP$2ConstIterator+-1
+    #END_RULE
+    #APPEND_RULE:100*MAP$2RefIterator
+        `($2)(` #REUSE_ID MAP$2RefIterator_ `.second)`
+        #SET MAP$2RefIterator=MAP$2RefIterator+-1
+    #END_RULE
+    #APPEND_RULE:100*MAP$2ConstRefIterator
+        `($2)(` #REUSE_ID MAP$2ConstRefIterator_ `.second)`
+        #SET MAP$2ConstRefIterator=MAP$2ConstRefIterator+-1
+    #END_RULE
+    #APPEND_RULE:1
+        @$2_LITERAL
+    #END_RULE

@@ -1,0 +1,131 @@
+
+@bool_CONSTANT
+    #BEGIN_RULE
+        `true`
+    #END_RULE
+    #BEGIN_RULE
+        `false`
+    #END_RULE
+
+@int8_t_CONSTANT
+    #BEGIN_RULE:19
+        @[-12:12]
+    #END_RULE
+    #BEGIN_RULE:1
+        @[-128:127]
+    #END_RULE
+@int8_t_CAST_OPEN
+    #BEGIN_RULE
+        `(int8_t)(`
+    #END_RULE
+@int8_t_CAST_CLOSE
+    #BEGIN_RULE
+        `)`
+    #END_RULE
+
+@uint8_t_CONSTANT
+    #BEGIN_RULE:19
+        @[100:125]
+    #END_RULE
+    #BEGIN_RULE:1
+        @[0:255]
+    #END_RULE
+@uint8_t_CAST_OPEN
+    #BEGIN_RULE
+        `(uint8_t)(`
+    #END_RULE
+@uint8_t_CAST_CLOSE
+    #BEGIN_RULE
+        `)`
+    #END_RULE
+
+
+@int16_t_CONSTANT
+    #BEGIN_RULE:19
+        @[-327:327]
+    #END_RULE
+    #BEGIN_RULE:1
+        @[-3276:3276]
+    #END_RULE
+@int16_t_CAST_OPEN
+    #BEGIN_RULE
+        `(int16_t)(`
+    #END_RULE
+@int16_t_CAST_CLOSE
+    #BEGIN_RULE
+        `)`
+    #END_RULE
+
+@uint16_t_CONSTANT
+    #BEGIN_RULE:19
+        @[3276:3365]
+    #END_RULE
+    #BEGIN_RULE:1
+        @[0:6553]
+    #END_RULE
+@uint16_t_CAST_OPEN
+    #BEGIN_RULE
+        `(uint16_t)(`
+    #END_RULE
+@uint16_t_CAST_CLOSE
+    #BEGIN_RULE
+        `)`
+    #END_RULE
+
+
+@int32_t_CONSTANT
+    #BEGIN_RULE:19
+        @[-21474:21474]
+    #END_RULE
+    #BEGIN_RULE:1
+        @[-21474:21474]
+    #END_RULE
+@int32_t_CAST_OPEN
+    #BEGIN_RULE
+    #END_RULE
+@int32_t_CAST_CLOSE
+    #BEGIN_RULE
+    #END_RULE
+
+@uint32_t_CONSTANT
+    #BEGIN_RULE:19
+        @[21474:21949]
+    #END_RULE
+    #BEGIN_RULE:1
+        @[0:42949]
+    #END_RULE
+@uint32_t_CAST_OPEN
+    #BEGIN_RULE
+    #END_RULE
+@uint32_t_CAST_CLOSE
+    #BEGIN_RULE
+    #END_RULE
+
+
+@int64_t_CONSTANT
+    #BEGIN_RULE:19
+        @[-4611686:4611686]
+    #END_RULE
+    #BEGIN_RULE:1
+        @[-4611686:4611686]
+    #END_RULE
+@int64_t_CAST_OPEN
+    #BEGIN_RULE
+    #END_RULE
+@int64_t_CAST_CLOSE
+    #BEGIN_RULE
+    #END_RULE
+
+@uint64_t_CONSTANT
+    #BEGIN_RULE:19
+        @[4611686:4623372]
+    #END_RULE
+    #BEGIN_RULE:1
+        @[0:9223372]
+    #END_RULE
+@uint64_t_CAST_OPEN
+    #BEGIN_RULE
+    #END_RULE
+@uint64_t_CAST_CLOSE
+    #BEGIN_RULE
+    #END_RULE

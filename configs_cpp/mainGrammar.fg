@@ -1,0 +1,101 @@
+#INCLUDE "configs_cpp/includes.fg"
+#INCLUDE "configs_cpp/namespaces.fg"
+#INCLUDE "configs_cpp/arrayFunctions.fg"
+#INCLUDE "configs_cpp/utilsContainer.fg"
+
+#INCLUDE "configs_cpp/parameters.fg"
+#INCLUDE "configs_cpp/random.fg" 10072001
+#INCLUDE "configs_cpp/statements.fg"
+#INCLUDE "configs_cpp/mainPrintByType.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+
+@MAIN
+    #BEGIN_RULE
+        @TEST
+    #END_RULE
+
+@TEST
+    #BEGIN_RULE
+        @INCLUDE_FIELD
+        @NAMESPACE_FIELD
+        @CLASS_TEST
+        @INT_MAIN
+    #END_RULE
+
+
+@CLASS_TEST
+    #BEGIN_RULE
+        #BEGIN_SCOPE
+        @START_CLASS
+        @PRIVATE
+        @RANDOM_SEED
+        @CREATE_RANDOM_FUNC
+        @ARRAY_FUNCTIONS
+        @CONTAINERS_FUNCTIONS
+        @PUBLIC
+        @MAIN_TEST
+        @END_CLASS
+        #END_SCOPE
+    #END_RULE
+
+
+@INT_MAIN
+    #BEGIN_RULE
+        `int main(int32_t argc, char* argv[]) { ` \n
+        #BEGIN_SCOPE
+        `    Test test;` \n
+        `    cout << test.run();` \n
+        #END_SCOPE
+        `return 0;` \n
+        `}` \n \n
+    #END_RULE
+
+
+@MAIN_TEST
+    #BEGIN_RULE
+        `string run() { ` \n
+        #BEGIN_SCOPE
+        @MAIN_TEST_BODY
+        #END_SCOPE
+        `    return result;`\n
+        `}` \n
+    #END_RULE
+
+@MAIN_TEST_BODY
+    #BEGIN_RULE
+        #SET LoopCount=0
+        #SET StatementsInFuncCount=0
+        #BEGIN_SCOPE
+        @SET_DECLARED_FLAG_TO_ZERO
+        @DECLARES
+        @STATEMENTS
+        `string result = "";` \n
+        @PRINT
+        #END_SCOPE
+    #END_RULE
+
+@PRINT
+    #BEGIN_RULE:50
+         @PRINTS @PRINT
+    #END_RULE
+    #BEGIN_RULE:1
+    #END_RULE
+
+@START_CLASS
+    #BEGIN_RULE
+        `class Test {` \n
+    #END_RULE
+
+@END_CLASS
+    #BEGIN_RULE
+        `};` \n \n
+    #END_RULE
+
+@PRIVATE
+    #BEGIN_RULE
+        `private:` \n
+    #END_RULE
+
+@PUBLIC
+    #BEGIN_RULE
+        `public:` \n
+    #END_RULE

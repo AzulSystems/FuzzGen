@@ -1,0 +1,85 @@
+#INCLUDE "configs_java/utils.fg"
+
+#INCLUDE "configs_java/arrayTypesDeclareVars.fg" ($1) (VAR) (Var)
+#INCLUDE "configs_java/arrayTypesDeclareVars.fg" ($1) (VAL) (Val)
+#INCLUDE "configs_java/arrayTypesDeclareVars.fg" ($1) (FIELD_VAR) (FieldVar)
+#INCLUDE "configs_java/arrayTypesDeclareVars.fg" ($1) (FIELD_VAL) (FieldVal)
+
+@ARRAY_MAX_LENGTH
+@$1_LITERAL
+
+@TEST_CLASS_NAME
+
+
+@REUSE_ID_$1_ARRAY_FIELD_VAR
+    #BEGIN_RULE:5*global_$1ArrayFieldVarDeclared
+         #LEND_SCOPE_WITH_ID Cls_ $1ArrayFieldVar_
+            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_ID $1ArrayFieldVar_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:TestClass*0
+         #LEND_SCOPE Test_
+            `Test.`  #REUSE_LOCAL_ID $1ArrayFieldVar_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:20*$1ArrayFieldVarDeclared
+            #REUSE_ID $1ArrayFieldVar_
+    #END_RULE
+
+@REUSE_ID_$1_ARRAY_FIELD_VAL
+    #BEGIN_RULE:5*global_$1ArrayFieldValDeclared
+        #LEND_SCOPE_WITH_ID Cls_ $1ArrayFieldVal_
+            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID $1ArrayFieldVal_
+        #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:TestClass*0
+         #LEND_SCOPE Test_
+            `Test.`  #REUSE_LOCAL_ID $1ArrayFieldVal_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:20*$1ArrayFieldValDeclared
+        #REUSE_ID $1ArrayFieldVal_
+    #END_RULE
+
+
+
+@REUSE_ID_$1_ARRAY_VAR
+    #BEGIN_RULE:3*$1ArrayVarDeclared
+        #REUSE_ID $1ArrayVar_  
+    #END_RULE
+    #BEGIN_RULE:1*$1ArrayFieldVarDeclared+1*global_$1ArrayFieldVarDeclared
+        @REUSE_ID_$1_ARRAY_FIELD_VAR
+    #END_RULE
+
+@REUSE_ID_$1_ARRAY_VAL
+    #BEGIN_RULE:3*$1ArrayValDeclared
+        #REUSE_ID $1ArrayVal_  
+    #END_RULE
+    #BEGIN_RULE:1*$1ArrayFieldValDeclared+1*global_$1ArrayFieldValDeclared
+        @REUSE_ID_$1_ARRAY_FIELD_VAL
+    #END_RULE
+
+@REUSE_ID_$1_ARRAY_VAR_OR_VAL
+    #BEGIN_RULE:($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*10+global_$1ArrayFieldVarDeclared
+        @REUSE_ID_$1_ARRAY_VAR
+    #END_RULE
+    #BEGIN_RULE:($1ArrayValDeclared+$1ArrayFieldValDeclared)+global_$1ArrayFieldValDeclared
+        @REUSE_ID_$1_ARRAY_VAL
+    #END_RULE
+
+@DECLARE_VAR_OF_TYPE
+#APPEND_RULE:10*Enable$1
+@DECLARE_$1_ARRAY_VAR
+#END_RULE
+#APPEND_RULE:Enable$1
+@DECLARE_$1_ARRAY_VAL
+#END_RULE
+
+@DECLARE_FIELD_VAR_OF_TYPE[0]
+#APPEND_RULE:10*Enable$1
+    @DECLARE_$1_ARRAY_FIELD_VAR
+#END_RULE
+#APPEND_RULE:2*Enable$1
+        @DECLARE_$1_ARRAY_FIELD_VAL
+#END_RULE
+

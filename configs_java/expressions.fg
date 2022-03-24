@@ -1,0 +1,245 @@
+#INCLUDE "configs_java/expressionsCommon.fg"  (int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/expressionsPrimitives.fg"  (int short byte long float double)
+#INCLUDE "configs_java/expressionsReferences.fg"  (Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/parametersByType.fg" (boolean Boolean) (Val Var)
+//#INCLUDE "configs_java/intrinsic.fg"  (int short byte long float double Integer Short Byte Long Float Double)
+
+
+//#SET MethodCallCount=0
+
+#SET ExprDepth=0
+#SET BinExprDepth=0
+#SET ExprBlockDepth=0
+
+
+@Boolean_CONSTANT
+@boolean_CONSTANT
+@REUSE_ID_Boolean_VAL
+@REUSE_ID_Boolean_VAR
+@REUSE_ID_boolean_VAL
+@REUSE_ID_boolean_VAR
+@BIN_EXPR_IntegerInteger_Boolean
+@BIN_EXPR_LongLong_Boolean
+@BIN_EXPR_FloatFloat_Boolean
+@BIN_EXPR_DoubleDouble_Boolean
+@BIN_EXPR_intint_boolean
+@BIN_EXPR_longlong_boolean
+@BIN_EXPR_floatfloat_boolean
+@BIN_EXPR_doubledouble_boolean
+
+
+@byte_EXPRESSION_SPECIFIC
+    #BEGIN_RULE:5
+        `(byte)(` @int_EXPRESSION_COMMON `)`
+    #END_RULE
+    #BEGIN_RULE:5
+        `(byte)(` @short_EXPRESSION_COMMON `)`
+    #END_RULE
+    #BEGIN_RULE:5
+        `(byte)(` @long_EXPRESSION_COMMON `)`
+    #END_RULE
+    #BEGIN_RULE:1
+        @Byte_EXPRESSION
+    #END_RULE
+
+@Byte_EXPRESSION_SPECIFIC
+    #BEGIN_RULE:1
+        @byte_EXPRESSION
+    #END_RULE
+
+
+@short_EXPRESSION_SPECIFIC
+    #BEGIN_RULE:5
+        `(short)(` @int_EXPRESSION_COMMON `)`
+    #END_RULE
+    #BEGIN_RULE:5
+        @byte_EXPRESSION_COMMON 
+    #END_RULE
+    #BEGIN_RULE:5
+        `(short)(` @long_EXPRESSION_COMMON `)`
+    #END_RULE
+    #BEGIN_RULE:1
+        @Short_EXPRESSION
+    #END_RULE
+
+
+@Short_EXPRESSION_SPECIFIC
+    #BEGIN_RULE:1
+        @short_EXPRESSION
+    #END_RULE
+
+
+@int_EXPRESSION_SPECIFIC
+    #BEGIN_RULE
+         @Integer_EXPRESSION_COMMON
+    #END_RULE
+    #BEGIN_RULE
+         @short_EXPRESSION
+    #END_RULE
+    #BEGIN_RULE
+         @byte_EXPRESSION
+    #END_RULE
+    #BEGIN_RULE:(intVarDeclared+intFieldVarDeclared)
+         @REUSE_ID_int_VAR `++`
+    #END_RULE
+    #BEGIN_RULE:(intVarDeclared+intFieldVarDeclared)
+        `++` @REUSE_ID_int_VAR 
+    #END_RULE
+    #BEGIN_RULE:(intVarDeclared+intFieldVarDeclared)
+         @REUSE_ID_int_VAR `--`
+    #END_RULE
+    #BEGIN_RULE:(intVarDeclared+intFieldVarDeclared)
+        `--` @REUSE_ID_int_VAR 
+    #END_RULE
+    
+@Integer_EXPRESSION_SPECIFIC
+    #BEGIN_RULE
+         @int_EXPRESSION_COMMON
+    #END_RULE
+    #BEGIN_RULE
+         `(int)(` @int_EXPRESSION `)`
+    #END_RULE
+    
+@float_EXPRESSION_SPECIFIC
+    #BEGIN_RULE:5
+        `(float)(` @double_EXPRESSION `)`
+    #END_RULE
+    #BEGIN_RULE
+         @Float_EXPRESSION
+    #END_RULE
+
+@Float_EXPRESSION_SPECIFIC
+    #BEGIN_RULE
+         @float_EXPRESSION
+    #END_RULE
+
+@double_EXPRESSION_SPECIFIC
+    #BEGIN_RULE:10
+        `(double)(` @int_EXPRESSION `)`
+    #END_RULE
+    #BEGIN_RULE:10
+        `(double)(` @long_EXPRESSION `)`
+    #END_RULE
+    #BEGIN_RULE
+         @Double_EXPRESSION
+    #END_RULE
+    #BEGIN_RULE:5
+         @MATHPOW
+    #END_RULE
+    #BEGIN_RULE:5
+         @MATHEXP
+    #END_RULE
+    #BEGIN_RULE:5
+         @MATHLOG
+    #END_RULE
+    #BEGIN_RULE:5
+         @MATHLOG10
+    #END_RULE
+    #BEGIN_RULE:4
+         @SQRT
+    #END_RULE
+
+@Double_EXPRESSION_SPECIFIC
+    #BEGIN_RULE
+         @double_EXPRESSION
+    #END_RULE
+
+@long_EXPRESSION_SPECIFIC
+    #BEGIN_RULE:5
+        `(long)(` @int_EXPRESSION `)`
+    #END_RULE
+    #BEGIN_RULE:5
+        @int_EXPRESSION
+    #END_RULE
+    #BEGIN_RULE:5
+        @Long_EXPRESSION
+    #END_RULE
+
+@Long_EXPRESSION_SPECIFIC
+    #BEGIN_RULE:5
+        @long_EXPRESSION_COMMON
+    #END_RULE
+    #BEGIN_RULE:5
+        `(long)(`@long_EXPRESSION_SPECIFIC `)`
+    #END_RULE
+
+
+@boolean_EXPRESSION
+    #BEGIN_RULE
+        @boolean_CONSTANT
+    #END_RULE
+    #BEGIN_RULE
+        @boolean_CONSTANT
+    #END_RULE
+    #BEGIN_RULE:20*booleanValDeclared
+        @REUSE_ID_boolean_VAL
+    #END_RULE
+    #BEGIN_RULE:50*booleanVarDeclared
+        @REUSE_ID_boolean_VAR
+    #END_RULE
+    #BEGIN_RULE:10*BooleanValDeclared
+        @REUSE_ID_Boolean_VAL
+    #END_RULE
+    #BEGIN_RULE:10*BooleanVarDeclared
+        @REUSE_ID_Boolean_VAR
+    #END_RULE
+    #BEGIN_RULE:20
+        @BIN_EXPR_IntegerInteger_Boolean
+    #END_RULE
+    #BEGIN_RULE:20
+        @BIN_EXPR_ByteByte_Boolean
+    #END_RULE
+    #BEGIN_RULE:20
+        @BIN_EXPR_ShortShort_Boolean
+    #END_RULE
+    #BEGIN_RULE:20
+        @BIN_EXPR_LongLong_Boolean
+    #END_RULE
+     #BEGIN_RULE:20
+        @BIN_EXPR_FloatFloat_Boolean
+    #END_RULE
+    #BEGIN_RULE:20
+        @BIN_EXPR_DoubleDouble_Boolean
+    #END_RULE
+    #BEGIN_RULE:20
+        @BIN_EXPR_intint_boolean
+    #END_RULE
+    #BEGIN_RULE:20
+        @BIN_EXPR_longlong_boolean
+    #END_RULE
+     #BEGIN_RULE:20
+        @BIN_EXPR_floatfloat_boolean
+    #END_RULE
+    #BEGIN_RULE:20
+        @BIN_EXPR_doubledouble_boolean
+    #END_RULE
+    #BEGIN_RULE:10
+        `(` @boolean_EXPRESSION `) ? ` @boolean_EXPRESSION ` : ` @boolean_EXPRESSION
+    #END_RULE
+    #BEGIN_RULE:10
+        `(` @boolean_EXPRESSION @OP_booleanboolean_boolean  @boolean_EXPRESSION `)`
+    #END_RULE
+    #BEGIN_RULE:10
+        `(` @OP_boolean_boolean  @boolean_EXPRESSION  `)`
+    #END_RULE
+    #BEGIN_RULE:10
+        @ARRAYEQUALS
+    #END_RULE
+
+@Boolean_EXPRESSION
+    #BEGIN_RULE
+        @boolean_EXPRESSION
+    #END_RULE
+
+
+
+@LIST_TO_INT_FUNC
+#BEGIN_RULE
+`sum`
+#END_RULE
+#BEGIN_RULE
+`min`
+#END_RULE
+#BEGIN_RULE
+`max`
+#END_RULE

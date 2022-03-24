@@ -1,0 +1,9 @@
+@UTILS_INIT_ARRAY_$1
+    #BEGIN_RULE
+    ` public static void init($1[] a, $1 seed) { ` \n
+    `   for (int j = 0; j < a.length; j++) { ` \n
+    `        a[j] = ` @$1_CAST_OPEN `((j % 2 == 0) ? seed + j : seed - j)` @$1_CAST_CLOSE  `; ` \n
+    `   }` \n
+    ` }` \n
+
+    #END_RULE

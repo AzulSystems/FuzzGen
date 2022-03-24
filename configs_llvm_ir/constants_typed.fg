@@ -1,0 +1,18 @@
+// $1 - type
+// $2 - min value
+// $3 - min value
+
+@MIN_$1_VALUE
+#BEGIN_RULE
+    `$2`
+#END_RULE
+
+@MAX_$1_VALUE
+#BEGIN_RULE
+    `$3`
+#END_RULE
+
+@CONST_$1
+#BEGIN_RULE
+    @[$2:$3]
+#END_RULE

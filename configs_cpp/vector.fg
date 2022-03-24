@@ -1,0 +1,24 @@
+
+@DECLARE_ID_int32_t_VAR
+
+@DECLARE_$1_VECTOR
+    #BEGIN_RULE
+        #SET $1VectorDeclared=$1VectorDeclared+1
+        `vector <$1> ` @DECLARE_ID_$1_VECTOR `;` \n
+        `fillVector(` #GET_LAST_ID $1Vector_ `, random() % ` @ARRAY_MAX_LENGTH`);` \n
+    #END_RULE
+
+@DECLARE_ID_$1_VECTOR
+    #BEGIN_RULE
+        #CREATE_ID $1Vector_
+    #END_RULE
+
+@REUSE_ID_$1_VECTOR
+    #BEGIN_RULE:$1VectorDeclared
+        #REUSE_ID $1Vector_
+    #END_RULE
+
+@DECLARE_VAR_OF_TYPE
+    #APPEND_RULE:30*Enable$1
+        @DECLARE_$1_VECTOR
+    #END_RULE

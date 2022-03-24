@@ -1,0 +1,63 @@
+
+//Keep EnableInt always equal to 1! Other types should be set to 1 or 0 only.
+#SET Enablebool=1
+#SET Enableint8_t=1
+#SET Enableint16_t=1
+#SET Enableint32_t=1
+#SET Enableint64_t=1
+#SET Enableuint8_t=1
+#SET Enableuint16_t=1
+#SET Enableuint32_t=1
+#SET Enableuint64_t=1
+
+#SET Unsigned_bool=1
+#SET Unsigned_int8_t=0
+#SET Unsigned_int16_t=0
+#SET Unsigned_int32_t=0
+#SET Unsigned_int64_t=0
+#SET Unsigned_uint8_t=1
+#SET Unsigned_uint16_t=1
+#SET Unsigned_uint32_t=1
+#SET Unsigned_uint64_t=1
+
+#SET Bool_bool=1
+#SET Bool_int8_t=0
+#SET Bool_int16_t=0
+#SET Bool_int32_t=0
+#SET Bool_int64_t=0
+#SET Bool_uint8_t=0
+#SET Bool_uint16_t=0
+#SET Bool_uint32_t=0
+#SET Bool_uint64_t=0
+
+#SET isEquality=0
+
+
+@ARRAY_MAX_LENGTH
+    #BEGIN_RULE
+          `1000`
+    #END_RULE
+
+#SET RandomSeed=10072001
+
+#SET ForEachCount=0
+#SET MaxLoopCount=12
+#SET LoopCount=0
+#SET MaxLoopNest=2
+#SET LoopNest=0
+
+#SET MaxCondCount=12
+#SET CondCount=0
+#SET MaxCondNest=2
+#SET CondNest=0
+
+#SET ExprDepth=0
+#SET BinExprDepth=0
+
+#SET BinExprMaxDepth=2
+#SET ExprMaxDepth=1
+
+#SET MaxStatementsInFuncCount=25
+#SET StatementsInFuncCount=0
+
+#SET SwitchMatch=20

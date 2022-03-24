@@ -1,0 +1,153 @@
+#INCLUDE "configs_java/dataTypes.fg"
+#INCLUDE "configs_java/arrayTypes.fg" $1
+#INCLUDE "configs_java/parametersBasic.fg"
+#INCLUDE "configs_java/parametersByType.fg" ( $1 ) (Val Var)
+
+@$1_EXPRESSION
+@int_EXPRESSION
+@Boolean_EXPRESSION
+@boolean_EXPRESSION
+@REUSE_ID_$1_ARRAY_VAR_OR_VAL_BY_IND_ARRAY_SAFE_VAR
+
+@STATEMENT
+@STATEMENTS_SHORT
+
+@EXCEPTION
+@FOR_LOOP_YIELD_LIST_$1
+@FOR_LOOP_YIELD_SET_$1
+@FOR_LOOP_YIELD_$1
+@LIST_TO_INT_FUNC
+
+@ASSIGN
+    #APPEND_RULE:100*$1VarDeclared*Enable$1
+        @ASSIGN_$1_VAR
+    #END_RULE
+    #APPEND_RULE:10*$1ListVarDeclared*Enable$1
+        @ASSIGN_$1_LIST_VAR
+    #END_RULE
+    #APPEND_RULE:10*$1ImmutableSetVarDeclared*Enable$1
+        @ASSIGN_$1_IMMUTABLE_SET_VAR
+    #END_RULE
+    #APPEND_RULE:10*$1ArrayVarDeclared*Enable$1
+        @ASSIGN_$1_ARRAY_VAR
+    #END_RULE
+    #APPEND_RULE:2*($1ArrayVarDeclared+$1ArrayValDeclared)*Enable$1
+        @ASSIGN_TO_$1_ARRAY_VAR_OR_VAL_ELEMENT
+    #END_RULE
+
+@COLLECTION_VAL    
+    #APPEND_RULE:Enable$1
+        @DECLARE_COLLECTION_VAL ` = ` @FOR_LOOP_YIELD_$1
+    #END_RULE
+
+@ASSIGN_TO_$1_ARRAY_VAR_OR_VAL_ELEMENT
+    #BEGIN_RULE
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[(` @int_EXPRESSION ` >>> 1) % ` @[MaxArrayCount/2:3*MaxArrayCount/4] `]`  @SET_OR_SET_OP_$1 @$1_CAST_OPEN @$1_EXPRESSION @$1_CAST_CLOSE `; `\n
+//        @REUSE_ID_$1_ARRAY_VAR `( ( ( ( ` @REUSE_ID_int_VAR ` % ` #GET_LAST_ID `.length  ) / 2 ).abs ).min( ` @ARRAY_MAX_LENGTH ` - 1 ) ) = ` @$1_EXPRESSION \n
+    #END_RULE
+    #BEGIN_RULE:2*($1ArrayVarDeclared+$1ArrayFieldValDeclared+$1ArrayVarDeclared+$1ArrayFieldValDeclared)*(intIndArraySafeVarDeclared+byteIndArraySafeVarDeclared+shortIndArraySafeVarDeclared+longIndArraySafeVarDeclared)
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL_BY_IND_ARRAY_SAFE_VAR  @SET_OR_SET_OP_$1 @$1_CAST_OPEN @$1_EXPRESSION @$1_CAST_CLOSE `; `\n
+    #END_RULE
+    #BEGIN_RULE:1
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[  Math.min( Math.abs(( ` @int_LITERAL ` ) / 2 ), ( ` @[MaxArrayCount/2:3*MaxArrayCount/4] ` )) ] ` @SET_OR_SET_OP_$1 @$1_CAST_OPEN @$1_EXPRESSION @$1_CAST_CLOSE `; ` \n
+    #END_RULE
+
+@ASSIGN_$1_VAR
+    #BEGIN_RULE:20*$1VarDeclared
+        @REUSE_ID_$1_VAR @SET_OR_SET_OP_$1 @$1_CAST_OPEN @$1_EXPRESSION @$1_CAST_CLOSE `; ` \n
+    #END_RULE
+   
+@ASSIGN_$1_LIST_VAR
+    #BEGIN_RULE
+    @REUSE_ID_$1_LIST_VAR ` = ` @FOR_LOOP_YIELD_LIST_$1 `; ` \n
+    #END_RULE
+
+@ASSIGN_$1_IMMUTABLE_SET_VAR
+    #BEGIN_RULE:5
+    @REUSE_ID_$1_IMMUTABLE_SET_VAR ` = ` @FOR_LOOP_YIELD_SET_$1 `; ` \n
+    #END_RULE
+    #BEGIN_RULE
+    @REUSE_ID_$1_IMMUTABLE_SET_VAR ` = (` @REUSE_ID_$1_IMMUTABLE_SET_VAR ` ++ ` @REUSE_ID_$1_IMMUTABLE_SET_VAR  `)` \n
+    #END_RULE
+  
+@ASSIGN_$1_ARRAY_VAR
+    #BEGIN_RULE
+    @REUSE_ID_$1_ARRAY_VAR ` = ` @REUSE_ID_$1_ARRAY_VAR_OR_VAL `; `\n
+    #END_RULE
+
+@SWITCH_$1
+    #APPEND_RULE:$1VarDeclared
+        #SET SwitchMatchTmp=SwitchMatch+2
+        #SET SwitchMatch=-5
+        ` switch (` @$1_EXPRESSION `) {` \n
+        `     ` @SWITCH_CASES_$1
+        `     ` @SWITCH_DEFAULT_CASE_$1
+        ` }` \n
+        #SET SwitchMatch=SwitchMatchTmp+2
+    #END_RULE
+
+@SWITCH_CASE_$1
+    #BEGIN_RULE
+        #SET SwitchMatch=SwitchMatch+2
+        `     case ` @[SwitchMatch+-1:SwitchMatch+1] `: ` @STATEMENT @SWITCH_BREAK
+    #END_RULE
+
+@SWITCH_DEFAULT_CASE_$1
+    #BEGIN_RULE:7
+    `     default : ` @STATEMENT @SWITCH_BREAK
+    #END_RULE
+    #BEGIN_RULE
+    #END_RULE
+
+@SWITCH_BREAK
+    #BEGIN_RULE:10
+    `     break; ` \n
+    #END_RULE
+    #BEGIN_RULE
+    #END_RULE
+
+
+@SWITCH_CASES_$1
+    #BEGIN_RULE:5
+        @SWITCH_CASE_$1 @SWITCH_CASES_$1
+    #END_RULE
+    #BEGIN_RULE
+    #END_RULE
+
+
+@MATCH
+#APPEND_RULE:$1VarDeclared*$1ValDeclared
+    @REUSE_ID_$1_VAR ` = ` @REUSE_ID_$1_VAL ` match {` \n
+         @MATCH_STRING_$1
+         `case _ => ` @$1_EXPRESSION ` } ` \n
+#END_RULE
+
+@MATCH_STRING_$1
+#BEGIN_RULE:2*$1ValDeclared
+    `case ` @REUSE_ID_$1_VAL ` => ` @$1_CONSTANT @$1_CONSTANT_SUFFIX \n
+    @MATCH_STRING_$1
+#END_RULE
+#BEGIN_RULE:2*$1ValDeclared
+    `case ` @REUSE_ID_$1_VAL ` => ` @$1_EXPRESSION \n
+    @MATCH_STRING_$1
+#END_RULE
+#BEGIN_RULE:($1ValDeclared+$1ValDeclared)
+#END_RULE
+
+@MATCH_STRING
+#APPEND_RULE:$1ValDeclared
+@MATCH_STRING_$1
+#END_RULE
+
+
+@METHOD_MAP
+#APPEND_RULE:$1VarDeclared*$1ValDeclared*method_$1_$1Declared
+    @REUSE_ID_$1_VAR ` = List( ` #GET_ALL_IDS $1Val_ ` ).map( ` @REUSE_ID_METHOD_$1_$1 ` ).` @LIST_TO_INT_FUNC \n
+#END_RULE
+
+@LAMBDA_MAP
+#APPEND_RULE:$1VarDeclared*$1ValDeclared*Enable$1
+    @REUSE_ID_$1_VAR ` = List( ` #GET_ALL_IDS $1Val_ ` ).map( ` @LAMBDA_1_$1 ` ).` @LIST_TO_INT_FUNC \n
+#END_RULE
+
+

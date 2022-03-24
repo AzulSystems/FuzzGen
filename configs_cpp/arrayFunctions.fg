@@ -1,0 +1,40 @@
+
+@ARRAY_FUNCTIONS
+    #BEGIN_RULE
+        @ARRAY_LENGTH
+        @ARRAY_PRINT
+        @ARRAY_FILL
+    #END_RULE
+
+
+@ARRAY_LENGTH
+    #BEGIN_RULE
+        \n
+        `template <typename T, uint32_t N>` \n
+        `size_t lengthArray(T (&Array)[N]) {` \n
+        `    return N;` \n
+        `}` \n \n
+    #END_RULE
+
+@ARRAY_PRINT
+    #BEGIN_RULE
+        \n
+        `template <typename T, uint32_t N>` \n
+        `uint64_t print(T (&Array)[N]) {` \n
+        `    const uint64_t num = 17;` \n
+        `    uint64_t sum = 0;` \n
+        `    for (auto i = 0; i < N; ++i)` \n
+        `        sum = (uint64_t) ((uint64_t) (sum * 17) + Array[i]);` \n
+        `    return sum;` \n
+        `}` \n \n
+    #END_RULE
+
+@ARRAY_FILL
+    #BEGIN_RULE
+        \n
+        `template <typename T, uint32_t N>` \n
+        `void fillArray(T (&Array)[N]) {` \n
+        `    for (auto i = 0; i < N; ++i)` \n
+        `        Array[i] = (T) random();` \n
+        `}` \n \n
+    #END_RULE

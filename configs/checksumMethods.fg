@@ -1,0 +1,24 @@
+
+@DECLARE_CHECKSUM_$1_VARS_METHOD
+	#BEGIN_RULE
+		`def checksum$1VarsMethod ( ` #BEGIN_SCOPE ` valuesList: List[AnyVal] ): $1 = { ` \n @CHECKSUM_$1_VARS_METHOD_BODY \n ` } ` #END_SCOPE \n
+	#END_RULE
+
+@CHECKSUM_$1_VARS_METHOD_BODY
+	#BEGIN_RULE
+        ` var sum : $1 = 0; ` \n
+        `for (currIndex <- valuesList.indices) { ` \n
+            ` val x = valuesList(currIndex)  match { ` \n
+            `    case _ : Int => valuesList(currIndex).asInstanceOf[Int].to$1 ` \n
+            `    case _ : Long => valuesList(currIndex).asInstanceOf[Long].to$1 ` \n
+            `    case _ : Double => valuesList(currIndex).asInstanceOf[Double].to$1 ` \n
+            `    case _ : Float => valuesList(currIndex).asInstanceOf[Float].to$1 ` \n
+            `    case _ : Boolean => { val b = valuesList(currIndex).asInstanceOf[Boolean] ; if (b) 1 else 0 } `  \n
+            `    case _ => 0 ` \n
+           ` }` \n
+            `  sum = sum + x`  \n
+        `} ` \n
+        ` return sum ` \n
+	#END_RULE
+
+

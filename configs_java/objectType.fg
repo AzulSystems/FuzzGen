@@ -1,0 +1,53 @@
+#INCLUDE "configs_java/constants.fg"
+#INCLUDE "configs_java/parametersBasic.fg"
+#INCLUDE "configs_java/parametersByType.fg" ( $1 ) (Var Val)
+#INCLUDE "configs_java/arrayTypes.fg" $1
+#INCLUDE "configs_java/numericFloat.fg" (float double Float Double)
+#INCLUDE "configs_java/numericInteger.fg" (int short byte long Integer Short Byte Long)
+
+@TEST_CLASS_NAME
+
+
+
+
+@REUSE_ID_METHOD_$1_$1
+    #APPEND_RULE:5*global_method_$1_$1Declared*0
+         #LEND_SCOPE_WITH_ID Cls_ method_$1_$1_
+           `(new ` #REUSE_LOCAL_ID Cls_ `()).` #REUSE_LOCAL_ID method_$1_$1_
+         #RETURN_SCOPE
+    #END_RULE
+
+@REUSE_ID_RECURSIVE_FUNCTION_$1_$1
+    #BEGIN_RULE:25*recursive_function_$1_$1Declared
+        #REUSE_ID recursive_function_$1_$1_
+    #END_RULE
+    #BEGIN_RULE:2*global_recursive_function_$1_$1Declared
+         #LEND_SCOPE_WITH_ID Cls_ recursive_function_$1_$1_
+            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID recursive_function_$1_$1_
+         #RETURN_SCOPE
+    #END_RULE
+
+
+@DECLARE_$1_METHOD_OBJ_VAR
+     #BEGIN_RULE
+        #SET $1MethodObjVarDeclared=$1MethodObjVarDeclared+1
+        #SET global_$1MethodObjVarDeclared=global_$1MethodObjVarDeclared+1
+        #LEND_SCOPE_WITH_ID Cls_ method_$1_$1_
+            #REUSE_ID Cls_ ` ` 
+        #RETURN_SCOPE
+        #CREATE_ID $1MethodObjVar_ ` = new ` #GET_LAST_ID Cls_ `(); ` \n
+
+    #END_RULE
+
+@REUSE_$1_METHOD_OBJ_VAR
+     #BEGIN_RULE
+            #REUSE_ID $1MethodObjVar_
+    #END_RULE
+
+
+@DECLARE_VAR_OF_TYPE
+#APPEND_RULE:10*global_method_$1_$1Declared*0
+    @DECLARE_$1_METHOD_OBJ_VAR
+#END_RULE
+
+

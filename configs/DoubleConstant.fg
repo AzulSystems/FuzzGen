@@ -1,0 +1,13 @@
+@Double_CONSTANT_SUFFIX
+#BEGIN_RULE
+#END_RULE
+@Double_CONSTANT
+    #BEGIN_RULE:10
+        @[-100.0:100.0]
+    #END_RULE
+    #BEGIN_RULE:5
+        @[-1000.0:1000.0]
+    #END_RULE
+    #BEGIN_RULE:2
+        @[-1000000.0:1000000.0]
+    #END_RULE

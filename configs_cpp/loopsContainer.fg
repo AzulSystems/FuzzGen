@@ -1,0 +1,41 @@
+#INCLUDE "configs_cpp/loopsIterTypes.fg" (ARRAY_VAR VECTOR SET) ($1)
+#INCLUDE "configs_cpp/operationsWithMap.fg" ($1) (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+
+@STATEMENTS
+@STATEMENT_
+
+@FOREACH
+    #APPEND_RULE:100*$1ArrayVarDeclared
+        #BEGIN_SCOPE
+        `for (` @DECLARE_SOME_FOREACH_ITERATOR_ARRAY_VAR_$1 `: ` @REUSE_ID_$1_ARRAY_VAR `) {` \n
+            #SET ForEachCount=ForEachCount+1
+            @STATEMENTS \n
+            @SET_DECLARED_ITERATOR_TO_ZERO_ARRAY_VAR_$1
+            #SET ForEachCount=ForEachCount+-1
+        `} ` \n
+        #END_SCOPE
+    #END_RULE
+    #APPEND_RULE:100*$1VectorDeclared*(1+-1*Bool_$1)
+        #BEGIN_SCOPE
+        `for (` @DECLARE_SOME_FOREACH_ITERATOR_VECTOR_$1 `: ` @REUSE_ID_$1_VECTOR `) {` \n
+            #SET ForEachCount=ForEachCount+1
+            @STATEMENTS \n
+            @SET_DECLARED_ITERATOR_TO_ZERO_VECTOR_$1
+            #SET ForEachCount=ForEachCount+-1
+        `} ` \n
+        #END_SCOPE
+    #END_RULE
+    #APPEND_RULE:100*$1SetDeclared
+        #BEGIN_SCOPE
+        `for (` @DECLARE_SOME_FOREACH_ITERATOR_SET_$1 `: ` @REUSE_ID_$1_SET `) {` \n
+            #SET ForEachCount=ForEachCount+1
+            @STATEMENTS \n
+            @SET_DECLARED_ITERATOR_TO_ZERO_SET_$1
+            #SET ForEachCount=ForEachCount+-1
+        `} ` \n
+        #END_SCOPE
+    #END_RULE
+    #APPEND_RULE:1
+        @STATEMENT_
+    #END_RULE
+

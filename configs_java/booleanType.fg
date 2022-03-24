@@ -1,0 +1,90 @@
+#INCLUDE "configs_java/parametersBasic.fg"
+#INCLUDE "configs_java/parametersByType.fg" ($1) (Var Val)
+
+@DECLARE_$1_VAR
+    #BEGIN_RULE
+        #SET $1VarDeclared=$1VarDeclared+1
+        `$1 ` @DECLARE_ID_$1_VAR ` = ` @$1_CONSTANT `; `\n
+    #END_RULE
+
+@DECLARE_$1_VAL
+    #BEGIN_RULE
+        #SET $1ValDeclared=$1ValDeclared+1
+        `final $1 ` @DECLARE_ID_$1_VAL ` = ` @$1_CONSTANT `; `\n
+    #END_RULE
+
+@DECLARE_ID_$1_VAR
+    #BEGIN_RULE
+        #CREATE_ID $1Var_
+    #END_RULE
+
+@DECLARE_ID_$1_VAL
+    #BEGIN_RULE
+        #CREATE_ID $1Val_
+    #END_RULE
+
+@REUSE_ID_$1_VAR
+    #BEGIN_RULE
+        #REUSE_ID $1Var_
+    #END_RULE
+
+@REUSE_ID_$1_VAL
+    #BEGIN_RULE
+        #REUSE_ID $1Val_
+    #END_RULE
+
+@OP_$2$2_$1
+    #BEGIN_RULE:2
+       ` == `
+    #END_RULE
+    #BEGIN_RULE:3
+       ` != `
+    #END_RULE
+    #BEGIN_RULE:3
+      ` < `
+    #END_RULE
+    #BEGIN_RULE:3
+      ` <= `
+    #END_RULE
+    #BEGIN_RULE:3
+       ` > `
+    #END_RULE
+    #BEGIN_RULE:3
+       ` >= `
+    #END_RULE
+
+@$1_CONSTANT
+    #BEGIN_RULE
+        `true`
+    #END_RULE
+    #BEGIN_RULE
+        `false`
+    #END_RULE
+
+@$1_CONSTANT_SUFFIX
+    #BEGIN_RULE
+    #END_RULE
+
+@$1_LITERAL
+    #BEGIN_RULE:10
+        @$1_CONSTANT @$1_CONSTANT_SUFFIX
+    #END_RULE
+    #BEGIN_RULE:60*$1ValDeclared
+        @REUSE_ID_$1_VAL
+    #END_RULE
+    #BEGIN_RULE:60*$1VarDeclared
+        @REUSE_ID_$1_VAR
+    #END_RULE
+
+@OP_$1$1_$1
+    #BEGIN_RULE
+        ` || `
+    #END_RULE
+    #BEGIN_RULE
+        ` && `
+    #END_RULE
+
+@OP_$1_$1
+    #BEGIN_RULE
+        `!`
+    #END_RULE

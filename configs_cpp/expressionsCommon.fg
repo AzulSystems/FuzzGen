@@ -1,0 +1,121 @@
+#INCLUDE "configs_cpp/shiftLimits.fg" (bool) (0) (1)
+#INCLUDE "configs_cpp/shiftLimits.fg" (int8_t) (0) (8)
+#INCLUDE "configs_cpp/shiftLimits.fg" (uint8_t) (0) (8)
+#INCLUDE "configs_cpp/shiftLimits.fg" (int16_t) (0) (16)
+#INCLUDE "configs_cpp/shiftLimits.fg" (uint16_t) (0) (16)
+#INCLUDE "configs_cpp/shiftLimits.fg" (int32_t) (0) (32)
+#INCLUDE "configs_cpp/shiftLimits.fg" (uint32_t) (0) (32)
+#INCLUDE "configs_cpp/shiftLimits.fg" (int64_t) (0) (64)
+#INCLUDE "configs_cpp/shiftLimits.fg" (uint64_t) (0) (64)
+
+
+@$1_GET_ELEMENT_FROM_CONTAINER
+@CONTAINERS_CAPACITY_INFO_$1
+@MAP_SET_COUNT_$1
+@$1$1_CONTAINERS_CMP
+@CONTAINER_IS_EMPTY_$1
+@REUSE_ITERATION_VAR_$1
+
+@$1_EXPRESSION_RECURSIVE
+    #BEGIN_RULE:70
+       @BIN_EXPR_$1$1_int
+    #END_RULE
+    #BEGIN_RULE:15
+       @BIN_EXPR_$1$1_shift
+    #END_RULE
+    #BEGIN_RULE:30
+       @STL_$1$1
+    #END_RULE
+    #BEGIN_RULE:14
+        @$1$1_MEMCMP
+    #END_RULE
+    #BEGIN_RULE:20
+        @CONTAINERS_CAPACITY_INFO_$1
+    #END_RULE
+    #BEGIN_RULE:11
+        @MAP_SET_COUNT_$1
+    #END_RULE
+    #BEGIN_RULE:22
+        @$1_GET_ELEMENT_FROM_CONTAINER
+    #END_RULE
+    #BEGIN_RULE:13
+        `(` @bool_EXPRESSION `) ? (` @$1_EXPRESSION `) : (` @$1_EXPRESSION `)`
+    #END_RULE
+    #BEGIN_RULE:9
+        @$1$1_CONTAINERS_CMP
+    #END_RULE
+    #BEGIN_RULE:7
+        @CONTAINER_IS_EMPTY_$1
+    #END_RULE
+
+@$1_EXPRESSION_NOT_RECURSIVE
+    #BEGIN_RULE:20
+        @$1_LITERAL
+    #END_RULE
+    #BEGIN_RULE:100
+        @REUSE_ITERATION_VAR_$1
+    #END_RULE
+
+@$1$1_MEMCMP
+    #BEGIN_RULE:100*$1ArrayVarDeclared*($1ArrayVarDeclared+-1)
+        `memcmp(`@REUSE_ID_$1_ARRAY_VAR `, `@REUSE_ID_$1_ARRAY_VAR`, `@ARRAY_MAX_LENGTH`)`
+    #END_RULE
+    #BEGIN_RULE:1
+        @$1_LITERAL
+    #END_RULE
+
+@STL_$1$1
+    #BEGIN_RULE:5
+        @MIN_$1$1
+    #END_RULE
+    #BEGIN_RULE:5
+        @MAX_$1$1
+    #END_RULE
+    #BEGIN_RULE:5*(1+-1*Unsigned_$1)
+        @ABS_$1
+    #END_RULE
+
+@MIN_$1$1
+    #BEGIN_RULE
+        ` min(($1)(`@$1_EXPRESSION `), ($1)(`@$1_EXPRESSION `)) `
+    #END_RULE
+
+@MAX_$1$1
+    #BEGIN_RULE
+        ` max(($1)(`@$1_EXPRESSION `), ($1)(`@$1_EXPRESSION `)) `
+    #END_RULE
+
+@ABS_$1
+    #BEGIN_RULE
+        ` ($1) abs(($1)(`@$1_EXPRESSION `)) `
+    #END_RULE
+
+@$1_EXPRESSION_COMMON
+    #BEGIN_RULE:4*(ExprMaxDepth+-1*ExprDepth)
+        #SET ExprDepth=ExprDepth+1
+        @$1_EXPRESSION_RECURSIVE
+        #SET ExprDepth=ExprDepth+-1
+    #END_RULE
+    #BEGIN_RULE:2
+        @$1_EXPRESSION_NOT_RECURSIVE
+    #END_RULE
+
+@BIN_EXPR_$1$1_int
+    #BEGIN_RULE:BinExprMaxDepth+-1*BinExprDepth
+        #SET BinExprDepth=BinExprDepth+1
+        `($1)(($1)(`@$1_EXPRESSION `) ` @OP_$1$1_int ` (($1)` @$1_EXPRESSION `))`
+        #SET BinExprDepth=BinExprDepth+-1
+    #END_RULE
+    #BEGIN_RULE:1+-1*(BinExprMaxDepth+-1*BinExprDepth)
+        `($1)((`@$1_CONSTANT `) ` @OP_$1$1_int ` (` @$1_CONSTANT `))`
+    #END_RULE
+
+@BIN_EXPR_$1$1_shift
+    #BEGIN_RULE:BinExprMaxDepth+-1*BinExprDepth
+        #SET BinExprDepth=BinExprDepth+1
+        `($1)(($1)(`@$1_EXPRESSION `) ` @OP_$1$1_shift ` ` @SHIFT_RANGE_$1 ` )`
+        #SET BinExprDepth=BinExprDepth+-1
+    #END_RULE
+    #BEGIN_RULE:1+-1*(BinExprMaxDepth+-1*BinExprDepth)
+        `($1)(($1)(`@$1_CONSTANT `) ` @OP_$1$1_int ` ` @SHIFT_RANGE_$1` )`
+    #END_RULE

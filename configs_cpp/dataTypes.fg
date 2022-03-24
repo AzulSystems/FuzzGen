@@ -1,0 +1,29 @@
+#INCLUDE "configs_cpp/numericTypesCommon.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/pointerTypesCommon.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/arrayTypes.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/vector.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/set.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/map.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t) (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+
+
+@DECLARES
+    #BEGIN_RULE:20
+        @DECLARE @DECLARES
+    #END_RULE
+    #BEGIN_RULE:1
+         @DECLARE_BASIC \n
+    #END_RULE
+
+@DECLARE
+    #BEGIN_RULE:4
+        @DECLARE_VAR_OF_TYPE
+    #END_RULE
+    #BEGIN_RULE:1
+        @DECLARE_POINTER_OF_TYPE
+    #END_RULE
+
+@DECLARE_BASIC
+    #BEGIN_RULE
+        @DECLARE_BASIC_VAR \n
+        @DECLARE_BASIC_POINTER \n
+    #END_RULE

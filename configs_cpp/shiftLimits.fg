@@ -1,0 +1,9 @@
+
+// $1 = type of var                         ex: (int8_t)
+// $2 = bottom bottom border for this type      (1)
+// $3 = top border for this type                (8)
+
+@SHIFT_RANGE_$1
+    #BEGIN_RULE
+        @[$2:$3]
+    #END_RULE

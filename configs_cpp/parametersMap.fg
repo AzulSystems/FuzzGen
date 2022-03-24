@@ -1,0 +1,14 @@
+
+@SET_MAP_$1
+    #BEGIN_RULE
+        #SET $1boolMapDeclared=0
+        #SET $1int8_tMapDeclared=0
+        #SET $1uint8_tMapDeclared=0
+        #SET $1int16_tMapDeclared=0
+        #SET $1uint16_tMapDeclared=0
+        #SET $1int32_tMapDeclared=0
+        #SET $1uint32_tMapDeclared=0
+        #SET $1int64_tMapDeclared=0
+        #SET $1uint64_tMapDeclared=0
+    #END_RULE
+

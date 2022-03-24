@@ -1,0 +1,59 @@
+@DECLARE_Boolean_VAR
+    #BEGIN_RULE
+        #SET BooleanVarDeclared=BooleanVarDeclared+1
+        `var ` @DECLARE_ID_Boolean_VAR ` : Boolean = ` @Boolean_CONSTANT` `\n
+    #END_RULE
+
+@DECLARE_Boolean_VAL
+    #BEGIN_RULE
+        #SET BooleanValDeclared=BooleanValDeclared+1
+        `val ` @DECLARE_ID_Boolean_VAL ` : Boolean =  ` @Boolean_CONSTANT`  `\n
+    #END_RULE
+
+@DECLARE_ID_Boolean_VAR
+    #BEGIN_RULE
+        #CREATE_ID BooleanVar_
+    #END_RULE
+
+@DECLARE_ID_Boolean_VAL
+    #BEGIN_RULE
+        #CREATE_ID BooleanVal_
+    #END_RULE
+
+@REUSE_ID_Boolean_VAR
+    #BEGIN_RULE
+        #REUSE_ID BooleanVar_
+    #END_RULE
+
+@REUSE_ID_Boolean_VAL
+    #BEGIN_RULE
+        #REUSE_ID BooleanVal_
+    #END_RULE
+
+@OP_$1$1_Boolean
+    #BEGIN_RULE
+       ` == `
+    #END_RULE
+    #BEGIN_RULE
+       ` != `
+    #END_RULE
+    #BEGIN_RULE
+      ` < `
+    #END_RULE
+    #BEGIN_RULE
+      ` <= `
+    #END_RULE
+    #BEGIN_RULE
+       ` > `
+    #END_RULE
+    #BEGIN_RULE
+       ` >= `
+    #END_RULE
+
+@Boolean_CONSTANT
+    #BEGIN_RULE
+        `true`
+    #END_RULE
+    #BEGIN_RULE
+        `false`
+    #END_RULE

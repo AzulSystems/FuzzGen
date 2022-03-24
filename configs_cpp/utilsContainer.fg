@@ -1,0 +1,82 @@
+
+@CONTAINERS_FUNCTIONS
+    #BEGIN_RULE
+        @FILL_VECTOR
+        @FILL_SET
+        @FILL_MAP
+        @VECTOR_PRINT
+        @SET_PRINT
+        @MAP_PRINT
+    #END_RULE
+
+@FILL_VECTOR
+    #BEGIN_RULE
+        \n
+        `template <typename T>` \n
+        `void fillVector(vector <T> &Vector, size_t size) {` \n
+        `    for (auto i = 0; i < size; ++i)` \n
+        `        Vector.push_back((T) random());` \n
+        `}` \n \n
+    #END_RULE
+
+@VECTOR_PRINT
+    #BEGIN_RULE
+        \n
+        `template <typename T>` \n
+        `uint64_t print(vector <T> &Vector) {` \n
+        `    const uint64_t num = 3;` \n
+        `    uint64_t sum = 0;` \n
+        `    for (auto i = 0; i < Vector.size(); ++i)` \n
+        `        sum = (uint64_t) ((uint64_t) (sum * num) + Vector[i]);` \n
+        `    return sum;` \n
+        `}` \n \n
+    #END_RULE
+
+@FILL_SET
+    #BEGIN_RULE
+        \n
+        `template <typename T>` \n
+        `void fillSet(set <T> &Set, size_t size) {` \n
+        `    for (auto i = 0; i < size; ++i)` \n
+        `        Set.insert((T) random());` \n
+        `}` \n \n
+    #END_RULE
+
+@SET_PRINT
+    #BEGIN_RULE
+        \n
+        `template <typename T>` \n
+        `uint64_t print(set <T> &Set) {` \n
+        `    const uint64_t num = 3;` \n
+        `    uint64_t sum = 0;` \n
+        `    for (const auto &it : Set)` \n
+        `        sum = (uint64_t) ((uint64_t) (sum * num) + it);` \n
+        `    return sum;` \n
+        `}` \n \n
+    #END_RULE
+
+@FILL_MAP
+    #BEGIN_RULE
+        \n
+        `template <typename T, typename R>` \n
+        `void fillMap(map <T, R> &Map, size_t size) {` \n
+        `    for (auto i = 0; i < size; ++i) {` \n
+        `        auto key = (T) random();` \n
+        `        auto value = (R) random();` \n
+        `        Map.emplace(key, value);` \n
+        `    }` \n
+        `}` \n \n
+    #END_RULE
+
+@MAP_PRINT
+    #BEGIN_RULE
+        \n
+        `template <typename T, typename R>` \n
+        `uint64_t print(map <T, R> &Map) {` \n
+        `    const uint64_t num = 3;`
+        `    uint64_t sum = 0;` \n
+        `    for (const auto &it : Map)` \n
+        `        sum = (uint64_t) ((uint64_t) ((uint64_t) (sum * num) * it.first) + it.second);` \n
+        `    return sum;` \n
+        `}` \n \n
+    #END_RULE

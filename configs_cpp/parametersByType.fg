@@ -1,0 +1,37 @@
+// #INCLUDE "configs_cpp/parametersMap.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+
+// beginning of setting var counters to zero
+#SET $1IndVarDeclared=0
+#SET $1LinkVarDeclared=0
+#SET $1$2Declared=0
+#SET $1Array$2Declared=0
+#SET $1VectorDeclared=0
+#SET $1boolMapDeclared=0
+#SET $1int8_tMapDeclared=0
+#SET $1uint8_tMapDeclared=0
+#SET $1int16_tMapDeclared=0
+#SET $1uint16_tMapDeclared=0
+#SET $1int32_tMapDeclared=0
+#SET $1uint32_tMapDeclared=0
+#SET $1int64_tMapDeclared=0
+#SET $1uint64_tMapDeclared=0
+#SET $1SetDeclared=0
+
+// end of setting var counters to zero
+@SET_DECLARED_FLAG_TO_ZERO_$1_$2
+    #BEGIN_RULE
+        #SET $1IndVarDeclared=0
+        #SET $1$2Declared=0
+        #SET $1Array$2Declared=0
+        #SET $1VectorDeclared=0
+        #SET $1boolMapDeclared=0
+        #SET $1int8_tMapDeclared=0
+        #SET $1uint8_tMapDeclared=0
+        #SET $1int16_tMapDeclared=0
+        #SET $1uint16_tMapDeclared=0
+        #SET $1int32_tMapDeclared=0
+        #SET $1uint32_tMapDeclared=0
+        #SET $1int64_tMapDeclared=0
+        #SET $1uint64_tMapDeclared=0
+        #SET $1SetDeclared=0
+    #END_RULE

@@ -1,0 +1,67 @@
+#INCLUDE "configs/parameters.fg" 
+//#INCLUDE "configs/expressions.fg" 
+#INCLUDE "configs/statements.fg"
+
+#INCLUDE "configs/checksumTestMethod.fg" (Int Long Float Double) (Int Long Float Double)
+
+@DECLARE_METHOD
+    #APPEND_RULE:Enable$1
+        `def ` @CREATE_ID_METHOD_$1_$1 ` ( ` #BEGIN_SCOPE @DECLARE_ID_$1_VAL ` : $1 ): $1 = { ` \n
+            @$1_METHOD_BODY \n ` } ` 
+            @MAKE_METHOD_CALLABLE_$1 \n
+        // Find corresponding #END_SCOPE in the end of @$1_METHOD_BODY
+    #END_RULE
+
+
+@$1_METHOD_BODY
+    #BEGIN_RULE
+		#SET LoopCount=0
+        #SET LoopNest=0
+        #SET CondCount=0
+        #SET CondNest=0
+		#SET MethodCallCount=0
+        #SET LambdaCount=0
+        
+        #SET StatementsInMethodCount=0
+
+        @SET_DECLARED_FLAG_TO_ZERO
+        #SET $1ValDeclared=$1ValDeclared+1
+        @DECLARE_VARS
+        @STATEMENTS
+        @$1_RETURN_STATEMENT
+
+        @SET_DECLARED_FLAG_TO_ZERO
+
+        #SET LambdaCount=0
+        #SET ListCount=0
+        #SET SetCount=0
+
+        #SET LoopCount=0
+        #SET LoopNest=0
+        #SET CondCount=0
+        #SET CondNest=0
+        #END_SCOPE
+        #END_RULE
+
+
+
+@$1_RETURN_STATEMENT
+    #BEGIN_RULE:10
+        `return ( 0 + ` \n
+        @$1_RETURN_STATEMENT_Int ` + ` \n
+        @$1_RETURN_STATEMENT_Long ` + ` \n
+        @$1_RETURN_STATEMENT_Float ` + ` \n
+        @$1_RETURN_STATEMENT_Double ` + `  \n
+       `  0 ).to$1  ` \n
+        #END_RULE
+    #BEGIN_RULE:1
+        `return ` @$1_EXPRESSION
+    #END_RULE
+
+
+@MAKE_METHOD_CALLABLE_$1
+    #BEGIN_RULE
+    #SET method_$1_$1Declared=method_$1_$1Declared+1
+    #REGISTER_LAZY_IDS
+    #END_RULE
+

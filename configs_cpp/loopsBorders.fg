@@ -1,0 +1,21 @@
+
+// $1 = type of var                         ex: (int8_t)
+// $2 = bottom bottom border for this type      (-128)
+// $3 = top border for this type                (127)
+// $4 = step from                               (10)
+// $5 = step to                                 (20)
+
+@LOOP_TOP_BORDER_$1
+    #BEGIN_RULE
+        @[($3/10)+-1*$5:$3+-1*($5+1)]
+    #END_RULE
+
+@LOOP_BOTTOM_BORDER_$1
+    #BEGIN_RULE
+        @[$2+$5+1:$2+$5+$5/10+2]
+    #END_RULE
+
+@LOOP_RANGE_STEP_$1
+    #BEGIN_RULE
+        @[$4:$5]
+    #END_RULE

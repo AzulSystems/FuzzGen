@@ -1,0 +1,114 @@
+#INCLUDE "configs/dataTypes.fg" 
+
+#SET MethodCallCount=0
+#SET ExprDepth=0
+#SET BinExprDepth=0
+#SET ExprBlockDepth=0
+
+
+// Forward declarations
+@Boolean_EXPRESSION
+@REUSE_ID_Int_VAR
+@Int_EXPRESSION
+@Long_EXPRESSION
+@Float_EXPRESSION
+@Double_EXPRESSION
+@LIST_TO_INT_FUNC
+
+@$1_EXPRESSION_RECURSIVE
+    #BEGIN_RULE:1*($1ArrayVarDeclared+$1ArrayValDeclared)
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `( ( ( (` @Int_EXPRESSION `) / 2 ). abs ) . min (` @ARRAY_MAX_LENGTH ` - 1 ))`
+    #END_RULE
+    #BEGIN_RULE:100
+       @BIN_EXPR_$1$1_$1
+   #END_RULE
+   #BEGIN_RULE:10
+        `( if ( `@Boolean_EXPRESSION` ) `@$1_EXPRESSION` else ` @$1_EXPRESSION ` )`
+    #END_RULE
+   #BEGIN_RULE:3*(MethodCallInExprWeight+-2*MethodCallCount)*method_$1_$1Declared*(MaxLoopNest+-1*LoopNest)
+    #SET MethodCallCount=MethodCallCount+1
+        @REUSE_ID_METHOD_$1_$1` ( `@$1_EXPRESSION` )`
+    #END_RULE
+    #BEGIN_RULE:4
+    	@$1_EXPRESSION_BLOCK
+    #END_RULE
+   #BEGIN_RULE:4*(MaxLambdaCount+-1*LambdaCount)*($1LambdaOneArgVarDeclared+$1LambdaOneArgValDeclared)
+    #SET LambdaCount=LambdaCount+1
+        @REUSE_ID_$1_LAMBDA_ONE_ARG_VAR_OR_VAL `( ` @$1_EXPRESSION ` )`
+    #END_RULE
+    #BEGIN_RULE:4*(MaxLambdaCount+-1*LambdaCount)*($1LambdaTwoArgsVarDeclared+$1LambdaTwoArgsValDeclared)
+    #SET LambdaCount=LambdaCount+1
+        @REUSE_ID_$1_LAMBDA_TWO_ARGS_VAR_OR_VAL `( ` @$1_EXPRESSION `, ` @$1_EXPRESSION ` )`
+    #END_RULE
+    #BEGIN_RULE:4*$1ListVarDeclared
+        @REUSE_ID_$1_LIST_VAR `.filter(_ ` @OP_$1$1_Boolean ` ` @$1_EXPRESSION ` ).sum` 
+    #END_RULE
+
+@$1_EXPRESSION_NOT_RECURSIVE
+    #BEGIN_RULE:50
+        @$1_LITERAL
+    #END_RULE
+    #BEGIN_RULE:($1ArrayVarDeclared+$1ArrayValDeclared)
+        @REUSE_ID_$1_ARRAY_VAR_OR_VAL `( ( ( ` @Int_LITERAL ` / 2 ). abs ) . min ( ` @ARRAY_MAX_LENGTH ` - 1 ) )`
+    #END_RULE
+    #BEGIN_RULE:4*$1ImmutableSetVarDeclared
+        @REUSE_ID_$1_IMMUTABLE_SET_VAR `.sum`
+    #END_RULE
+    #BEGIN_RULE:4*$1ImmutableSetVarDeclared
+        `(if ( ` @REUSE_ID_$1_IMMUTABLE_SET_VAR `.isEmpty) `  @$1_LITERAL ` else  `  @REUSE_ID_$1_IMMUTABLE_SET_VAR `.` @LIST_TO_INT_FUNC `)`
+        //#GET_LAST_ID
+    #END_RULE
+
+@$1_EXPRESSION_COMMON
+    #BEGIN_RULE:2*(ExprMaxDepth+-1*ExprDepth)
+    #SET ExprDepth=ExprDepth+1
+    @$1_EXPRESSION_RECURSIVE
+    #SET ExprDepth=ExprDepth+-1
+    #END_RULE
+    #BEGIN_RULE:3
+    @$1_EXPRESSION_NOT_RECURSIVE
+    #END_RULE
+
+       
+@BIN_EXPR_$1$1_$1
+    #BEGIN_RULE:BinExprMaxDepth+-1*BinExprDepth
+        #SET BinExprDepth=BinExprDepth+1
+        `( `@$1_EXPRESSION @OP_$1$1_$1 @$1_EXPRESSION ` )`
+        #SET BinExprDepth=BinExprDepth+-1
+    #END_RULE
+    #BEGIN_RULE:1+-1*(BinExprMaxDepth+-1*BinExprDepth)
+        `( `@$1_CONSTANT @$1_CONSTANT_SUFFIX @OP_$1$1_$1 @$1_CONSTANT @$1_CONSTANT_SUFFIX ` )`
+    #END_RULE
+
+@$1_EXPRESSION_BLOCK
+    #BEGIN_RULE:100*(ExprBlockMaxDepth+-1*ExprBlockDepth)
+    #SET ExprBlockDepth=ExprBlockDepth+1
+        ` { ` #BEGIN_SCOPE \n
+   	@DECLARE_$1_VAR
+    	`for ( ` #BEGIN_SCOPE @DECLARE_LAZY_ID_Int_VAL  ` <- Range(0, `@[10:20]` ) ) { ` #REGISTER_LAZY_IDS \n
+            #SET IntValDeclared=IntValDeclared+1
+    	     @$1_EXPRESSION #END_SCOPE \n` } `\n
+            #SET IntValDeclared=IntValDeclared+-1
+    	@REUSE_ID_$1_VAR \n
+    	#END_SCOPE ` } ` \n
+    #SET $1VarDeclared=$1VarDeclared+-1
+    #SET ExprBlockDepth=ExprBlockDepth+-1
+    #END_RULE
+    #BEGIN_RULE:1
+    ` { ` #BEGIN_SCOPE \n
+        @$1_CONSTANT  @$1_CONSTANT_SUFFIX 
+    	#END_SCOPE ` } ` \n
+        #END_RULE
+
+
+@BIN_EXPR_$1$1_Boolean
+    #BEGIN_RULE:100*(BinExprMaxDepth+-1*BinExprDepth)
+        #SET BinExprDepth=BinExprDepth+1
+        `( ` @$1_EXPRESSION ` ` @OP_$1$1_Boolean ` ` @$1_EXPRESSION ` )`
+    #SET BinExprDepth=BinExprDepth+-1
+    #END_RULE
+    #BEGIN_RULE:1
+        `( `@$1_CONSTANT @$1_CONSTANT_SUFFIX @OP_$1$1_Boolean @$1_CONSTANT @$1_CONSTANT_SUFFIX ` )`
+    #END_RULE
+
+

@@ -1,0 +1,88 @@
+
+@$1_EXPRESSION
+@bool_EXPRESSION
+
+@STATEMENTS
+@STATEMENT
+@STATEMENT_
+
+@ASSIGN
+    #APPEND_RULE:15*$1VarDeclared*Enable$1
+        @ASSIGN_$1_VAR
+    #END_RULE
+    #APPEND_RULE:4*$1PointerDeclared*Enable$1
+        @ASSIGN_$1_POINTER
+    #END_RULE
+    #APPEND_RULE:(2*$1VectorDeclared*Enable$1)*(1+-1*ForEachCount)
+        @ASSIGN_$1_VECTOR
+    #END_RULE
+    #APPEND_RULE:1
+        @STATEMENT_
+    #END_RULE
+
+@ASSIGN_$1_VAR
+    #BEGIN_RULE:1*$1VarDeclared
+        @REUSE_ID_$1_VAR @SET_OP_$1$1_VAR `($1)(` @$1_EXPRESSION `); ` \n
+    #END_RULE
+
+@ASSIGN_$1_POINTER
+    #BEGIN_RULE:1*$1PointerDeclared
+        `*`@REUSE_ID_$1_POINTER @SET_OP_$1$1_POINTER `($1)(` @$1_EXPRESSION `); ` \n
+    #END_RULE
+
+@ASSIGN_$1_VECTOR
+    #BEGIN_RULE
+        @REUSE_ID_$1_VECTOR`.assign(random() % ` @ARRAY_MAX_LENGTH `, ($1)(` @$1_EXPRESSION `)); ` \n
+    #END_RULE
+
+@SWITCH_$1
+    #BEGIN_RULE:$1VarDeclared
+        #SET SwitchMatchTmp=SwitchMatch
+        ` switch (` @$1_EXPRESSION `) {`
+            #BEGIN_SCOPE \n
+        `     ` @SWITCH_CASES_$1
+        `     ` @SWITCH_DEFAULT_CASE_$1
+        ` }`
+            #END_SCOPE \n
+        #SET SwitchMatch=SwitchMatchTmp
+    #END_RULE
+
+@SWITCH_CASE_$1
+    #BEGIN_RULE
+        #SET SwitchMatch=SwitchMatch+5
+        `case ` @[SwitchMatch+-2:SwitchMatch+2] `:  {`
+            #BEGIN_SCOPE \n
+            @STATEMENTS
+            @SWITCH_BREAK `}`
+            #END_SCOPE \n
+    #END_RULE
+
+@SWITCH_DEFAULT_CASE_$1
+    #BEGIN_RULE:7
+    `     default : {`
+        #BEGIN_SCOPE \n
+        @STATEMENT
+        @SWITCH_BREAK `}`
+        #END_SCOPE \n
+    #END_RULE
+
+@SWITCH_BREAK
+    #BEGIN_RULE:10
+    `     break; ` \n
+    #END_RULE
+
+
+@SWITCH_CASES_$1
+    #BEGIN_RULE:(MaxStatementsInFuncCount+-1*LoopCount+-1*CondCount+-1*StatementsInFuncCount)+-50
+        @SWITCH_CASE_$1 @SWITCH_CASES_$1
+    #END_RULE
+    #BEGIN_RULE
+    #END_RULE
+
+@REINITIALIZATION
+    #APPEND_RULE:10*$1ArrayVarDeclared*($1ArrayVarDeclared+-1)
+        `memcpy(`@REUSE_ID_$1_ARRAY_VAR `, ` @REUSE_ID_$1_ARRAY_VAR `, lengthArray(` #GET_LAST_ID $1ArrayVar_ `));`\n
+    #END_RULE
+    #APPEND_RULE:10*$1VarDeclared*$1PointerDeclared
+        @REUSE_ID_$1_POINTER` = &` @REUSE_ID_$1_VAR `; ` \n
+    #END_RULE

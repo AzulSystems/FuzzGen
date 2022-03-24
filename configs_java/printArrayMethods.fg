@@ -1,0 +1,36 @@
+
+@DECLARE_PRINT_COLLECTION_VARS_METHOD_$1
+	#BEGIN_RULE
+		`public static void printCollectionVarsMethod_$1 ( ` #BEGIN_SCOPE `String idStr, $1[][] valuesList ) { ` \n @PRINT_COLLECTION_VARS_METHOD_BODY_$1 \n ` } ` #END_SCOPE \n
+	#END_RULE
+
+@PRINT_COLLECTION_VARS_METHOD_BODY_$1
+	#BEGIN_RULE
+		`String[] idsCollection = idStr.split(","); ` \n
+    		`StringBuilder sbId = new StringBuilder(); ` \n
+    		`StringBuilder sbValue = new StringBuilder(); ` \n
+            `for (int currIndex = 0; currIndex < valuesList.length; currIndex++) { ` \n
+                `  if (currIndex % 3 == 0 && currIndex != 0) { ` \n
+                    `    sbId.append("= "); ` \n
+                        `System.out.println(sbId.toString() + sbValue.toString()); `\n
+                        `sbId = new StringBuilder(); ` \n
+                        `sbValue = new StringBuilder(); ` \n
+                    `} ` \n
+
+
+
+                    `sbId.append(idsCollection[currIndex]).append(" "); ` \n
+              `          sbValue.append(checksumCollectionVarsMethod$1(new $1[][]{valuesList[currIndex]})).append(" ");` \n
+
+           ` }` \n
+
+           
+           
+		`sbId.append("= "); `\n
+        ` System.out.println(sbId.toString() + sbValue.toString()); ` \n
+                        `sbId = new StringBuilder(); ` \n
+                        `sbValue = new StringBuilder(); ` \n
+
+			#END_RULE
+
+

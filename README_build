@@ -1,0 +1,5 @@
+TODO: add more details
+
+Command line to build src with scalac 2.13:
+
+$ scalac com/azul/fuzzgen/fuzzer/*.scala com/azul/fuzzgen/grammar/*.scala com/azul/fuzzgen/parser/*.scala com/azul/fuzzgen/*.scala -d FuzzGen.jar && cp FuzzGen.jar ../
