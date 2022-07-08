@@ -1,4 +1,5 @@
 #INCLUDE "configs_cpp/numericTypesCommon.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/numericTypesSpecific.fg" (int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
 #INCLUDE "configs_cpp/pointerTypesCommon.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
 #INCLUDE "configs_cpp/arrayTypes.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
 #INCLUDE "configs_cpp/vector.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
@@ -26,4 +27,31 @@
     #BEGIN_RULE
         @DECLARE_BASIC_VAR \n
         @DECLARE_BASIC_POINTER \n
+    #END_RULE
+
+@DECLARE_FIELDS
+    #BEGIN_RULE:5
+        @DECLARE_FIELD_VAR_OF_TYPE @DECLARE_FIELDS
+    #END_RULE
+    #BEGIN_RULE:5
+        @DECLARE_FIELD_POINTER_OF_TYPE @DECLARE_FIELDS
+    #END_RULE
+    #BEGIN_RULE
+        @DECLARE_FIELD_VAR_OF_TYPE
+    #END_RULE
+    #BEGIN_RULE
+        @DECLARE_FIELD_POINTER_OF_TYPE
+    #END_RULE
+
+@ARRAY_INIT_MACROS
+    #BEGIN_RULE
+        @ARRAY_INIT_MACROS_bool
+        @ARRAY_INIT_MACROS_int8_t
+        @ARRAY_INIT_MACROS_uint8_t
+        @ARRAY_INIT_MACROS_int16_t
+        @ARRAY_INIT_MACROS_uint16_t
+        @ARRAY_INIT_MACROS_int32_t
+        @ARRAY_INIT_MACROS_uint32_t
+        @ARRAY_INIT_MACROS_int64_t
+        @ARRAY_INIT_MACROS_uint64_t
     #END_RULE

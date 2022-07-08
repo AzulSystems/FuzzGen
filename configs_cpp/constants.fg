@@ -57,10 +57,10 @@
     #END_RULE
 
 @uint16_t_CONSTANT
-    #BEGIN_RULE:19
+    #BEGIN_RULE:1
         @[3276:3365]
     #END_RULE
-    #BEGIN_RULE:1
+    #BEGIN_RULE:19
         @[0:6553]
     #END_RULE
 @uint16_t_CAST_OPEN
@@ -80,6 +80,7 @@
     #BEGIN_RULE:1
         @[-21474:21474]
     #END_RULE
+
 @int32_t_CAST_OPEN
     #BEGIN_RULE
     #END_RULE
@@ -94,9 +95,11 @@
     #BEGIN_RULE:1
         @[0:42949]
     #END_RULE
+
 @uint32_t_CAST_OPEN
     #BEGIN_RULE
     #END_RULE
+
 @uint32_t_CAST_CLOSE
     #BEGIN_RULE
     #END_RULE
@@ -104,7 +107,7 @@
 
 @int64_t_CONSTANT
     #BEGIN_RULE:19
-        @[-4611686:4611686]
+        @[-46116:46116]
     #END_RULE
     #BEGIN_RULE:1
         @[-4611686:4611686]

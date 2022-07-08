@@ -1,0 +1,118 @@
+#INCLUDE "configs_scala/$1Constant.fg"
+
+@CREATE_ID_METHOD_$1_$1
+    #BEGIN_RULE
+        #CREATE_LAZY_ID method_$1_$1_
+    #END_RULE
+
+@REUSE_ID_METHOD_$1_$1
+    #BEGIN_RULE
+        #REUSE_ID method_$1_$1_
+    #END_RULE
+
+@DECLARE_$1_VAR
+    #BEGIN_RULE
+        #SET $1VarDeclared=$1VarDeclared+1
+        ` var ` @DECLARE_ID_$1_VAR ` :  $1  = ` @$1_CONSTANT @$1_CONSTANT_SUFFIX ` ` \n
+    #END_RULE
+
+@DECLARE_$1_VAL
+    #BEGIN_RULE
+        #SET $1ValDeclared=$1ValDeclared+1
+        ` val ` @DECLARE_ID_$1_VAL ` :  $1  = ` @$1_CONSTANT @$1_CONSTANT_SUFFIX ` `  \n
+    #END_RULE
+
+@DECLARE_ID_$1_VAR
+    #BEGIN_RULE
+        #CREATE_ID $1Var_
+    #END_RULE
+
+@DECLARE_ID_$1_VAL
+    #BEGIN_RULE
+        #CREATE_ID $1Val_
+    #END_RULE
+
+@DECLARE_LAZY_ID_$1_VAR
+    #BEGIN_RULE
+        #CREATE_LAZY_ID $1Var_
+    #END_RULE
+
+@DECLARE_LAZY_ID_$1_VAL
+    #BEGIN_RULE
+        #CREATE_LAZY_ID $1Val_
+    #END_RULE
+
+
+@REUSE_ID_$1_VAR
+    #BEGIN_RULE
+        #REUSE_ID $1Var_
+    #END_RULE
+
+@REUSE_ID_$1_VAL
+    #BEGIN_RULE
+        #REUSE_ID $1Val_
+    #END_RULE
+
+@OP_$1$1_$1
+    #BEGIN_RULE:10
+    ` ` @OP_$1$1_$1_` `
+    #END_RULE
+
+@SET_OP_$1$1_$1
+    #BEGIN_RULE:10
+       ` += `
+    #END_RULE
+    #BEGIN_RULE:7
+       ` -= `
+    #END_RULE
+    #BEGIN_RULE:3
+       ` *= `
+    #END_RULE
+    #BEGIN_RULE:1
+       ` &= `
+    #END_RULE
+    #BEGIN_RULE:1
+       ` |= `
+    #END_RULE
+    #BEGIN_RULE:1
+       ` ^= `
+    #END_RULE
+    #BEGIN_RULE:1
+       ` >>= `
+    #END_RULE
+    #BEGIN_RULE:1
+       ` >>>= `
+    #END_RULE
+    #BEGIN_RULE:1
+       ` <<= `
+    #END_RULE
+
+@OP_$1$1_$1_
+    #BEGIN_RULE:10
+       `+`
+    #END_RULE
+    #BEGIN_RULE:7
+       `-`
+    #END_RULE
+    #BEGIN_RULE:3
+       `*`
+    #END_RULE
+    #BEGIN_RULE:1
+       `&`
+    #END_RULE
+    #BEGIN_RULE:1
+       `|`
+    #END_RULE
+    #BEGIN_RULE:1
+       `^`
+    #END_RULE
+    #BEGIN_RULE:1
+       `>>`
+    #END_RULE
+    #BEGIN_RULE:1
+       `>>>`
+    #END_RULE
+    #BEGIN_RULE:1
+       `<<`
+    #END_RULE
+

@@ -4,15 +4,27 @@
 // $3 = top border for this type                (127)
 // $4 = step from                               (10)
 // $5 = step to                                 (20)
+// $6 =  array safe top border
 
 @LOOP_TOP_BORDER_$1
     #BEGIN_RULE
         @[($3/10)+-1*$5:$3+-1*($5+1)]
     #END_RULE
 
+@LOOP_TOP_BORDER_ARRAY_SAFE_$1
+    #BEGIN_RULE
+        @[($6/10)+1*$5:$6+-1*($5+1)]
+        //@[$5+($6/10):$6-$5+1]
+    #END_RULE
+
 @LOOP_BOTTOM_BORDER_$1
     #BEGIN_RULE
         @[$2+$5+1:$2+$5+$5/10+2]
+    #END_RULE
+
+@LOOP_BOTTOM_BORDER_ARRAY_SAFE_$1
+    #BEGIN_RULE
+        @[0:$5+$5/10+2]
     #END_RULE
 
 @LOOP_RANGE_STEP_$1

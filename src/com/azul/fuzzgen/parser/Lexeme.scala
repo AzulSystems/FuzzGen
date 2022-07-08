@@ -19,10 +19,9 @@
 
 package com.azul.fuzzgen.parser
 
+import scala.collection.mutable.ArrayBuffer
 import com.azul.fuzzgen.grammar.Grammar
 import com.azul.fuzzgen.parser.LexemeType.LexemeType
-
-import scala.collection.mutable.ArrayBuffer
 
 /**
  * Represents a single unit of text parsed by lexer.
@@ -114,6 +113,21 @@ class LendScopeWithIDLexeme(token: String, lexemeType: LexemeType, IDtoken: Stri
   override def toString: String = token + "." + IDtoken + "[" + lexemeType + "]"
 }
 
+class LendScopeWithIDByPrefixLexeme(lexemeType: LexemeType, scopePrefix_ : String, IDtoken_ : String, scopeContains_ : String)
+  extends Lexeme(scopePrefix_ : String, lexemeType: LexemeType) {
+  val scopePrefix = scopePrefix_
+  val IDtoken = IDtoken_
+  val scopeContains = scopeContains_
+  override def toString = scopePrefix_ + IDtoken + " with " + scopeContains + "[" + lexemeType + "]"
+}
+
+class CreateIDFromLastIDLexeme(lexemeType: LexemeType, lastIDAsPrefix_ : String, suffix_ : String)
+  extends Lexeme(lastIDAsPrefix_ : String, lexemeType: LexemeType) {
+  val lastIDAsPrefix = lastIDAsPrefix_
+  val suffix = suffix_
+  override def toString = lastIDAsPrefix + suffix + "[" + lexemeType + "]"
+
+}
 
 final class IDLexemeWithDepth(token: String, d: Int, lexemeType: LexemeType)
   extends IDLexeme(token: String, lexemeType: LexemeType) {

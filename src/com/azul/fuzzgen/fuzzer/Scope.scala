@@ -31,11 +31,11 @@ class Scope(parent: Option[Scope], rnd: Random) {
   private case class LazyID(prefix: String, id: String)
 
   // Maps prefixes to all declared nodes from this scope.
-  private val map = new mutable.TreeMap[String, ArrayBuffer[String]]()
-  private val pendingLazyIDs = new ArrayBuffer[LazyID]()
-  private var lastReusedId: Option[String] = None
-  private var freeID = 0
-  private val predecessors = new ArrayBuffer[Scope]()
+  private val map = new mutable.TreeMap[String, ArrayBuffer[String]]();
+  private val pendingLazyIDs = new ArrayBuffer[LazyID]();
+  private var lastReusedId: Option[String] = None;
+  private var freeID = 0;
+  private val predecessors = new ArrayBuffer[Scope]();
   private val children = new ArrayBuffer[Scope]()
 
   {
@@ -44,30 +44,31 @@ class Scope(parent: Option[Scope], rnd: Random) {
     }
   }
   def addPredecessor(scope: Scope): Unit = {
-    if (scope.getParent != getParent)
+    if (scope.getParent() != getParent())
       error("Predecessor links are only possible between siblings so far!")
     predecessors += scope
   }
 
-  def getParent: Option[Scope] = {
+  def getParent(): Option[Scope] = {
     parent
   }
 
-  private def getImmediateDominator: Option[Scope] = {
-    if (getParent.isEmpty || predecessors.isEmpty) {
-      getParent
+  private def getImmediateDominator(): Option[Scope] = {
+    if (getParent().isEmpty || predecessors.isEmpty) {
+      getParent()
     } else {
       // FIXME: Should have a better way of finding children.
       val entry = parent.get.children(0)
       if (this == entry)
-        return getParent
+        return getParent()
 
       def computeReachable(exclude: Option[Scope]) = {
         val worklist = new ArrayBuffer[Scope]()
         val visited = new mutable.HashSet[Scope]()
 
         def enqueue(scope: Scope): Unit = {
-          if (!exclude.contains(scope) && !visited.contains(scope)) {
+            if (!exclude.contains(scope) && !visited.contains(scope)) {
+         //   if (Some(scope) != exclude && !visited.contains(scope)) {
             visited += scope
             worklist += scope
           }
@@ -90,7 +91,7 @@ class Scope(parent: Option[Scope], rnd: Random) {
       allReachable.remove(this)
       if (!allReachable.contains(entry))
         // Entry is not even reachable, bail.
-        return getParent
+        return getParent()
 
       var bestCandidate: Option[Scope] = None
       var bestScore = 0
@@ -105,13 +106,13 @@ class Scope(parent: Option[Scope], rnd: Random) {
         }
       }
       if (bestCandidate.isEmpty)
-        return getParent
+        return getParent()
       bestCandidate
     }
   }
 
   private def nextFreeID: Int = {
-    val dom = getImmediateDominator
+    val dom = getImmediateDominator()
     if (dom.isDefined)
       return dom.get.nextFreeID
     val ret = freeID
@@ -123,7 +124,7 @@ class Scope(parent: Option[Scope], rnd: Random) {
   private def containsID(prefix: String, id: String): Boolean = {
     if (map.contains(prefix) && map(prefix).contains(id))
       return true
-    val dom = getImmediateDominator
+    val dom = getImmediateDominator()
     if (dom.isEmpty)
       return false
     dom.get.containsID(prefix, id)
@@ -152,26 +153,50 @@ class Scope(parent: Option[Scope], rnd: Random) {
     if (containsID(prefix, newID))
       error("Duplicating IDs detected!")
     pendingLazyIDs += LazyID(prefix, newID)
-    new TerminalFuzzNode(newID)
+    val fNode = new TerminalFuzzNode(newID)
+
+    fNode
   }
 
-  def registerLazyIDs(): Unit = {
+  def registerLazyIDs(f: Fuzzer): Unit = {
     if (pendingLazyIDs.isEmpty)
       error("No pending lazy IDs to register!")
 
-    for (lazyID <- pendingLazyIDs)
+    for (lazyID <- pendingLazyIDs) {
       getIDListFor(lazyID.prefix) += lazyID.id
+      f.lastID(lazyID.prefix) = lazyID.id
+    }
 
     pendingLazyIDs.clear()
   }
 
+  private def getMatchingValuesFromMap(prefix : String, tmap: mutable.TreeMap[String, ArrayBuffer[String]]) : Option[ArrayBuffer[String]] = {
+    var matches = new ArrayBuffer[String]()
+
+    if (prefix.contains("%")) {
+      val pattern = prefix.replace("%", ".*")
+
+      for (s <- tmap.keys ) {
+        if (s.matches(pattern)) {
+          matches ++= tmap.get(s).get
+        }
+      }
+      return Option(matches)
+
+    } else {
+      return tmap.get(prefix)
+    }
+
+  }
+
   private def collectIDs(prefix: String, candidates: ArrayBuffer[String], lookupParentScopes: Boolean): Unit = {
     if (lookupParentScopes) {
-      val dom = getImmediateDominator
+      val dom = getImmediateDominator()
       if (dom.isDefined)
         dom.get.collectIDs(prefix, candidates, lookupParentScopes)
     }
-    val maybeMap = map.get(prefix)
+    //val maybeMap = map.get(prefix)
+    val maybeMap = getMatchingValuesFromMap(prefix, map)
     if (maybeMap.isEmpty)
       return
     candidates ++= maybeMap.get
@@ -219,7 +244,7 @@ class Scope(parent: Option[Scope], rnd: Random) {
         System.err.println("\t\t" + value)
     }
     if (dumpParents) {
-      val dom = getImmediateDominator
+      val dom = getImmediateDominator()
       if (dom.isDefined)
         dom.get.dump(dumpParents)
     }

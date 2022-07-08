@@ -38,26 +38,151 @@
           `1000`
     #END_RULE
 
+#SET ArrayMaxLength=1000
+
 #SET RandomSeed=10072001
 
 #SET ForEachCount=0
 #SET MaxLoopCount=12
 #SET LoopCount=0
-#SET MaxLoopNest=2
+#SET MaxLoopNest=5
 #SET LoopNest=0
 
 #SET MaxCondCount=12
 #SET CondCount=0
-#SET MaxCondNest=2
+#SET MaxCondNest=5
 #SET CondNest=0
 
 #SET ExprDepth=0
 #SET BinExprDepth=0
 
-#SET BinExprMaxDepth=2
-#SET ExprMaxDepth=1
+#SET BinExprMaxDepth=4
+#SET ExprMaxDepth=3
+
+#SET IncDecUsed=0
+
+#SET MaxFunctionsInClass=8
+#SET MaxLoopNestForFuncCall=2
+#SET MaxFuncCalls=10
+
 
 #SET MaxStatementsInFuncCount=25
 #SET StatementsInFuncCount=0
 
 #SET SwitchMatch=20
+
+#SET FuncCallCount=0
+
+#SET runFunc=0
+
+@SET_FLAGS_BEFORE_FUNC
+#BEGIN_RULE
+#SET ForEachCount=0
+#SET LoopCount=0
+#SET LoopNest=0
+#SET CondCount=0
+#SET CondNest=0
+#SET FuncCallCount=0
+
+#SET IncDecUsed=0
+
+#SET ExprDepth=0
+#SET BinExprDepth=0
+
+#SET StatementsInFuncCount=0
+#SET SwitchMatch=20
+
+#END_RULE
+
+#SET bool_is_narrower_than_bool=1
+#SET bool_is_narrower_than_int8_t=1
+#SET bool_is_narrower_than_uint8_t=1
+#SET bool_is_narrower_than_int16_t=1
+#SET bool_is_narrower_than_uint16_t=1
+#SET bool_is_narrower_than_int32_t=1
+#SET bool_is_narrower_than_uint32_t=1
+#SET bool_is_narrower_than_int64_t=1
+#SET bool_is_narrower_than_uint64_t=1
+
+#SET int8_t_is_narrower_than_bool=1
+#SET int8_t_is_narrower_than_int8_t=1
+#SET int8_t_is_narrower_than_uint8_t=0
+#SET int8_t_is_narrower_than_int16_t=1
+#SET int8_t_is_narrower_than_uint16_t=0
+#SET int8_t_is_narrower_than_int32_t=1
+#SET int8_t_is_narrower_than_uint32_t=1
+#SET int8_t_is_narrower_than_int64_t=0
+#SET int8_t_is_narrower_than_uint64_t=1
+
+#SET uint8_t_is_narrower_than_bool=1
+#SET uint8_t_is_narrower_than_int8_t=0
+#SET uint8_t_is_narrower_than_uint8_t=1
+#SET uint8_t_is_narrower_than_int16_t=0
+#SET uint8_t_is_narrower_than_uint16_t=1
+#SET uint8_t_is_narrower_than_int32_t=0
+#SET uint8_t_is_narrower_than_uint32_t=1
+#SET uint8_t_is_narrower_than_int64_t=0
+#SET uint8_t_is_narrower_than_uint64_t=1
+
+
+#SET int16_t_is_narrower_than_bool=1
+#SET int16_t_is_narrower_than_int8_t=0
+#SET int16_t_is_narrower_than_uint8_t=0
+#SET int16_t_is_narrower_than_int16_t=1
+#SET int16_t_is_narrower_than_uint16_t=0
+#SET int16_t_is_narrower_than_int32_t=1
+#SET int16_t_is_narrower_than_uint32_t=0
+#SET int16_t_is_narrower_than_int64_t=1
+#SET int16_t_is_narrower_than_uint64_t=0
+
+#SET uint16_t_is_narrower_than_bool=1
+#SET uint16_t_is_narrower_than_int8_t=0
+#SET uint16_t_is_narrower_than_uint8_t=0
+#SET uint16_t_is_narrower_than_int16_t=0
+#SET uint16_t_is_narrower_than_uint16_t=1
+#SET uint16_t_is_narrower_than_int32_t=0
+#SET uint16_t_is_narrower_than_uint32_t=1
+#SET uint16_t_is_narrower_than_int64_t=0
+#SET uint16_t_is_narrower_than_uint64_t=1
+
+#SET int32_t_is_narrower_than_bool=1
+#SET int32_t_is_narrower_than_int8_t=0
+#SET int32_t_is_narrower_than_uint8_t=0
+#SET int32_t_is_narrower_than_int16_t=0
+#SET int32_t_is_narrower_than_uint16_t=0
+#SET int32_t_is_narrower_than_int32_t=1
+#SET int32_t_is_narrower_than_uint32_t=0
+#SET int32_t_is_narrower_than_int64_t=1
+#SET int32_t_is_narrower_than_uint64_t=0
+
+#SET uint32_t_is_narrower_than_bool=1
+#SET uint32_t_is_narrower_than_int8_t=0
+#SET uint32_t_is_narrower_than_uint8_t=0
+#SET uint32_t_is_narrower_than_int16_t=0
+#SET uint32_t_is_narrower_than_uint16_t=0
+#SET uint32_t_is_narrower_than_int32_t=0
+#SET uint32_t_is_narrower_than_uint32_t=1
+#SET uint32_t_is_narrower_than_int64_t=0
+#SET uint32_t_is_narrower_than_uint64_t=1
+
+#SET int64_t_is_narrower_than_bool=1
+#SET int64_t_is_narrower_than_int8_t=0
+#SET int64_t_is_narrower_than_uint8_t=0
+#SET int64_t_is_narrower_than_int16_t=0
+#SET int64_t_is_narrower_than_uint16_t=0
+#SET int64_t_is_narrower_than_int32_t=0
+#SET int64_t_is_narrower_than_uint32_t=0
+#SET int64_t_is_narrower_than_int64_t=0
+#SET int64_t_is_narrower_than_uint64_t=0
+
+#SET uint64_t_is_narrower_than_bool=1
+#SET uint64_t_is_narrower_than_int8_t=0
+#SET uint64_t_is_narrower_than_uint8_t=0
+#SET uint64_t_is_narrower_than_int16_t=0
+#SET uint64_t_is_narrower_than_uint16_t=0
+#SET uint64_t_is_narrower_than_int32_t=0
+#SET uint64_t_is_narrower_than_uint32_t=0
+#SET uint64_t_is_narrower_than_int64_t=0
+#SET uint64_t_is_narrower_than_uint64_t=1
+
+

@@ -1,10 +1,13 @@
 
 @$1_EXPRESSION
+@$2_EXPRESSION
 @bool_EXPRESSION
 
 @STATEMENTS
 @STATEMENT
 @STATEMENT_
+
+@VECTORIZATION_TRIGGER_ADDITION
 
 @ASSIGN
     #APPEND_RULE:15*$1VarDeclared*Enable$1
@@ -16,13 +19,16 @@
     #APPEND_RULE:(2*$1VectorDeclared*Enable$1)*(1+-1*ForEachCount)
         @ASSIGN_$1_VECTOR
     #END_RULE
+    #APPEND_RULE:3*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)
+        @ASSIGN_TO_$1_ARRAY_VAR_ELEMENT
+    #END_RULE
     #APPEND_RULE:1
         @STATEMENT_
     #END_RULE
 
 @ASSIGN_$1_VAR
     #BEGIN_RULE:1*$1VarDeclared
-        @REUSE_ID_$1_VAR @SET_OP_$1$1_VAR `($1)(` @$1_EXPRESSION `); ` \n
+        @REUSE_ID_$1_VAR @SET_OP_$1$1_VAR  @$1_EXPRESSION `; ` \n
     #END_RULE
 
 @ASSIGN_$1_POINTER
@@ -32,8 +38,33 @@
 
 @ASSIGN_$1_VECTOR
     #BEGIN_RULE
-        @REUSE_ID_$1_VECTOR`.assign(random() % ` @ARRAY_MAX_LENGTH `, ($1)(` @$1_EXPRESSION `)); ` \n
+        @REUSE_ID_$1_VECTOR`.assign(random() % ` @ARRAY_MAX_LENGTH `, (` @$1_EXPRESSION `)); ` \n
     #END_RULE
+
+
+@ABS_IF_NEEDED_$2
+    #BEGIN_RULE:Unsigned_$2
+    #END_RULE
+    #BEGIN_RULE:1-Unsigned_$2
+        `abs`
+    #END_RULE
+        
+        
+
+
+@ASSIGN_TO_$1_ARRAY_VAR_ELEMENT
+    #APPEND_RULE:1*$1ArrayVarDeclared
+        #REUSE_ID $1ArrayVar_ `[` @ABS_IF_NEEDED_$2 `(` @$2_EXPRESSION ` ) % ` @[ArrayMaxLength/2:3*ArrayMaxLength/4] `]` @SET_OP_$1$1_VAR  @$1_EXPRESSION `; ` \n
+    #END_RULE
+    #APPEND_RULE:1*$1ArrayFieldVarDeclared
+        #REUSE_ID $1ArrayFieldVar_ `[` @ABS_IF_NEEDED_$2 `(` @$2_EXPRESSION ` ) % ` @[ArrayMaxLength/2:3*ArrayMaxLength/4] `]` @SET_OP_$1$1_VAR  @$1_EXPRESSION `; ` \n
+    #END_RULE
+    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$2IndArraySafeVarDeclared
+         @REUSE_ID_$1_ARRAY_VAR `[ `  #REUSE_ID $2IndArraySafeVar_ @VECTORIZATION_TRIGGER_ADDITION `]` @SET_OP_$1$1_VAR  @$1_EXPRESSION `; ` \n
+    #END_RULE
+
+
+
 
 @SWITCH_$1
     #BEGIN_RULE:$1VarDeclared

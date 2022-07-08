@@ -1,0 +1,46 @@
+// $1 - type
+@MAYBE_ATOMIC
+
+@ALLOCA_ARRAY_$1
+#BEGIN_RULE
+    `  %`
+    #CREATE_LAZY_ID array_$1_
+    ` = alloca [ ` @ARRAY_SIZE ` x $1 ]`
+    #SET NUM_ARRAY_ALLOCAS=NUM_ARRAY_ALLOCAS+1
+    #SET NUM_ARRAYS_$1=NUM_ARRAYS_$1+1
+    #REGISTER_LAZY_IDS
+#END_RULE
+
+
+@CONSTANT_ARRAY_IDX
+    #BEGIN_RULE
+        @[0:ARRAY_SIZE]
+    #END_RULE
+
+
+@ARRAY_INSTRUCTION_$1
+#BEGIN_RULE
+    @GETELEMENT_FROM_ARRAY_$1
+#END_RULE
+
+
+@GETELEMENT_FROM_ARRAY_$1
+    #BEGIN_RULE
+        `  %`
+        #CREATE_LAZY_ID ptr_$1_
+        ` = getelementptr inbounds [` @ARRAY_SIZE ` x $1], [` @ARRAY_SIZE ` x $1]* %` #REUSE_ID array_$1_ `, i64 0, i64 ` @CONSTANT_ARRAY_IDX
+         #SET NUM_PTRS_$1=NUM_PTRS_$1+1
+        #REGISTER_LAZY_IDS
+    #END_RULE
+
+@ALLOCA
+    #APPEND_RULE:ENABLE_$1
+        @ALLOCA_ARRAY_$1
+    #END_RULE
+
+ @ARRAY_INSTRUCTION
+    #APPEND_RULE:NUM_ARRAYS_$1
+        @ARRAY_INSTRUCTION_$1 
+    #END_RULE
+    #APPEND_RULE:2
+    #END_RULE

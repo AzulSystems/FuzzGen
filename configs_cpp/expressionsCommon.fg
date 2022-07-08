@@ -35,7 +35,10 @@
     #BEGIN_RULE:11
         @MAP_SET_COUNT_$1
     #END_RULE
-    #BEGIN_RULE:22
+    #BEGIN_RULE:32
+        @$1_GET_ELEMENT_FROM_CONTAINER
+    #END_RULE
+    #BEGIN_RULE:50*(boolIndArraySafeVarDeclared+int8_tIndArraySafeVarDeclared+uint8_tIndArraySafeVarDeclared+int16_tIndArraySafeVarDeclared+uint16_tIndArraySafeVarDeclared+int32_tIndArraySafeVarDeclared+uint32_tIndArraySafeVarDeclared+int64_tIndArraySafeVarDeclared+uint64_tIndArraySafeVarDeclared)*($1ArrayVarDeclared+$1VectorDeclared)
         @$1_GET_ELEMENT_FROM_CONTAINER
     #END_RULE
     #BEGIN_RULE:13
@@ -47,6 +50,25 @@
     #BEGIN_RULE:7
         @CONTAINER_IS_EMPTY_$1
     #END_RULE
+    #BEGIN_RULE:10*$1VarDeclared*(1-IncDecUsed)
+        #SET IncDecUsed=IncDecUsed+1
+        @UNARY_EXPR_$1_$1
+    #END_RULE
+    #BEGIN_RULE:25*func_$1_$1Declared*(MaxFuncCalls-FuncCallCount)*(MaxLoopNestForFuncCall-LoopNest)*(1+20*runFunc)
+        #SET FuncCallCount=FuncCallCount+1
+        @REUSE_ID_FUNC_$1_$1 `( /* func call */ ` @$1_EXPRESSION ` )`
+    #END_RULE
+    #BEGIN_RULE:25*pointer_func_$1_$1Declared*(MaxFuncCalls-FuncCallCount)*(MaxLoopNestForFuncCall-LoopNest)*(1+20*runFunc)*$1PointerDeclared
+        #SET FuncCallCount=FuncCallCount+1
+        @REUSE_ID_POINTER_FUNC_$1_$1 `( /* func call */ ` @REUSE_ID_$1_POINTER ` )`
+    #END_RULE
+    #BEGIN_RULE:25*pointer_func_$1_$1Declared*(MaxFuncCalls-FuncCallCount)*(MaxLoopNestForFuncCall-LoopNest)*(1+20*runFunc)*$1VarDeclared
+        #SET FuncCallCount=FuncCallCount+1
+        @REUSE_ID_POINTER_FUNC_$1_$1 `( /* func call */ ` `  &` @REUSE_ID_$1_VAR ` )`
+    #END_RULE
+        
+
+       
 
 @$1_EXPRESSION_NOT_RECURSIVE
     #BEGIN_RULE:20
@@ -55,6 +77,15 @@
     #BEGIN_RULE:100
         @REUSE_ITERATION_VAR_$1
     #END_RULE
+
+@UNARY_EXPR_$1_$1
+    #BEGIN_RULE:1*$1VarDeclared
+        @PREFIX_OP_$1_$1 @REUSE_ID_$1_VAR
+    #END_RULE
+    #BEGIN_RULE:1*$1VarDeclared
+        @REUSE_ID_$1_VAR @POSTFIX_OP_$1_$1
+    #END_RULE
+
 
 @$1$1_MEMCMP
     #BEGIN_RULE:100*$1ArrayVarDeclared*($1ArrayVarDeclared+-1)
@@ -87,7 +118,7 @@
 
 @ABS_$1
     #BEGIN_RULE
-        ` ($1) abs(($1)(`@$1_EXPRESSION `)) `
+        `abs(`@$1_EXPRESSION `)`
     #END_RULE
 
 @$1_EXPRESSION_COMMON
@@ -95,6 +126,7 @@
         #SET ExprDepth=ExprDepth+1
         @$1_EXPRESSION_RECURSIVE
         #SET ExprDepth=ExprDepth+-1
+        #SET IncDecUsed=IncDecUsed*ExprDepth
     #END_RULE
     #BEGIN_RULE:2
         @$1_EXPRESSION_NOT_RECURSIVE
@@ -103,19 +135,19 @@
 @BIN_EXPR_$1$1_int
     #BEGIN_RULE:BinExprMaxDepth+-1*BinExprDepth
         #SET BinExprDepth=BinExprDepth+1
-        `($1)(($1)(`@$1_EXPRESSION `) ` @OP_$1$1_int ` (($1)` @$1_EXPRESSION `))`
+        `((`@$1_EXPRESSION `) ` @OP_$1$1_int ` (` @$1_EXPRESSION `))`
         #SET BinExprDepth=BinExprDepth+-1
     #END_RULE
     #BEGIN_RULE:1+-1*(BinExprMaxDepth+-1*BinExprDepth)
-        `($1)((`@$1_CONSTANT `) ` @OP_$1$1_int ` (` @$1_CONSTANT `))`
+        `((`@$1_CONSTANT `) ` @OP_$1$1_int ` (` @$1_CONSTANT `))`
     #END_RULE
 
 @BIN_EXPR_$1$1_shift
     #BEGIN_RULE:BinExprMaxDepth+-1*BinExprDepth
         #SET BinExprDepth=BinExprDepth+1
-        `($1)(($1)(`@$1_EXPRESSION `) ` @OP_$1$1_shift ` ` @SHIFT_RANGE_$1 ` )`
+        `((`@$1_EXPRESSION `) ` @OP_$1$1_shift ` ` @SHIFT_RANGE_$1 ` )`
         #SET BinExprDepth=BinExprDepth+-1
     #END_RULE
     #BEGIN_RULE:1+-1*(BinExprMaxDepth+-1*BinExprDepth)
-        `($1)(($1)(`@$1_CONSTANT `) ` @OP_$1$1_int ` ` @SHIFT_RANGE_$1` )`
+        `((`@$1_CONSTANT `) ` @OP_$1$1_int ` ` @SHIFT_RANGE_$1` )`
     #END_RULE

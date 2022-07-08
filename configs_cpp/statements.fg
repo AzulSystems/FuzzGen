@@ -1,8 +1,18 @@
 #INCLUDE "configs_cpp/dataTypes.fg"
-#INCLUDE "configs_cpp/statementsByType.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/statementsByType.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t) (int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t)
 #INCLUDE "configs_cpp/statementsByContainers.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
-#INCLUDE "configs_cpp/expressions.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t) (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
-#INCLUDE "configs_cpp/loops.fg" (int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+//#INCLUDE "configs_cpp/expressions.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t) (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/expressions.fg" (bool) (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/expressions.fg" (int8_t) (bool int8_t )
+#INCLUDE "configs_cpp/expressions.fg" (uint8_t) (bool uint8_t)
+#INCLUDE "configs_cpp/expressions.fg" (int16_t) (bool int8_t uint8_t int16_t)
+#INCLUDE "configs_cpp/expressions.fg" (uint16_t) (bool uint8_t uint16_t)
+#INCLUDE "configs_cpp/expressions.fg" (int32_t) (bool int8_t uint8_t int16_t uint16_t int32_t)
+#INCLUDE "configs_cpp/expressions.fg" (uint32_t) (bool uint8_t uint16_t uint32_t)
+#INCLUDE "configs_cpp/expressions.fg" (int64_t) (bool int8_t uint8_t int16_t uint16_t int32_t int64_t)
+#INCLUDE "configs_cpp/expressions.fg" (uint64_t) (bool uint8_t uint16_t uint32_t uint64_t)
+#INCLUDE "configs_cpp/loops.fg" (int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t) (VAR) (Var) (BORDER)
+#INCLUDE "configs_cpp/loops.fg" (int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t) (ARRAY_SAFE_VAR) (ArraySafeVar) (BORDER_ARRAY_SAFE)
 
 
 @STATEMENTS
@@ -37,7 +47,7 @@
     #BEGIN_RULE:(10*LoopCount*CondCount+5)*(1+-1*ForEachCount)
         @REINITIALIZATION
     #END_RULE
-    #BEGIN_RULE:(10*LoopCount*CondCount+5)*(1+-1*ForEachCount)
+    #BEGIN_RULE:(LoopCount*CondCount+5)*(1+-1*ForEachCount)
         @CLEAR_CONTAINERS
     #END_RULE
     #BEGIN_RULE:(15*LoopCount*CondCount+25)*(1+-1*ForEachCount)
@@ -55,10 +65,13 @@
     #BEGIN_RULE:(2*LoopCount*CondCount+6)*(1+-1*ForEachCount)
         @VECTOR_SORT
     #END_RULE
-    #BEGIN_RULE:30*LoopNest
+    #BEGIN_RULE:4*LoopNest*(MaxCondCount+-1*CondCount)*(MaxCondNest+-1*CondNest)
+        #SET CondNest=CondNest+1
+        #SET CondCount=CondCount+1
         @LOOP_CONTROL_FOR
+        #SET CondNest=CondNest+-1
     #END_RULE
-    #BEGIN_RULE:40*LoopNest*ForEachCount
+    #BEGIN_RULE:10*LoopNest*ForEachCount
         @FOREACH_STATEMENTS
     #END_RULE
     #BEGIN_RULE:1
@@ -90,7 +103,7 @@
             #END_SCOPE \n
         ` } ` \n
     #END_RULE
-    #BEGIN_RULE:11
+    #BEGIN_RULE:25
         `if ( ` @bool_EXPRESSION ` ) { `
             #BEGIN_SCOPE \n
             @STATEMENTS

@@ -1,0 +1,128 @@
+// $1 - type
+
+
+@ATOMICRMW_$1
+    #BEGIN_RULE
+        `  %`
+        #CREATE_LAZY_ID val_$1_
+        ` = `
+
+        ` atomicrmw ` @VOLATILE_MAYBE @ATOMICRMW_OPS ` $1* %` #REUSE_ID ptr_$1_ `, $1 ` @LITERAL_$1 @SYNCSCOPE_MAYBE @ORDERING
+        #REGISTER_LAZY_IDS
+        #SET NUM_VALUES_$1=NUM_VALUES_$1+1
+    #END_RULE
+
+
+@ATOMICRMW_OPS
+    #BEGIN_RULE
+        `xchg`
+    #END_RULE
+    #BEGIN_RULE
+        `add`
+    #END_RULE
+    #BEGIN_RULE
+        `sub`
+    #END_RULE
+    #BEGIN_RULE
+        `and`
+    #END_RULE
+    #BEGIN_RULE
+        `nand`
+    #END_RULE
+    #BEGIN_RULE
+        `or`
+    #END_RULE
+    #BEGIN_RULE
+        `xor`
+    #END_RULE
+    #BEGIN_RULE
+        `max`
+    #END_RULE
+    #BEGIN_RULE
+        `min`
+    #END_RULE
+
+
+@ATOMIC_INSTRUCTION
+#APPEND_RULE
+    @FENCE
+#END_RULE
+#APPEND_RULE:NUM_PTRS_$1*$1_IS_BYTE_SIZED
+    @ATOMICRMW_$1
+#END_RULE
+#APPEND_RULE:NUM_PTRS_$1*NUM_VALUES_$1*$1_IS_BYTE_SIZED
+    @CMPXCHG_$1
+#END_RULE
+
+@VOLATILE_MAYBE
+    #BEGIN_RULE
+        ` volatile ` 
+    #END_RULE
+    #BEGIN_RULE
+    #END_RULE
+
+@WEAK_MAYBE
+    #BEGIN_RULE
+        ` weak ` 
+    #END_RULE
+    #BEGIN_RULE
+    #END_RULE
+
+@SYNCSCOPE_MAYBE
+    #BEGIN_RULE
+        ` syncscope("singlethread") ` 
+    #END_RULE
+    #BEGIN_RULE
+    #END_RULE
+
+
+
+@ORDERING
+    #BEGIN_RULE
+        ` acquire `
+    #END_RULE
+    #BEGIN_RULE:0
+        ` unordered `
+    #END_RULE
+    #BEGIN_RULE:1-Fence
+        ` monotonic `
+    #END_RULE
+    #BEGIN_RULE:0
+        ` release `
+    #END_RULE
+    #BEGIN_RULE:0
+        ` acq_rel `
+    #END_RULE
+    #BEGIN_RULE
+        ` seq_cst `
+    #END_RULE
+
+
+@CMPXCHG_$1
+    #BEGIN_RULE
+        `  %`
+        #CREATE_LAZY_ID struct_val_$1_
+        ` = `
+        ` cmpxchg ` @WEAK_MAYBE @VOLATILE_MAYBE ` $1* %` #REUSE_ID ptr_$1_ `, $1 ` @LITERAL_$1 `, $1 %` #REUSE_ID val_$1_ @SYNCSCOPE_MAYBE @ORDERING @ORDERING ` ; yields  { $1, i1 }` \n
+        #REGISTER_LAZY_IDS
+        #SET NUM_VALUES_$1=NUM_VALUES_$1+1
+        `  %`
+        #CREATE_LAZY_ID val_$1_
+        ` = `
+         ` extractvalue { $1, i1 } %` #GET_LAST_ID  struct_val_$1_ `, 0` \n
+        `  %`
+        #CREATE_LAZY_ID val_i1_
+        ` = `
+        ` extractvalue { $1, i1 } %` #GET_LAST_ID  struct_val_$1_ `, 1` \n
+        #REGISTER_LAZY_IDS
+        #SET NUM_STRUCT_VALUES_$1=NUM_STRUCT_VALUES_$1+1
+        #SET NUM_VALUES_i1=NUM_VALUES_i1+1
+    #END_RULE
+
+
+@FENCE
+    #BEGIN_RULE
+        #SET Fence=1
+        `fence ` @SYNCSCOPE_MAYBE @ORDERING
+        #SET Fence=0
+    #END_RULE

@@ -1,0 +1,86 @@
+//#INCLUDE "configs_cpp/parameters.fg"
+#INCLUDE "configs_cpp/parametersBasic.fg"
+#INCLUDE "configs_cpp/checksum.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t) (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+
+@CREATE_ID_FUNC_$1_$1
+@SET_DECLARED_FLAG_TO_ZERO
+@STATEMENTS
+@$1_EXPRESSION
+@DECLARES
+
+@FUNC_ARG_POINTER_$1
+    #BEGIN_RULE
+            `( $1 *` 
+             #CREATE_ID $1Pointer_
+             #SET $1PointerDeclared=$1PointerDeclared+1
+            `)`
+    #END_RULE
+
+@FUNC_ARG_VAR_$1
+    #BEGIN_RULE
+            `( $1 ` 
+             #CREATE_ID $1Var_
+                    #SET $1VarDeclared=$1VarDeclared+1
+            `)`
+    #END_RULE
+
+
+@DECLARE_FUNC
+    #APPEND_RULE:Enable$1
+    \n \n ` $1 ` @CREATE_ID_FUNC_$1_$1 
+            #BEGIN_SCOPE
+            @SET_DECLARED_FLAG_TO_ZERO
+            @FUNC_ARG_VAR_$1
+             ` { ` \n
+                    @$1_FUNC_BODY \n ` } `
+            #END_SCOPE
+            @MAKE_FUNC_CALLABLE_$1 \n
+            #SET func_$1_$1Declared=func_$1_$1Declared+1
+    #END_RULE
+#APPEND_RULE:Enable$1
+    \n \n ` $1 ` @CREATE_ID_POINTER_FUNC_$1_$1 
+            #BEGIN_SCOPE
+            @SET_DECLARED_FLAG_TO_ZERO
+            @FUNC_ARG_POINTER_$1
+             ` { ` \n
+                    @$1_FUNC_BODY \n ` } `
+            #END_SCOPE
+            @MAKE_FUNC_CALLABLE_$1 \n
+            #SET pointer_func_$1_$1Declare=pointer_func_$1_$1Declared+1
+    #END_RULE
+
+@$1_FUNC_BODY
+    #BEGIN_RULE
+        @SET_FLAGS_BEFORE_FUNC
+`// function body ` \n
+ @DECLARES
+         @STATEMENTS
+
+//` return ` @$1_EXPRESSION `; ` \n
+@$1_RETURN_STATEMENT
+    #END_RULE
+
+@MAKE_FUNC_CALLABLE_$1
+    #BEGIN_RULE
+        #REGISTER_LAZY_IDS
+    #END_RULE
+
+
+@$1_RETURN_STATEMENT
+#BEGIN_RULE:10
+`return ($1)(0 + ` \n
+        @$1_RETURN_STATEMENT_bool ` + ` \n
+        @$1_RETURN_STATEMENT_int8_t ` + ` \n
+        @$1_RETURN_STATEMENT_uint8_t ` + ` \n
+        @$1_RETURN_STATEMENT_int16_t ` + ` \n
+        @$1_RETURN_STATEMENT_uint16_t ` + ` \n
+        @$1_RETURN_STATEMENT_int32_t ` + `  \n
+        @$1_RETURN_STATEMENT_uint32_t ` + ` \n
+        @$1_RETURN_STATEMENT_int64_t ` + ` \n
+        @$1_RETURN_STATEMENT_uint64_t ` + ` \n
+        `  0) ` `; ` \n
+#END_RULE
+#BEGIN_RULE:1
+`return ` @$1_EXPRESSION `; ` \n
+#END_RULE
+

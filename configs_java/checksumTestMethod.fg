@@ -31,6 +31,16 @@
 //` 0 `
 #END_RULE
 
+@$1_RETURN_STATEMENT_String_VAR
+#BEGIN_RULE:100000*StringVarDeclared
+ `  ( ` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR String%Var_ " + " ` ).length() + `
+#END_RULE
+#BEGIN_RULE:1
+
+#END_RULE
+
+
+
 @$1_RETURN_STATEMENT_$2_VAL
 #BEGIN_RULE:100000*$2ValDeclared
  `  ( ` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $2Val_ " + " ` ) + `
@@ -38,6 +48,16 @@
 #BEGIN_RULE:1
 //` 0 `
 #END_RULE
+
+@$1_RETURN_STATEMENT_String_VAL
+#BEGIN_RULE:100000*StringValDeclared
+ `  (  ` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR String%Val_ " + " ` ).length() + `
+#END_RULE
+#BEGIN_RULE:1
+//` 0 `
+#END_RULE
+
+
 
 @$1_RETURN_STATEMENT_$2_ARRAY_VAR
 #BEGIN_RULE:100000*$2ArrayVarDeclared
@@ -63,6 +83,20 @@
     @$1_RETURN_STATEMENT_$2_VAL 
     @$1_RETURN_STATEMENT_$2_ARRAY_VAR 
     @$1_RETURN_STATEMENT_$2_ARRAY_VAL ` 0` \n
+
+//         `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( new $2[][]{` #GET_LOCAL_IDS_OR_EMPTY $2ArrayVar_ `})` ` + ` \n
+  //       `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( new $2[][]{` #GET_LOCAL_IDS_OR_EMPTY $2ArrayVal_ `})` \n
+         //@$1_CHECKSUM_$2_LIST_VAR ` + ` \n
+         //@$1_CHECKSUM_$2_IMMUTABLE_SET_VAR  `  ` 
+#END_RULE
+#BEGIN_RULE:1
+ ` 0 `
+#END_RULE
+
+@$1_RETURN_STATEMENT_String
+#BEGIN_RULE:100000*EnableString
+    @$1_RETURN_STATEMENT_String_VAR
+    @$1_RETURN_STATEMENT_String_VAL ` 0` \n
 
 //         `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( new $2[][]{` #GET_LOCAL_IDS_OR_EMPTY $2ArrayVar_ `})` ` + ` \n
   //       `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( new $2[][]{` #GET_LOCAL_IDS_OR_EMPTY $2ArrayVal_ `})` \n

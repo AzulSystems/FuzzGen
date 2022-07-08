@@ -1,8 +1,9 @@
 #INCLUDE "configs_cpp/expressionsCommon.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
-#INCLUDE "configs_cpp/expressionsContainer.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/expressionsContainer.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t) (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/expressionsSpecific.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
 
 @$1_EXPRESSION
-    #APPEND_RULE:5
+    #APPEND_RULE:40
         @$1_EXPRESSION_COMMON
     #END_RULE
     #APPEND_RULE:1

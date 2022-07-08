@@ -1,0 +1,14 @@
+#INCLUDE "configs_cpp/testFunctions.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+
+
+@DECLARE_FUNC
+
+#SET FunctionCount=0
+@DECLARE_FUNCTIONS
+    #BEGIN_RULE:15*(MaxFunctionsInClass+-1*FunctionCount)
+                #SET FunctionCount=FunctionCount+1
+        @DECLARE_FUNC \n @DECLARE_FUNCTIONS
+    #END_RULE
+    #BEGIN_RULE:2
+    #END_RULE
+

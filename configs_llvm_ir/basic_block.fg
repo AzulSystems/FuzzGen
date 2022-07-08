@@ -1,4 +1,5 @@
 #INCLUDE "configs_llvm_ir/instructions.fg"
+#INCLUDE "configs_llvm_ir/basic_block_typed.fg" (i8 i16 i32 i64)
 
 @ENTRY_BLOCK[2]
 #BEGIN_RULE
@@ -48,6 +49,9 @@
 #END_RULE
 #BEGIN_RULE:10
     `  br i1 ` @EXPRESSION_i1 `, label %` #REUSE_ID_AND_LINK bb_ `, label %` #REUSE_ID_AND_LINK bb_
+#END_RULE
+#BEGIN_RULE:1
+    @SWITCH 
 #END_RULE
 #BEGIN_RULE
     `  unreachable`

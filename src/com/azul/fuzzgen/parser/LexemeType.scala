@@ -28,7 +28,7 @@ object LexemeType extends Enumeration {
   NonTerminal, Literal,
   BeginScope, EndScope,
   BeginRule, EndRule, AppendRule,
-  CreateID, ReuseID, ReuseLocalID, ReuseIDAndLink,
+  CreateID, CreateIDFromLastID, ReuseID, ReuseLocalID, ReuseIDAndLink,
   GetLocalIDs, GetLocalIDsOrEmpty, GetLocalIDsOrEmptySeparator,
   GetAllIDs,
   GetLastReusedLocalID,
@@ -38,6 +38,6 @@ object LexemeType extends Enumeration {
   IntExprFromRange, LongFromRange, DoubleFromRange,
   Include,
   Comment,
-  LendScope, LendScopeWithID, ReturnScope,
+  LendScope, LendScopeWithID, LendScopeWithIDByPrefix, ReturnScope,
   EOF = Value
 }

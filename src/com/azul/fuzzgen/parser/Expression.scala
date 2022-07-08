@@ -19,6 +19,8 @@
 
 package com.azul.fuzzgen.parser
 
+import com.azul.fuzzgen.FuzzGen
+import com.azul.fuzzgen.fuzzer.FuzzException
 import com.azul.fuzzgen.grammar.Grammar
 
 import scala.collection.mutable.ArrayBuffer
@@ -62,7 +64,12 @@ final class AddExpression extends NAryOperationExpression {
 }
 
 final class MulExpression extends NAryOperationExpression {
-  override def operation(op1: Int, op2: Int) : Int = op1 * op2
+  override def operation(op1: Int, op2: Int) : Int = {
+    if (op1 < 0 && op2 < 0) {
+      FuzzGen.warning("Multiplying negative expressions is usually done by mistake and can lead to hidden errors: in expression " + this.toString + " found negative multipliers " + op1 + " and " + op2)
+    }
+    return op1 * op2
+  }
 
   def putParenthesesIfNeeded(expression: Expression): String = {
     if (expression.isInstanceOf[AddExpression])

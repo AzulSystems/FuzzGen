@@ -19,7 +19,7 @@
 
 package com.azul.fuzzgen.fuzzer
 
-import FuzzNode.FREE_ID
+import com.azul.fuzzgen.fuzzer.FuzzNode.FREE_ID
 
 import scala.collection.mutable.ArrayBuffer
 

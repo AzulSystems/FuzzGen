@@ -1,0 +1,22 @@
+#INCLUDE "configs_scala/statements.fg"
+
+#INCLUDE "configs_scala/printMethods.fg"
+#INCLUDE "configs_scala/printArrayMethods.fg" (Int Long Float Double)
+
+#INCLUDE "configs_scala/checksumArrayMethods.fg" Int Long Float Double
+
+#INCLUDE "configs_scala/testMethods.fg" Int Long Float Double
+
+
+@DECLARE_METHOD
+
+#SET MethodCount=0
+@DECLARE_METHODS
+    #BEGIN_RULE:7+-1*MethodCount
+		#SET MethodCount=MethodCount+1
+        @DECLARE_METHOD \n @DECLARE_METHODS
+    #END_RULE
+    #BEGIN_RULE
+    #END_RULE
+
+

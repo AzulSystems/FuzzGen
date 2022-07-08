@@ -14,9 +14,13 @@
     #END_RULE
 
 @REUSE_ID_$1_VAR
-    #BEGIN_RULE
+    #BEGIN_RULE:3
         #REUSE_ID $1Var_
     #END_RULE
+    #BEGIN_RULE:1*$1FieldVarDeclared
+        @REUSE_ID_$1_FIELD_VAR
+    #END_RULE
+
 
 @DECLARE_VAR_OF_TYPE
     #APPEND_RULE:100*Enable$1
@@ -24,20 +28,65 @@
     #END_RULE
 
 @$1_LITERAL
-    #BEGIN_RULE:4
+    #BEGIN_RULE:1
         @$1_CONSTANT
     #END_RULE
-    #BEGIN_RULE:8*$1VarDeclared
+    #BEGIN_RULE:15*$1VarDeclared
         @REUSE_ID_$1_VAR
     #END_RULE
     #BEGIN_RULE:8*$1PointerDeclared
         ` *`@REUSE_ID_$1_POINTER
     #END_RULE
 
+@DECLARE_ID_$1_FIELD_VAR
+    #BEGIN_RULE
+        #CREATE_ID $1FieldVar_
+    #END_RULE
+
+
+
+@DECLARE_$1_FIELD_VAR
+    #BEGIN_RULE
+        //#SET $1FieldVarDeclared=$1FieldVarDeclared+1
+       // @DECLARE_$1_FIELD_VAR_DECLARED
+        #SET $1FieldVarDeclared=$1FieldVarDeclared+1
+        //#SET global_$1FieldVarDeclared=global_$1FieldVarDeclared+1*(1+-1*TestClass)
+        `$1 ` @DECLARE_ID_$1_FIELD_VAR ` = ` @$1_CONSTANT `; ` \n
+#END_RULE
+
+        @DECLARE_$1_FIELD_VAR_DECLARED
+#BEGIN_RULE
+        #SET $1FieldVarDeclared=$1FieldVarDeclared+1
+#END_RULE
+
+@DECLARE_FIELD_VAR_OF_TYPE
+#APPEND_RULE:10*Enable$1
+    @DECLARE_$1_FIELD_VAR
+#END_RULE
+
+@REUSE_ID_$1_FIELD_VAR
+    #APPEND_RULE:20*$1FieldVarDeclared
+            `(this -> ` #REUSE_ID $1FieldVar_ `)`
+    #END_RULE
+    
+
+
 @DECLARE_BASIC_VAR
     #APPEND_RULE:Enable$1
         @DECLARE_$1_VAR
     #END_RULE
+
+@CREATE_ID_FUNC_$1_$1
+    #BEGIN_RULE
+        #CREATE_LAZY_ID func_$1_$1_
+    #END_RULE
+
+@REUSE_ID_FUNC_$1_$1
+    #APPEND_RULE:25*func_$1_$1Declared
+        #REUSE_ID func_$1_$1_
+    #END_RULE
+
+
 
 @SET_OP_$1$1_VAR
     #BEGIN_RULE:2
@@ -45,6 +94,7 @@
     #END_RULE
     #BEGIN_RULE:10
         #SET isEquality=1
+        #SET IncDecUsed=IncDecUsed+1
         ` ` @OP_$1$1_int `= `
         #SET isEquality=0
     #END_RULE
@@ -126,3 +176,5 @@
     #BEGIN_RULE
        ` >= `
     #END_RULE
+
+

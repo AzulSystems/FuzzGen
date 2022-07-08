@@ -84,7 +84,7 @@
 
 @VECTOR_SORT
     #APPEND_RULE:10*$1VectorDeclared
-        `sort(`@REUSE_ID_$1_VECTOR`.begin(), ` #GET_LAST_ID $1Vector_`.end());` \n
+        `if (!` @REUSE_ID_$1_VECTOR `.empty()) { ` \n `sort(` #GET_LAST_ID $1Vector_  `.begin(), ` #GET_LAST_ID $1Vector_`.end());}` \n
     #END_RULE
     #APPEND_RULE:1
         @STATEMENT_

@@ -13,6 +13,8 @@
 #SET EnableFloat=1
 #SET EnableDouble=1
 
+#SET EnableString=2
+
 #SET intIsPrimitiveType=1
 #SET shortIsPrimitiveType=1
 #SET byteIsPrimitiveType=1
@@ -25,6 +27,7 @@
 #SET LongIsPrimitiveType=0
 #SET FloatIsPrimitiveType=0
 #SET DoubleIsPrimitiveType=0
+#SET StringIsPrimitiveType=0
 
 #SET intIsFloatingPointType=0
 #SET shortIsFloatingPointType=0
@@ -39,6 +42,21 @@
 #SET FloatIsFloatingPointType=1
 #SET DoubleIsFloatingPointType=1
 
+#SET intIsStringType=0
+#SET shortIsStringType=0
+#SET byteIsStringType=0
+#SET longIsStringType=0
+#SET floatIsStringType=0
+#SET doubleIsStringType=0
+#SET IntegerIsStringType=0
+#SET ShortIsStringType=0
+#SET ByteIsStringType=0
+#SET LongIsStringType=0
+#SET FloatIsStringType=0
+#SET DoubleIsStringType=0
+#SET StringIsStringType=1
+
+
 #SET TestClass=0
 
 
@@ -50,21 +68,22 @@
 #SET MaxArrayCount=500
 
 #SET StatementProb=8
-#SET MaxLoopNest=3
+#SET MaxLoopNest=4
 #SET LoopNest=0
-#SET MaxLoopCount=40
+#SET MaxLoopCount=50
 #SET LoopCount=0
+
 
 #SET LoopCntLimitMin=10
 #SET LoopCntLimitMax=150
 
-#SET MaxCondCount=12
+#SET MaxCondCount=15
 #SET CondCount=0
-#SET MaxCondNest=3
+#SET MaxCondNest=4
 #SET CondNest=0
 
 #SET BinExprMaxDepth=3
-#SET ExprMaxDepth=2
+#SET ExprMaxDepth=3
 #SET ExprBlockMaxDepth=1
 
 #SET MaxLambdaCount=1
@@ -73,7 +92,7 @@
 
 #SET MethodCallInExprWeight=4
 
-#SET MaxStatementsInMethodCount=20
+#SET MaxStatementsInMethodCount=30
 #SET StatementsInMethodCount=0
 
 #SET LambdaCount=0
@@ -88,6 +107,7 @@
 #SET MaxLongLoop=1
 #SET MaxLongLoopDepth=2
 #SET LongLoop=0
+#SET MaxLongLoopLength=2000
 
 #SET MaxTryCatchDepth=1
 #SET TryCatchDepth=0
@@ -97,11 +117,13 @@
 #SET MaxMethodsInClass=4
 #SET MethodCallCount=0
 
-#SET MaxClasses=3
+#SET MaxClasses=4
 #SET ClassesCount=0
 
 #SET MaxExplicitCallsInMain=5
 #SET ExplicitCallsInMain=0
+
+#SET MaxLoopNestForMethodCall=2
 
 @SET_FLAGS_BEFORE_METHOD_
 #BEGIN_RULE
@@ -117,6 +139,7 @@
 #SET MaxSynchronizedBlockNestDepth=2
 #SET SynchronizedBlockNestDepth=0
 
+#SET LongLoop=0
 
 #END_RULE
 
@@ -177,10 +200,160 @@
     `double`
 #END_RULE
 
+
+@StringToPrimitiveType
+#BEGIN_RULE
+    `String`
+#END_RULE
+
 @doubleToPrimitiveType
 #BEGIN_RULE
     `double`
 #END_RULE
+
+
+ @IntegerToReferenceType
+#BEGIN_RULE
+    `Integer`
+#END_RULE
+
+@intToReferenceType
+#BEGIN_RULE
+    `Integer`
+#END_RULE
+
+@ByteToReferenceType
+#BEGIN_RULE
+    `Byte`
+#END_RULE
+
+@byteToReferenceType
+#BEGIN_RULE
+    `Byte`
+#END_RULE
+
+@ShortToReferenceType
+#BEGIN_RULE
+    `Short`
+#END_RULE
+
+@shortToReferenceType
+#BEGIN_RULE
+    `Short`
+#END_RULE
+
+@LongToReferenceType
+#BEGIN_RULE
+    `Long`
+#END_RULE
+
+@longToReferenceType
+#BEGIN_RULE
+    `Long`
+#END_RULE
+
+@FloatToReferenceType
+#BEGIN_RULE
+    `Float`
+#END_RULE
+
+@floatToReferenceType
+#BEGIN_RULE
+    `Float`
+#END_RULE
+
+@DoubleToReferenceType
+#BEGIN_RULE
+    `Double`
+#END_RULE
+
+
+@StringToReferenceType
+#BEGIN_RULE
+    `String`
+#END_RULE
+
+@doubleToReferenceType
+#BEGIN_RULE
+    `Double`
+#END_RULE
+
+
+
+
+
+
+ @IntegerToParseNumericType
+#BEGIN_RULE
+    `Int`
+#END_RULE
+
+@intToParseNumericType
+#BEGIN_RULE
+    `Int`
+#END_RULE
+
+@ByteToParseNumericType
+#BEGIN_RULE
+    `Byte`
+#END_RULE
+
+@byteToParseNumericType
+#BEGIN_RULE
+    `Byte`
+#END_RULE
+
+@ShortToParseNumericType
+#BEGIN_RULE
+    `Short`
+#END_RULE
+
+@shortToParseNumericType
+#BEGIN_RULE
+    `Short`
+#END_RULE
+
+@LongToParseNumericType
+#BEGIN_RULE
+    `Long`
+#END_RULE
+
+@longToParseNumericType
+#BEGIN_RULE
+    `Long`
+#END_RULE
+
+@FloatToParseNumericType
+#BEGIN_RULE
+    `Float`
+#END_RULE
+
+@floatToParseNumericType
+#BEGIN_RULE
+    `Float`
+#END_RULE
+
+@DoubleToParseNumericType
+#BEGIN_RULE
+    `Double`
+#END_RULE
+
+
+@StringToParseNumericType
+#BEGIN_RULE
+    `String`
+#END_RULE
+
+@doubleToParseNumericType
+#BEGIN_RULE
+    `Double`
+#END_RULE
+
+
+
+
+
+
 
       @IntegerTointType
 #BEGIN_RULE

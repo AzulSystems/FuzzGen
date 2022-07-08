@@ -13,20 +13,48 @@
         #CREATE_ID $1Pointer_
     #END_RULE
 
+@DECLARE_$1_FIELD_POINTER
+    #BEGIN_RULE:10*$1FieldVarDeclared
+        #SET $1FieldPointerDeclared=$1FieldPointerDeclared+1
+        `$1 *` @DECLARE_ID_$1_FIELD_POINTER ` = &` @REUSE_ID_$1_FIELD_VAR `; ` \n
+    #END_RULE
+    #BEGIN_RULE:1
+    #END_RULE
+
+@DECLARE_ID_$1_FIELD_POINTER
+    #BEGIN_RULE
+        #CREATE_ID $1FieldPointer_
+    #END_RULE
+
+
 @DECLARE_LAZY_ID_$1_POINTER
     #BEGIN_RULE
         #CREATE_LAZY_ID $1Pointer_
     #END_RULE
 
 @REUSE_ID_$1_POINTER
-    #BEGIN_RULE
+    #BEGIN_RULE:3
         #REUSE_ID $1Pointer_
+    #END_RULE
+    #BEGIN_RULE:$1FieldPointerDeclared
+        @REUSE_ID_$1_FIELD_POINTER
+    #END_RULE
+
+@REUSE_ID_$1_FIELD_POINTER
+    #BEGIN_RULE
+        `(this -> ` #REUSE_ID $1FieldPointer_ `)`
     #END_RULE
 
 @DECLARE_POINTER_OF_TYPE
     #APPEND_RULE:10*Enable$1
         @DECLARE_$1_POINTER
     #END_RULE
+
+@DECLARE_FIELD_POINTER_OF_TYPE
+    #APPEND_RULE:10*Enable$1
+        @DECLARE_$1_FIELD_POINTER
+    #END_RULE
+
 
 @$1_LITERAL_POINTER
     #BEGIN_RULE:6*$1PointerDeclared
@@ -43,5 +71,14 @@
         ` = `
     #END_RULE
 
+@CREATE_ID_POINTER_FUNC_$1_$1
+    #BEGIN_RULE
+        #CREATE_LAZY_ID pointer_func_$1_$1_
+    #END_RULE
+
+@REUSE_ID_POINTER_FUNC_$1_$1
+    #APPEND_RULE:25*pointer_func_$1_$1Declared
+        #REUSE_ID pointer_func_$1_$1_
+    #END_RULE
 
 

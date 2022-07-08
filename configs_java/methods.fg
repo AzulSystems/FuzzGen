@@ -5,14 +5,14 @@
 
 #INCLUDE "configs_java/checksumArrayMethods.fg" int short byte long float double Integer Short Byte Long Float Double
 
-#INCLUDE "configs_java/testMethods.fg" int short byte long float double Integer Short Byte Long Float Double
+#INCLUDE "configs_java/testMethods.fg" int short byte long float double Integer Short Byte Long Float Double String
 
 
 @DECLARE_METHOD
 
 #SET MethodCount=0
 @DECLARE_METHODS
-    #BEGIN_RULE:5*(MaxMethodsInClass+-1*MethodCount)
+    #BEGIN_RULE:6*(MaxMethodsInClass+-1*MethodCount)
 		#SET MethodCount=MethodCount+1
         @DECLARE_METHOD \n @DECLARE_METHODS
     #END_RULE
@@ -20,7 +20,7 @@
 		#SET MethodCount=MethodCount+1
         @DECLARE_RECURSIVE_FUNCTION \n @DECLARE_METHODS
     #END_RULE
-    #BEGIN_RULE:4
+    #BEGIN_RULE:3
     #END_RULE
 
 

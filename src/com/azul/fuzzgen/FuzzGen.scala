@@ -19,15 +19,16 @@
 
 package com.azul.fuzzgen
 
+import java.io.PrintWriter
 import com.azul.fuzzgen.fuzzer.Fuzzer
 import com.azul.fuzzgen.parser.{RulesFileReader, RulesParser}
 
-import java.io.PrintWriter
 import scala.collection.mutable
 
 /**
   * Main runner for the Fuzzer.
   */
+
 object FuzzGen {
   private val version: String = "FuzzGen v0.1"
   private val help: String = {
@@ -35,6 +36,7 @@ object FuzzGen {
       "\t--version\tPrint information about current FuzzGen's version.\n" +
       "\t--help\tPrint this help message.\n" +
       "\t--verbose\tPrint details as generation goes on.\n" +
+      "\t--dont-fail-on-warnings\tIgnore warning messages and proceed fuzzing.\n" +
       "\t--grammar=<path>\tSpecify path to grammar file. Must be specified.\n" +
       "\t--output=<path>\tPath to output directory. Defaulted to current directory.\n" +
       "\t--seed=<int>\tSpecify seed for generation. Defaulted to 0.\n" +
@@ -42,6 +44,19 @@ object FuzzGen {
       "\t--num-attempts=<int>\tSpecify the number of fuzz attempts on one test. Defaulted to 20.\n" +
       "\t--parallel\tEnable parallel test generation.\n" +
       "\t--local-id-separator=<string>\tSpecify the separator string used in output of GetLocalIDs Lexeme. Defaulted to \",\".\n"
+  }
+  var dontFailOnWarnings: Boolean = false
+
+  def error(message: String) = {
+    throw new Exception(message)
+  }
+
+  def warning(message: String) = {
+    if (FuzzGen.dontFailOnWarnings) {
+      println("WARNING: " + message)
+    } else {
+      throw new Exception(message + "\n Use --dont-fail-on-warnings to ignore this warning")
+    }
   }
 
   def main(args: Array[String]): Unit = {
@@ -63,6 +78,8 @@ object FuzzGen {
         return
       } else if (currArg.startsWith("--grammar=")) {
         pathToGrammar = Some(currArg.substring("--grammar=".length))
+      } else if (currArg.equals("--dont-fail-on-warnings")) {
+        this.dontFailOnWarnings = true
       } else if (currArg.startsWith("--output=")) {
         pathToOutputDir = currArg.substring("--output=".length)
       } else if (currArg.startsWith("--seed=")) {

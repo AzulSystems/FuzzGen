@@ -2,6 +2,7 @@
 
 // beginning of setting var counters to zero
 #SET $1IndVarDeclared=0
+#SET $1IndArraySafeVarDeclared=0
 #SET $1LinkVarDeclared=0
 #SET $1$2Declared=0
 #SET $1Array$2Declared=0
@@ -16,11 +17,35 @@
 #SET $1int64_tMapDeclared=0
 #SET $1uint64_tMapDeclared=0
 #SET $1SetDeclared=0
+#SET $1Field$2Declared=0
+#SET $1ArrayField$2Declared=0
+
+#SET func_$1_$1Declared=0
+#SET pointer_func_$1_$1Declared=0
+
+@SET_DECLARED_FIELDS_FLAG_TO_ZERO_$1_$2
+    #BEGIN_RULE
+        #SET $1Field$2Declared=0
+        #SET $1ArrayField$2Declared=0
+    #END_RULE
+
+@SET_DECLARED_FUNC_FLAG_TO_ZERO_$1_$1
+    #BEGIN_RULE
+        #SET func_$1_$1Declared=0
+        #SET pointer_func_$1_$1Declared=0
+       // #SET recursive_function_$1_$1Declared=0
+    #END_RULE
+
+
+
+
+
 
 // end of setting var counters to zero
 @SET_DECLARED_FLAG_TO_ZERO_$1_$2
     #BEGIN_RULE
         #SET $1IndVarDeclared=0
+        #SET $1IndArraySafeVarDeclared=0
         #SET $1$2Declared=0
         #SET $1Array$2Declared=0
         #SET $1VectorDeclared=0

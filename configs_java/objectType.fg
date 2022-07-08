@@ -10,44 +10,86 @@
 
 
 
+@DECLARE_$1_METHOD_OBJ_VAR
+     #BEGIN_RULE
+        #SET $1MethodObjVarDeclared=$1MethodObjVarDeclared+1
+        #SET global_$1MethodObjVarDeclared=global_$1MethodObjVarDeclared+1
+
+        #LEND_SCOPE_WITH_ID Cls_ method_$1_$1_ 
+			#REUSE_ID Cls_
+	    #RETURN_SCOPE
+	    ` ` #CREATE_ID_FROM_LAST_ID ( Cls_ _mObjVar_ ) ` = new ` #GET_LAST_ID Cls_ `();` \n
+        #REGISTER_LAZY_IDS
+     #END_RULE
+     #BEGIN_RULE:4*$1MethodObjVarDeclared
+		#LEND_SCOPE_WITH_ID_BY_PREFIX ( Cls_ _mObjVar_ Cls_ )
+		 `  /* DEBUG 1 */ `   #GET_LAST_ID Cls_ ` `
+		#RETURN_SCOPE
+        #CREATE_ID_FROM_LAST_ID ( Cls_ _mObjVar_ )
+         ` = ` 
+        #GET_LAST_ID Cls_%_mObjVar_ `; ` \n
+        #REGISTER_LAZY_IDS
+        #SET $1MethodObjVarDeclared=$1MethodObjVarDeclared+1
+        #SET global_$1MethodObjVarDeclared=global_$1MethodObjVarDeclared+1
+     #END_RULE
+
 @REUSE_ID_METHOD_$1_$1
     #APPEND_RULE:5*global_method_$1_$1Declared*0
          #LEND_SCOPE_WITH_ID Cls_ method_$1_$1_
            `(new ` #REUSE_LOCAL_ID Cls_ `()).` #REUSE_LOCAL_ID method_$1_$1_
          #RETURN_SCOPE
     #END_RULE
-
-@REUSE_ID_RECURSIVE_FUNCTION_$1_$1
-    #BEGIN_RULE:25*recursive_function_$1_$1Declared
-        #REUSE_ID recursive_function_$1_$1_
-    #END_RULE
-    #BEGIN_RULE:2*global_recursive_function_$1_$1Declared
-         #LEND_SCOPE_WITH_ID Cls_ recursive_function_$1_$1_
-            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID recursive_function_$1_$1_
-         #RETURN_SCOPE
+    #APPEND_RULE:500*$1MethodObjVarDeclared
+		#LEND_SCOPE_WITH_ID_BY_PREFIX ( Cls_ _mObjVar_ method_$1_$1_ )
+		#GET_LAST_ID Cls_%_mObjVar_	 `.` #REUSE_LOCAL_ID method_$1_$1_ 	
+		#RETURN_SCOPE
     #END_RULE
 
-
-@DECLARE_$1_METHOD_OBJ_VAR
+@DECLARE_$1_FIELD_OBJ_VAR
      #BEGIN_RULE
-        #SET $1MethodObjVarDeclared=$1MethodObjVarDeclared+1
-        #SET global_$1MethodObjVarDeclared=global_$1MethodObjVarDeclared+1
-        #LEND_SCOPE_WITH_ID Cls_ method_$1_$1_
-            #REUSE_ID Cls_ ` ` 
-        #RETURN_SCOPE
-        #CREATE_ID $1MethodObjVar_ ` = new ` #GET_LAST_ID Cls_ `(); ` \n
+        #SET $1FieldObjVarDeclared=$1FieldObjVarDeclared+1
+        #SET global_$1FieldObjVarDeclared=global_$1FieldObjVarDeclared+1
 
-    #END_RULE
+        #LEND_SCOPE_WITH_ID Cls_ $1FieldVar_ 
+			#REUSE_ID Cls_
+	    #RETURN_SCOPE
+	    ` ` #CREATE_ID_FROM_LAST_ID ( Cls_ _$1fObjVar_ ) ` = new ` #GET_LAST_ID Cls_ `();` \n
+        #REGISTER_LAZY_IDS
+     #END_RULE
+     #BEGIN_RULE:4*$1FieldObjVarDeclared
+		#LEND_SCOPE_WITH_ID_BY_PREFIX ( Cls_ _$1fObjVar_ Cls_ )
+		 `  /* DEBUG 1 */ `   #GET_LAST_ID Cls_ ` `
+		#RETURN_SCOPE
+        #CREATE_ID_FROM_LAST_ID ( Cls_ _$1fObjVar_ )
+         ` = ` 
+        #GET_LAST_ID Cls_%_$1fObjVar_ `; ` \n
+        #REGISTER_LAZY_IDS
+        #SET $1FieldObjVarDeclared=$1FieldObjVarDeclared+1
+        #SET global_$1FieldObjVarDeclared=global_$1FieldObjVarDeclared+1
+     #END_RULE
 
-@REUSE_$1_METHOD_OBJ_VAR
-     #BEGIN_RULE
-            #REUSE_ID $1MethodObjVar_
-    #END_RULE
 
 
-@DECLARE_VAR_OF_TYPE
-#APPEND_RULE:10*global_method_$1_$1Declared*0
-    @DECLARE_$1_METHOD_OBJ_VAR
+
+@REUSE_ID_$1_FIELD_VAR
+    #APPEND_RULE:30*$1FieldObjVarDeclared
+	    #LEND_SCOPE_WITH_ID_BY_PREFIX ( Cls_ _$1fObjVar_ $1FieldVar_ )
+		    `/* FieldObjVar */` #GET_LAST_ID Cls_%_$1fObjVar_	 `.` #REUSE_LOCAL_ID  $1FieldVar_
+		#RETURN_SCOPE
+#END_RULE
+// TODO: Sometimes (rarely) try to access field of another type
+#APPEND_RULE:10*$1FieldObjVarDeclared*0
+	    #LEND_SCOPE_WITH_ID_BY_PREFIX ( Cls_ _%fObjVar_ $1FieldVar_ )
+		    `/* FieldObjVar */` #GET_LAST_ID Cls_%_$1fObjVar_	 `.` #REUSE_LOCAL_ID  $1FieldVar_
+		#RETURN_SCOPE
 #END_RULE
 
+@DECLARE_VAR_OF_TYPE
+    #APPEND_RULE:20*global_method_$1_$1Declared
+        @DECLARE_$1_METHOD_OBJ_VAR
+    #END_RULE
+    #APPEND_RULE:20*global_$1FieldVarDeclared
+        @DECLARE_$1_FIELD_OBJ_VAR
+    #END_RULE
 
+       

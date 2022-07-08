@@ -1,4 +1,4 @@
-#INCLUDE "configs_java/parametersByType.fg" (boolean int short byte long float double Boolean Integer Short Byte Long Float Double) (Var Val)
+#INCLUDE "configs_java/parametersByType.fg" (boolean int short byte long float double Boolean Integer Short Byte Long Float Double String) (Var Val)
 #INCLUDE "configs_java/parametersBasic.fg"
 
 
@@ -22,6 +22,8 @@
 @SET_GLOBAL_COUNTERS_TO_ZERO_float_Val
 @SET_GLOBAL_COUNTERS_TO_ZERO_double_Val
 
+@SET_GLOBAL_COUNTERS_TO_ZERO_String_Val
+
 
 @SET_GLOBAL_COUNTERS_TO_ZERO_Boolean_Var
 @SET_GLOBAL_COUNTERS_TO_ZERO_Integer_Var
@@ -38,6 +40,10 @@
 @SET_GLOBAL_COUNTERS_TO_ZERO_Long_Val
 @SET_GLOBAL_COUNTERS_TO_ZERO_Float_Val
 @SET_GLOBAL_COUNTERS_TO_ZERO_Double_Val
+
+
+@SET_GLOBAL_COUNTERS_TO_ZERO_String_Var
+
 #END_RULE
 
 
@@ -61,6 +67,9 @@
 @SET_DECLARED_FLAG_TO_ZERO_float_Val
 @SET_DECLARED_FLAG_TO_ZERO_double_Val
 
+@SET_DECLARED_FLAG_TO_ZERO_String_Val
+@SET_DECLARED_FLAG_TO_ZERO_String_Var
+
 
 @SET_DECLARED_FLAG_TO_ZERO_Boolean_Var
 @SET_DECLARED_FLAG_TO_ZERO_Integer_Var
@@ -77,6 +86,9 @@
 @SET_DECLARED_FLAG_TO_ZERO_Long_Val
 @SET_DECLARED_FLAG_TO_ZERO_Float_Val
 @SET_DECLARED_FLAG_TO_ZERO_Double_Val
+
+
+
 #END_RULE
 
 @SET_DECLARED_FIELDS_FLAG_TO_ZERO
@@ -97,6 +109,8 @@
 @SET_DECLARED_FIELDS_FLAG_TO_ZERO_float_Val
 @SET_DECLARED_FIELDS_FLAG_TO_ZERO_double_Val
 
+@SET_DECLARED_FIELDS_FLAG_TO_ZERO_String_Val
+
 
 @SET_DECLARED_FIELDS_FLAG_TO_ZERO_Boolean_Var
 @SET_DECLARED_FIELDS_FLAG_TO_ZERO_Integer_Var
@@ -113,6 +127,10 @@
 @SET_DECLARED_FIELDS_FLAG_TO_ZERO_Long_Val
 @SET_DECLARED_FIELDS_FLAG_TO_ZERO_Float_Val
 @SET_DECLARED_FIELDS_FLAG_TO_ZERO_Double_Val
+
+
+@SET_DECLARED_FIELDS_FLAG_TO_ZERO_String_Var
+
 #END_RULE
 
 
@@ -131,6 +149,8 @@
 @SET_DECLARED_METHOD_FLAG_TO_ZERO_Long_Long
 @SET_DECLARED_METHOD_FLAG_TO_ZERO_Float_Float
 @SET_DECLARED_METHOD_FLAG_TO_ZERO_Double_Double
+
+@SET_DECLARED_METHOD_FLAG_TO_ZERO_String_String
 
 
 #END_RULE

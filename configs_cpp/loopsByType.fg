@@ -1,16 +1,16 @@
 
-@DECLARE_ID_$1_IND_VAR
+@DECLARE_ID_$1_IND_$2
     #BEGIN_RULE
-        #SET $1IndVarDeclared=$1IndVarDeclared+1
-        #CREATE_ID $1IndVar_
+        #SET $1Ind$3Declared=$1Ind$3Declared+1
+        #CREATE_ID $1Ind$3_
     #END_RULE
 
-@REUSE_ID_$1_IND_VAR
+@REUSE_ID_$1_IND_$2
     #BEGIN_RULE
-        #REUSE_ID $1IndVar_
+        #REUSE_ID $1Ind$3_
     #END_RULE
 
-@REUSE_$1_IND_VAR
+@REUSE_$1_IND_$2
     #BEGIN_RULE
-        #REUSE_LOCAL_ID $1IndVar_
+        #REUSE_LOCAL_ID $1Ind$3_
     #END_RULE

@@ -1,0 +1,60 @@
+#INCLUDE "configs_scala/parametersByType.fg" (Boolean Int Long Float Double) (Var Val)
+
+//Keep EnableInt always >0! 
+#SET EnableInt=5
+#SET EnableLong=2
+#SET EnableFloat=2
+#SET EnableDouble=1
+
+@ARRAY_MAX_LENGTH
+#BEGIN_RULE
+          `1000`
+#END_RULE
+
+
+#SET StatementProb=8
+#SET MaxLoopNest=3
+#SET LoopNest=0
+#SET MaxLoopCount=40
+#SET LoopCount=0
+
+#SET LoopCntLimitMin=10
+#SET LoopCntLimitMax=150
+
+#SET MaxCondCount=12
+#SET CondCount=0
+#SET MaxCondNest=3
+#SET CondNest=0
+
+#SET BinExprMaxDepth=3
+#SET ExprMaxDepth=2
+#SET ExprBlockMaxDepth=1
+
+#SET MaxLambdaCount=1
+#SET MaxListCount=2
+#SET MaxSetCount=2
+
+#SET MethodCallInExprWeight=6
+
+#SET MaxStatementsInMethodCount=20
+#SET StatementsInMethodCount=0
+
+#SET LambdaCount=0
+
+@SET_DECLARED_FLAG_TO_ZERO
+    #BEGIN_RULE
+        @SET_DECLARED_FLAG_TO_ZERO_Boolean_Var
+        @SET_DECLARED_FLAG_TO_ZERO_Int_Var
+        @SET_DECLARED_FLAG_TO_ZERO_Long_Var
+        @SET_DECLARED_FLAG_TO_ZERO_Float_Var
+        @SET_DECLARED_FLAG_TO_ZERO_Double_Var
+        @SET_DECLARED_FLAG_TO_ZERO_Boolean_Val
+        @SET_DECLARED_FLAG_TO_ZERO_Int_Val
+        @SET_DECLARED_FLAG_TO_ZERO_Long_Val
+        @SET_DECLARED_FLAG_TO_ZERO_Float_Val
+        @SET_DECLARED_FLAG_TO_ZERO_Double_Val
+    #END_RULE
+        
+        
+        
+        

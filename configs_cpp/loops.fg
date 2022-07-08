@@ -1,16 +1,22 @@
 #INCLUDE "configs_cpp/constants.fg"
 
 #INCLUDE "configs_cpp/loopsContainer.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
-#INCLUDE "configs_cpp/loopsByType.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
-#INCLUDE "configs_cpp/loopsBorders.fg" (bool) (0) (1) (0) (1)
-#INCLUDE "configs_cpp/loopsBorders.fg" (int8_t) (-20) (20) (1) (5)
-#INCLUDE "configs_cpp/loopsBorders.fg" (uint8_t) (10) (20) (1) (5)
-#INCLUDE "configs_cpp/loopsBorders.fg" (int16_t) (-500) (500) (10) (20)
-#INCLUDE "configs_cpp/loopsBorders.fg" (uint16_t) (100) (500) (10) (20)
-#INCLUDE "configs_cpp/loopsBorders.fg" (int32_t) (-1000) (1000) (10) (20)
-#INCLUDE "configs_cpp/loopsBorders.fg" (uint32_t) (100) (1000) (10) (20)
-#INCLUDE "configs_cpp/loopsBorders.fg" (int64_t) (-1000) (1000) (10) (20)
-#INCLUDE "configs_cpp/loopsBorders.fg" (uint64_t) (100) (1000) (10) (20)
+#INCLUDE "configs_cpp/loopsByType.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t) (VAR) (Var)
+#INCLUDE "configs_cpp/loopsByType.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t) (ARRAY_SAFE_VAR) (ArraySafeVar)
+#INCLUDE "configs_cpp/loopsBorders.fg" (bool) (0) (1) (0) (1) (1) 
+#INCLUDE "configs_cpp/loopsBorders.fg" (int8_t) (-20) (20) (1) (5) (20)
+#INCLUDE "configs_cpp/loopsBorders.fg" (uint8_t) (10) (20) (1) (5) (20)
+#INCLUDE "configs_cpp/loopsBorders.fg" (int16_t) (-300) (300) (10) (20) (300)
+#INCLUDE "configs_cpp/loopsBorders.fg" (uint16_t) (100) (300) (10) (20) (300)
+#INCLUDE "configs_cpp/loopsBorders.fg" (int32_t) (-600) (600) (10) (20) (600)
+#INCLUDE "configs_cpp/loopsBorders.fg" (uint32_t) (100) (600) (10) (20) (600)
+#INCLUDE "configs_cpp/loopsBorders.fg" (int64_t) (-600) (600) (10) (20) (600)
+#INCLUDE "configs_cpp/loopsBorders.fg" (uint64_t) (100) (600) (10) (20) (600)
+
+// $1 (int32_t)
+// $2 (ARRAY_SAFE_$2) 
+// $3 (ArraySafe$3) 
+// $4($4_ARRAY_SAFE)
 
 @STATEMENTS
 
@@ -55,88 +61,122 @@
         ` >= `
     #END_RULE 
 
-@LOOP_IND_VAR_SET_LOW_$1
+@LOOP_IND_$2_SET_LOW_$1
     #BEGIN_RULE
-    ` $1 ` @DECLARE_ID_$1_IND_VAR ` = ` @LOOP_BOTTOM_BORDER_$1 `; ` \n
+    ` $1 ` @DECLARE_ID_$1_IND_$2 ` = ` @LOOP_BOTTOM_$4_$1 `; ` \n
     #END_RULE
 
-@LOOP_IND_VAR_SET_UP_$1
+@LOOP_IND_$2_SET_UP_$1
     #BEGIN_RULE
-    ` $1 ` @DECLARE_ID_$1_IND_VAR ` = ` @LOOP_TOP_BORDER_$1 `; ` \n
+    ` $1 ` @DECLARE_ID_$1_IND_$2 ` = ` @LOOP_TOP_$4_$1 `; ` \n
     #END_RULE
 
-@WHILE_CONDITION_LESS_$1
+@WHILE_CONDITION_LESS_$2_$1
     #BEGIN_RULE
-        ` while ( ` @REUSE_$1_IND_VAR @LESS @LOOP_TOP_BORDER_$1  ` )`
+        ` while ( ` @REUSE_$1_IND_$2 @LESS @LOOP_TOP_$4_$1  ` )`
     #END_RULE
 
-@WHILE_CONDITION_GREATER_$1
+@WHILE_CONDITION_GREATER_$2_$1
     #BEGIN_RULE
-        ` while ( ` @REUSE_$1_IND_VAR @GREATER @LOOP_BOTTOM_BORDER_$1  ` )`
+        ` while ( ` @REUSE_$1_IND_$2 @GREATER @LOOP_BOTTOM_$4_$1  ` )`
     #END_RULE
+
+@REUSE_$1_IND_$2_INC
+    #BEGIN_RULE
+        @REUSE_$1_IND_$2 ` = ` @REUSE_$1_IND_$2 ` + ` @LOOP_RANGE_STEP_$1 `; ` \n
+    #END_RULE
+    #BEGIN_RULE
+        @REUSE_$1_IND_$2_INC_UNARY `; ` \n
+    #END_RULE
+
+@REUSE_$1_IND_$2_INC_UNARY
+    #BEGIN_RULE
+        @REUSE_$1_IND_$2  @INCREMENT 
+    #END_RULE
+    #BEGIN_RULE
+        @INCREMENT @REUSE_$1_IND_$2 
+    #END_RULE
+
+@REUSE_$1_IND_$2_DEC
+    #BEGIN_RULE
+        @REUSE_$1_IND_$2 ` = ` @REUSE_$1_IND_$2 ` - ` @LOOP_RANGE_STEP_$1 `; ` \n
+    #END_RULE
+    #BEGIN_RULE
+        @REUSE_$1_IND_$2_DEC_UNARY `; ` \n
+    #END_RULE
+
+@REUSE_$1_IND_$2_DEC_UNARY
+    #BEGIN_RULE
+        @REUSE_$1_IND_$2  @DECREMENT
+    #END_RULE
+    #BEGIN_RULE
+        @DECREMENT @REUSE_$1_IND_$2 
+    #END_RULE
+
+
 
 @WHILE_LOOP
     #APPEND_RULE
         #BEGIN_SCOPE
-        @LOOP_IND_VAR_SET_LOW_$1
-        @WHILE_CONDITION_LESS_$1   `{ ` \n
-            @REUSE_$1_IND_VAR ` = ` @REUSE_$1_IND_VAR ` + ` @LOOP_RANGE_STEP_$1 `; ` \n
+        @LOOP_IND_$2_SET_LOW_$1
+        @WHILE_CONDITION_LESS_$2_$1   `{ ` \n
+            @REUSE_$1_IND_$2_INC
             @STATEMENTS \n
             #END_SCOPE \n ` } ` \n
-        #SET $1IndVarDeclared=$1IndVarDeclared-1
+        #SET $1Ind$3Declared=$1Ind$3Declared-1
     #END_RULE
     #APPEND_RULE
         #BEGIN_SCOPE
-        @LOOP_IND_VAR_SET_UP_$1
-        @WHILE_CONDITION_GREATER_$1 `{ ` \n
-            @REUSE_$1_IND_VAR ` = ` @REUSE_$1_IND_VAR ` - ` @LOOP_RANGE_STEP_$1 `; ` \n
+        @LOOP_IND_$2_SET_UP_$1
+        @WHILE_CONDITION_GREATER_$2_$1 `{ ` \n
+            @REUSE_$1_IND_$2_DEC
             @STATEMENTS \n
             #END_SCOPE \n ` } ` \n
-        #SET $1IndVarDeclared=$1IndVarDeclared-1
+        #SET $1Ind$3Declared=$1Ind$3Declared-1
     #END_RULE
 
 @DO_WHILE_LOOP
     #APPEND_RULE
         #BEGIN_SCOPE
-        @LOOP_IND_VAR_SET_LOW_$1
+        @LOOP_IND_$2_SET_LOW_$1
         `do { ` #BEGIN_SCOPE \n
             @STATEMENTS \n
             #END_SCOPE \n
-            @REUSE_$1_IND_VAR ` = ` @REUSE_$1_IND_VAR ` + ` @LOOP_RANGE_STEP_$1 `; ` \n
+            @REUSE_$1_IND_$2_INC
             `} `
-        ` while ( ` @REUSE_$1_IND_VAR @LESS @LOOP_TOP_BORDER_$1  ` ); ` \n
+        ` while ( ` @REUSE_$1_IND_$2 @LESS @LOOP_TOP_$4_$1  ` ); ` \n
         #END_SCOPE
-        #SET $1IndVarDeclared=$1IndVarDeclared-1
+        #SET $1Ind$3Declared=$1Ind$3Declared-1
     #END_RULE
     #APPEND_RULE
         #BEGIN_SCOPE
-        @LOOP_IND_VAR_SET_UP_$1
+        @LOOP_IND_$2_SET_UP_$1
         `do { ` #BEGIN_SCOPE \n
             @STATEMENTS \n
             #END_SCOPE \n
-            @REUSE_$1_IND_VAR ` = ` @REUSE_$1_IND_VAR ` - ` @LOOP_RANGE_STEP_$1 `; ` \n
+            @REUSE_$1_IND_$2_DEC
             `} `
-        ` while ( ` @REUSE_$1_IND_VAR @GREATER @LOOP_BOTTOM_BORDER_$1  ` ); ` \n
+        ` while ( ` @REUSE_$1_IND_$2 @GREATER @LOOP_BOTTOM_$4_$1  ` ); ` \n
         #END_SCOPE
-        #SET $1IndVarDeclared=$1IndVarDeclared-1
+        #SET $1Ind$3Declared=$1Ind$3Declared-1
     #END_RULE
 
 @FOR_LOOP
     #APPEND_RULE
-        `for (` #BEGIN_SCOPE @LOOP_IND_VAR_SET_LOW_$1
-                @REUSE_$1_IND_VAR @LESS @LOOP_TOP_BORDER_$1 `; `
-                @REUSE_$1_IND_VAR ` = ` @REUSE_$1_IND_VAR ` + ` @LOOP_RANGE_STEP_$1 `) { ` \n
+        `for (` #BEGIN_SCOPE @LOOP_IND_$2_SET_LOW_$1
+                @REUSE_$1_IND_$2 @LESS @LOOP_TOP_$4_$1 `; `
+                @REUSE_$1_IND_$2_INC_UNARY `) { ` \n
             @STATEMENTS \n
             #END_SCOPE \n
-            #SET $1IndVarDeclared=$1IndVarDeclared-1
+            #SET $1Ind$3Declared=$1Ind$3Declared-1
             ` } ` \n
     #END_RULE
     #APPEND_RULE
-        `for (` #BEGIN_SCOPE @LOOP_IND_VAR_SET_UP_$1
-                @REUSE_$1_IND_VAR @GREATER @LOOP_BOTTOM_BORDER_$1 `; `
-                @REUSE_$1_IND_VAR ` = ` @REUSE_$1_IND_VAR ` - ` @LOOP_RANGE_STEP_$1 `) { ` \n
+        `for (` #BEGIN_SCOPE @LOOP_IND_$2_SET_UP_$1
+                @REUSE_$1_IND_$2 @GREATER @LOOP_BOTTOM_$4_$1 `; `
+                @REUSE_$1_IND_$2_DEC_UNARY `) { ` \n
             @STATEMENTS \n
             #END_SCOPE \n
-            #SET $1IndVarDeclared=$1IndVarDeclared-1
+            #SET $1Ind$3Declared=$1Ind$3Declared-1
             ` } ` \n
     #END_RULE

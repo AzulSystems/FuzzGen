@@ -1,0 +1,46 @@
+
+@CAST_EXT_INSTRUCTION_$1_$2
+    #BEGIN_RULE
+        `  %`
+        #CREATE_LAZY_ID val_$2_
+        ` = `
+        @CAST_EXT_INSTRUCTION_$1_$2_IMPL
+        ` $1 ` @LITERAL_$1 ` to $2 `
+        #REGISTER_LAZY_IDS
+        #SET NUM_VALUES_$2=NUM_VALUES_$2+1
+    #END_RULE
+
+@CAST_EXT_INSTRUCTION_$1_$2_IMPL
+    #BEGIN_RULE
+        // %X = zext i32 257 to i64             ; yields i64:257
+        `zext`
+    #END_RULE
+    #BEGIN_RULE
+        // %X = sext i8  -1 to i16              ; yields i16   :65535
+        `sext`
+    #END_RULE
+
+@CAST_TRUNC_INSTRUCTION_$2_$1
+    #BEGIN_RULE
+        `  %`
+        #CREATE_LAZY_ID val_$1_
+        ` = `
+        @CAST_TRUNC_INSTRUCTION_$2_$1_IMPL
+        ` $2 ` @LITERAL_$2 ` to $1 `
+        #REGISTER_LAZY_IDS
+        #SET NUM_VALUES_$1=NUM_VALUES_$1+1
+    #END_RULE
+
+@CAST_TRUNC_INSTRUCTION_$2_$1_IMPL
+    #BEGIN_RULE
+        // %X = trunc i32 257 to i8                        ; yields i8:1
+        `trunc`
+    #END_RULE
+
+@CAST_INSTRUCTION
+    #APPEND_RULE
+        @CAST_EXT_INSTRUCTION_$1_$2    
+    #END_RULE
+    #APPEND_RULE
+        @CAST_TRUNC_INSTRUCTION_$2_$1
+    #END_RULE

@@ -5,10 +5,11 @@
 #INCLUDE "configs_java/list.fg" int short byte long float double Integer Short Byte Long Float Double
 #INCLUDE "configs_java/set.fg" int short byte long float double Integer Short Byte Long Float Double
 
+#INCLUDE "configs_java/string.fg" (String) (boolean Boolean)  ( int short byte long float double Integer Short Byte Long Float Double  )
 
 
 @DECLARE_VARS
-    #BEGIN_RULE:10
+    #BEGIN_RULE:20
         @DECLARE_VAR \n @DECLARE_VARS
     #END_RULE
     #BEGIN_RULE
@@ -16,7 +17,7 @@
     #END_RULE
 
 @DECLARE_VAR
-    #BEGIN_RULE:80
+    #BEGIN_RULE:100
         @DECLARE_VAR_OF_TYPE
     #END_RULE
     #BEGIN_RULE:20
@@ -30,6 +31,12 @@
     #END_RULE
     #BEGIN_RULE:2
         @DECLARE_Boolean_VAL
+    #END_RULE
+    #BEGIN_RULE:20
+        @DECLARE_String_VAR
+    #END_RULE
+    #BEGIN_RULE:2
+        @DECLARE_String_VAL
     #END_RULE
     #BEGIN_RULE:1
         @DECLARE_ANOTHER_CLASS_OBJ

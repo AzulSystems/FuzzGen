@@ -1,0 +1,35 @@
+@INCREMENT
+    #BEGIN_RULE
+        `++`
+    #END_RULE
+
+@DECREMENT
+    #BEGIN_RULE
+        `--`
+    #END_RULE
+
+
+@PREFIX_OP_$1_$1
+    #BEGIN_RULE
+        @INCREMENT
+    #END_RULE
+    #BEGIN_RULE
+        @DECREMENT
+    #END_RULE
+
+@POSTFIX_OP_$1_$1
+    #BEGIN_RULE
+        @INCREMENT
+    #END_RULE
+    #BEGIN_RULE
+        @DECREMENT
+    #END_RULE
+
+
+@PREFIX_OP_bool_bool
+    #BEGIN_RULE
+    #END_RULE
+
+@POSTFIX_OP_bool_bool
+    #BEGIN_RULE
+    #END_RULE

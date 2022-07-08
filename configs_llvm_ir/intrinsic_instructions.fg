@@ -1,0 +1,18 @@
+#INCLUDE "configs_llvm_ir/intrinsic_instructions_typed.fg" (i1 i8 i16 i32 i64)
+
+
+@INTRINSIC_DECLARE
+    #BEGIN_RULE
+            @INTRINSIC_DECLARE_i1
+            @INTRINSIC_DECLARE_i8
+            @INTRINSIC_DECLARE_i16
+            @INTRINSIC_DECLARE_i32
+            @INTRINSIC_DECLARE_i64
+            ` declare void @llvm.assume(i1 noundef) ` \n
+    #END_RULE
+
+@ASSUME_INTRINSIC
+    #BEGIN_RULE
+        `call void @llvm.assume(i1 %` #REUSE_ID val_i1_  `) `
+    #END_RULE
+

@@ -19,7 +19,7 @@
     #BEGIN_RULE:(StatementProb+-1*LoopNest)*(MaxStatementsInMethodCount+-1*StatementsInMethodCount)
         @STATEMENT @STATEMENTS
     #END_RULE
-    #BEGIN_RULE:7
+    #BEGIN_RULE:2*StatementProb*(1+LoopNest)
     #END_RULE
 
 @STATEMENTS_SHORT
@@ -38,17 +38,17 @@
 
 @STATEMENT_
     //#BEGIN_RULE:60*(MaxLoopCount+-1*LoopCount)+3
-    #BEGIN_RULE:200
+    #BEGIN_RULE:390
         @ASSIGN
     #END_RULE
-   #BEGIN_RULE:10*(MaxCondCount+-1*CondCount)*(MaxCondNest+-1*CondNest)
+   #BEGIN_RULE:8*(MaxCondCount+-1*CondCount)*(MaxCondNest+-1*CondNest)
         #SET CondNest=CondNest+1
         #SET CondCount=CondCount+1
         @CONDITIONAL
          #SET CondNest=CondNest+-1
     #END_RULE                                               
   
-    #BEGIN_RULE:4*(MaxLoopCount+-1*LoopCount)*(MaxLoopNest+-1*LoopNest+-1*LongLoop)*(1+5*TryCatchDepth)       
+    #BEGIN_RULE:1*(MaxLoopCount+-1*LoopCount)*(MaxLoopNest+-1*LoopNest+-1*LongLoop)*(MaxLoopNest+-1*LoopNest+-1*LongLoop)*(1+5*TryCatchDepth)       
 	#SET LoopCount=LoopCount+1
         #SET LoopNest=LoopNest+1
         @LOOP
@@ -148,7 +148,7 @@
     #END_RULE
        
 @CONDITIONAL
-    #BEGIN_RULE:5
+    #BEGIN_RULE:10
         @IF
     #END_RULE  
     #BEGIN_RULE:1

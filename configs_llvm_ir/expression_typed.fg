@@ -25,3 +25,13 @@
 #BEGIN_RULE
     `%` #REUSE_ID ptr_$1_
 #END_RULE
+
+@LITERAL_$1
+#BEGIN_RULE:5
+    @CONST_$1
+#END_RULE
+#BEGIN_RULE:10*NUM_VALUES_$1
+    `%` #REUSE_ID val_$1_
+#END_RULE
+
+

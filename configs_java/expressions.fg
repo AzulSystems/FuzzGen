@@ -29,137 +29,143 @@
 
 
 @byte_EXPRESSION_SPECIFIC
-    #BEGIN_RULE:5
+    #APPEND_RULE:5
         `(byte)(` @int_EXPRESSION_COMMON `)`
     #END_RULE
-    #BEGIN_RULE:5
+    #APPEND_RULE:5
         `(byte)(` @short_EXPRESSION_COMMON `)`
     #END_RULE
-    #BEGIN_RULE:5
+    #APPEND_RULE:5
         `(byte)(` @long_EXPRESSION_COMMON `)`
     #END_RULE
-    #BEGIN_RULE:1
+    #APPEND_RULE:1
         @Byte_EXPRESSION
     #END_RULE
 
 @Byte_EXPRESSION_SPECIFIC
-    #BEGIN_RULE:1
+    #APPEND_RULE:1
         @byte_EXPRESSION
     #END_RULE
 
 
 @short_EXPRESSION_SPECIFIC
-    #BEGIN_RULE:5
+    #APPEND_RULE:5
         `(short)(` @int_EXPRESSION_COMMON `)`
     #END_RULE
-    #BEGIN_RULE:5
+    #APPEND_RULE:5
         @byte_EXPRESSION_COMMON 
     #END_RULE
-    #BEGIN_RULE:5
+    #APPEND_RULE:5
         `(short)(` @long_EXPRESSION_COMMON `)`
     #END_RULE
-    #BEGIN_RULE:1
+    #APPEND_RULE:1
         @Short_EXPRESSION
     #END_RULE
 
-
 @Short_EXPRESSION_SPECIFIC
-    #BEGIN_RULE:1
+    #APPEND_RULE:1
         @short_EXPRESSION
     #END_RULE
 
 
 @int_EXPRESSION_SPECIFIC
-    #BEGIN_RULE
+    #APPEND_RULE
          @Integer_EXPRESSION_COMMON
     #END_RULE
-    #BEGIN_RULE
+    #APPEND_RULE
          @short_EXPRESSION
     #END_RULE
-    #BEGIN_RULE
+    #APPEND_RULE
          @byte_EXPRESSION
     #END_RULE
-    #BEGIN_RULE:(intVarDeclared+intFieldVarDeclared)
+    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)
          @REUSE_ID_int_VAR `++`
     #END_RULE
-    #BEGIN_RULE:(intVarDeclared+intFieldVarDeclared)
+    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)
         `++` @REUSE_ID_int_VAR 
     #END_RULE
-    #BEGIN_RULE:(intVarDeclared+intFieldVarDeclared)
+    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)
          @REUSE_ID_int_VAR `--`
     #END_RULE
-    #BEGIN_RULE:(intVarDeclared+intFieldVarDeclared)
+    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)
         `--` @REUSE_ID_int_VAR 
     #END_RULE
+    #APPEND_RULE:StringVarDeclared
+         @REUSE_ID_String_VAR `.length()`
+    #END_RULE
+    #APPEND_RULE:StringValDeclared
+         @REUSE_ID_String_VAL `.length()`
+    #END_RULE
+
     
 @Integer_EXPRESSION_SPECIFIC
-    #BEGIN_RULE
+    #APPEND_RULE
          @int_EXPRESSION_COMMON
     #END_RULE
-    #BEGIN_RULE
+    #APPEND_RULE
          `(int)(` @int_EXPRESSION `)`
     #END_RULE
     
 @float_EXPRESSION_SPECIFIC
-    #BEGIN_RULE:5
+    #APPEND_RULE:5
         `(float)(` @double_EXPRESSION `)`
     #END_RULE
-    #BEGIN_RULE
+    #APPEND_RULE
          @Float_EXPRESSION
     #END_RULE
-
+    
 @Float_EXPRESSION_SPECIFIC
-    #BEGIN_RULE
+    #APPEND_RULE
          @float_EXPRESSION
     #END_RULE
 
 @double_EXPRESSION_SPECIFIC
-    #BEGIN_RULE:10
+    #APPEND_RULE:10
         `(double)(` @int_EXPRESSION `)`
     #END_RULE
-    #BEGIN_RULE:10
+    #APPEND_RULE:10
         `(double)(` @long_EXPRESSION `)`
     #END_RULE
-    #BEGIN_RULE
+    #APPEND_RULE
          @Double_EXPRESSION
     #END_RULE
-    #BEGIN_RULE:5
+    #APPEND_RULE:5
          @MATHPOW
     #END_RULE
-    #BEGIN_RULE:5
+    #APPEND_RULE:5
          @MATHEXP
     #END_RULE
-    #BEGIN_RULE:5
+    #APPEND_RULE:5
          @MATHLOG
     #END_RULE
-    #BEGIN_RULE:5
+    #APPEND_RULE:5
          @MATHLOG10
     #END_RULE
-    #BEGIN_RULE:4
+    #APPEND_RULE:4
          @SQRT
     #END_RULE
-
+   
 @Double_EXPRESSION_SPECIFIC
-    #BEGIN_RULE
+    #APPEND_RULE
          @double_EXPRESSION
     #END_RULE
 
 @long_EXPRESSION_SPECIFIC
-    #BEGIN_RULE:5
+    #APPEND_RULE:5
         `(long)(` @int_EXPRESSION `)`
     #END_RULE
-    #BEGIN_RULE:5
+    #APPEND_RULE:5
         @int_EXPRESSION
     #END_RULE
-    #BEGIN_RULE:5
+    #APPEND_RULE:5
         @Long_EXPRESSION
     #END_RULE
-
+    
 @Long_EXPRESSION_SPECIFIC
-    #BEGIN_RULE:5
+    #APPEND_RULE:5
         @long_EXPRESSION_COMMON
     #END_RULE
-    #BEGIN_RULE:5
+    #APPEND_RULE:5
         `(long)(`@long_EXPRESSION_SPECIFIC `)`
     #END_RULE
 
@@ -171,16 +177,16 @@
     #BEGIN_RULE
         @boolean_CONSTANT
     #END_RULE
-    #BEGIN_RULE:20*booleanValDeclared
+    #BEGIN_RULE:2*booleanValDeclared
         @REUSE_ID_boolean_VAL
     #END_RULE
-    #BEGIN_RULE:50*booleanVarDeclared
+    #BEGIN_RULE:5*booleanVarDeclared
         @REUSE_ID_boolean_VAR
     #END_RULE
-    #BEGIN_RULE:10*BooleanValDeclared
+    #BEGIN_RULE:1*BooleanValDeclared
         @REUSE_ID_Boolean_VAL
     #END_RULE
-    #BEGIN_RULE:10*BooleanVarDeclared
+    #BEGIN_RULE:1*BooleanVarDeclared
         @REUSE_ID_Boolean_VAR
     #END_RULE
     #BEGIN_RULE:20
@@ -201,7 +207,7 @@
     #BEGIN_RULE:20
         @BIN_EXPR_DoubleDouble_Boolean
     #END_RULE
-    #BEGIN_RULE:20
+    #BEGIN_RULE:40
         @BIN_EXPR_intint_boolean
     #END_RULE
     #BEGIN_RULE:20
@@ -225,10 +231,54 @@
     #BEGIN_RULE:10
         @ARRAYEQUALS
     #END_RULE
+    #BEGIN_RULE:10*StringVarDeclared
+        `(` @REUSE_ID_String_VAR `.equals( ` @String_EXPRESSION ` ))`
+    #END_RULE
+    #BEGIN_RULE:10*StringValDeclared
+        `(` @REUSE_ID_String_VAL `.equals( ` @String_EXPRESSION ` ))`
+    #END_RULE
 
 @Boolean_EXPRESSION
     #BEGIN_RULE
         @boolean_EXPRESSION
+    #END_RULE
+
+@String_EXPRESSION
+    #BEGIN_RULE
+        @String_CONSTANT
+    #END_RULE
+    #BEGIN_RULE:2-LoopNest
+        `(` @String_EXPRESSION @OP_StringString_String  @String_EXPRESSION `)`
+    #END_RULE
+    #BEGIN_RULE:8*StringValDeclared
+        @REUSE_ID_String_VAL
+    #END_RULE
+    #BEGIN_RULE:5*StringVarDeclared
+        @REUSE_ID_String_VAR
+    #END_RULE
+    #BEGIN_RULE:2*(2-LoopNest)
+        `( ` @String_EXPRESSION ` .concat(` @String_EXPRESSION ` ))`
+    #END_RULE
+    #BEGIN_RULE:1
+        `String.valueOf( ` @int_EXPRESSION ` )`
+    #END_RULE
+    #BEGIN_RULE:1
+        `String.valueOf( ` @long_EXPRESSION ` )`
+    #END_RULE
+    #BEGIN_RULE:1
+        `String.valueOf( ` @byte_EXPRESSION ` )`
+    #END_RULE
+    #BEGIN_RULE:1
+        `String.valueOf( ` @short_EXPRESSION ` )`
+    #END_RULE
+    #BEGIN_RULE:1
+        `String.valueOf( ` @float_EXPRESSION ` )`
+    #END_RULE
+    #BEGIN_RULE:1
+        `String.valueOf( ` @double_EXPRESSION ` )`
+    #END_RULE
+    #BEGIN_RULE:2*method_String_StringDeclared
+        @REUSE_ID_METHOD_String_String `(` @String_EXPRESSION `)`
     #END_RULE
 
 

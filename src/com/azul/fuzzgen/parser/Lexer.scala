@@ -19,7 +19,7 @@
 
 package com.azul.fuzzgen.parser
 
-import LexemeType._
+import com.azul.fuzzgen.parser.LexemeType._
 import scala.collection.mutable.ArrayBuffer
 
 /**
@@ -68,7 +68,11 @@ class Lexer() {
   }
 
   private def isExtendedLetterOrDigit(char: Char): Boolean = {
-    char == '_' || Character.isLetterOrDigit(char)
+    (char ==  '_' ) || Character.isLetterOrDigit(char)
+  }
+
+  private def isOkForID(char: Char): Boolean = {
+    isExtendedLetterOrDigit(char) || (char == '&' ) || (char == '%' )
   }
 
   private def isExtendedDigit(char: Char): Boolean = {
@@ -87,12 +91,16 @@ class Lexer() {
 
   private def parseID: String = {
     skipWhiteSpaces()
-    if (!hasCurrChar || !isExtendedLetter(currChar)) {
-      error("ID should start from a letter!")
+    if (!hasCurrChar || !(isOkForID(currChar) )) {
+      //if (!hasCurrChar || !(isExtendedLetter(currChar) || currChar == "+" || currChar == "*")) {
+        error("ID should start from a letter, not " + currChar)
+
     }
     val sb = new StringBuilder
-    while (hasCurrChar && isExtendedLetterOrDigit(currChar))
-      sb.append(nextChar)
+    //while (hasCurrChar && (isExtendedLetterOrDigit(currChar)|| currChar == "+" || currChar == "*")) {
+      while (hasCurrChar && (isOkForID(currChar))) {
+        sb.append(nextChar)
+    }
     sb.toString
   }
 
@@ -350,6 +358,20 @@ class Lexer() {
     if (lookup(Lexer.END_SCOPE))
       return new Lexeme(Lexer.END_SCOPE, EndScope)
 
+    if (lookup(Lexer.LEND_SCOPE_WITH_ID_BY_PREFIX)) {
+      skipWhiteSpaces()
+      if (!lookup("(")) {
+        error("Error in Lexer.LEND_SCOPE_WITH_ID_BY_PREFIX: \"(\" expected" )
+      }
+      val lex = new LendScopeWithIDByPrefixLexeme(LendScopeWithIDByPrefix, parseID, parseID, parseID)
+      skipWhiteSpaces()
+      if (!lookup(")")) {
+        error("Error in Lexer.LEND_SCOPE_WITH_ID_BY_PREFIX: \")\" expected" )
+      }
+      return lex
+    }
+
+
     if (lookup(Lexer.LEND_SCOPE_WITH_ID))
       return new LendScopeWithIDLexeme(parseID, LendScopeWithID, parseID)
 
@@ -377,8 +399,26 @@ class Lexer() {
     if (lookup(Lexer.END_RULE))
       return new Lexeme(Lexer.END_RULE, EndRule)
 
-    if (lookup(Lexer.CREATE_ID))
+
+    if (lookup(Lexer.CREATE_ID_FROM_LAST_ID)) {
+      skipWhiteSpaces()
+      if (!lookup("(")) {
+        error("Error in Lexer.CREATE_ID_FROM_LAST_ID: \"(\" expected" )
+      }
+      val lex =new CreateIDFromLastIDLexeme(CreateIDFromLastID, parseID, parseID)
+      skipWhiteSpaces()
+      if (!lookup(")")) {
+        error("Error in Lexer.CREATE_ID_FROM_LAST_ID: \")\" expected" )
+      }
+      return lex
+
+    }
+
+    if (lookup(Lexer.CREATE_ID)) {
       return new IDLexeme(parseID, CreateID)
+    }
+
+
 
     if (lookup(Lexer.CREATE_LAZY_ID))
       return new IDLexeme(parseID, CreateLazyID)
@@ -389,8 +429,9 @@ class Lexer() {
     if (lookup(Lexer.REUSE_ID_AND_LINK))
       return new IDLexeme(parseID, ReuseIDAndLink)
 
-    if (lookup(Lexer.REUSE_ID))
+    if (lookup(Lexer.REUSE_ID)) {
       return new IDLexeme(parseID, ReuseID)
+    }
 
     if (lookup(Lexer.REUSE_LOCAL_ID))
       return new IDLexeme(parseID, ReuseLocalID)
@@ -498,12 +539,14 @@ object Lexer {
   val BEGIN_SCOPE = "#BEGIN_SCOPE"
   val LEND_SCOPE = "#LEND_SCOPE"
   val LEND_SCOPE_WITH_ID = "#LEND_SCOPE_WITH_ID"
+  val LEND_SCOPE_WITH_ID_BY_PREFIX = "#LEND_SCOPE_WITH_ID_BY_PREFIX"
   val END_SCOPE = "#END_SCOPE"
   val RETURN_SCOPE = "#RETURN_SCOPE"
   val BEGIN_RULE = "#BEGIN_RULE"
   val END_RULE = "#END_RULE"
   val APPEND_RULE = "#APPEND_RULE"
   val CREATE_ID = "#CREATE_ID"
+  val CREATE_ID_FROM_LAST_ID = "#CREATE_ID_FROM_LAST_ID"
   val CREATE_LAZY_ID = "#CREATE_LAZY_ID"
   val REGISTER_LAZY_IDS = "#REGISTER_LAZY_IDS"
   val REUSE_ID = "#REUSE_ID"

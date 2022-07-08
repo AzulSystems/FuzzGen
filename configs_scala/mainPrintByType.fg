@@ -1,0 +1,66 @@
+#INCLUDE "configs_scala/expressions.fg" 
+#INCLUDE "configs_scala/parameters.fg" 
+
+@PRINT_VARS_$1
+    #BEGIN_RULE:1000000
+        @PRINT_VAR_$1
+        @PRINT_VAL_$1
+        @PRINT_ARRAYS_$1
+        @PRINT_LISTS_$1
+        @PRINT_SETS_$1
+    #END_RULE
+    #BEGIN_RULE:1
+        ` ` \n
+    #END_RULE    
+
+@PRINT_VAR_$1
+    #BEGIN_RULE:100000*$1VarDeclared
+		`printVarsMethod(" ` #GET_LOCAL_IDS_OR_EMPTY $1Var_ `", List( ` #GET_LOCAL_IDS_OR_EMPTY $1Var_ ` )) ` \n
+    #END_RULE
+    #BEGIN_RULE:1+-1*$1VarDeclared
+        ` ` \n
+    #END_RULE    
+
+@PRINT_VAL_$1
+    #BEGIN_RULE:100000*$1ValDeclared
+		`printVarsMethod(" ` #GET_LOCAL_IDS_OR_EMPTY $1Val_ `", List( ` #GET_LOCAL_IDS_OR_EMPTY $1Val_ ` )) ` \n
+    #END_RULE
+    #BEGIN_RULE:1+-1*$1ValDeclared
+        ` ` \n
+    #END_RULE    
+
+
+
+@PRINT_ARRAYS_$1
+    #BEGIN_RULE:100000*$1ArrayVarDeclared
+        `printCollectionVarsMethod_$1(" ` #GET_LOCAL_IDS_OR_EMPTY $1ArrayVar_ `", List( ` #GET_LOCAL_IDS_OR_EMPTY $1ArrayVar_ `  )) ` \n
+    #END_RULE    
+    #BEGIN_RULE:1+-1*$1ArrayVarDeclared
+        ` ` \n
+    #END_RULE    
+	
+@PRINT_LISTS_$1
+    #BEGIN_RULE:100000*$1ListVarDeclared
+        `printCollectionVarsMethod_$1(" ` #GET_LOCAL_IDS_OR_EMPTY $1ListVar_ `", List( ` #GET_LOCAL_IDS_OR_EMPTY $1ListVar_ `  )) ` \n
+    #END_RULE    
+    #BEGIN_RULE
+    #END_RULE    
+    #BEGIN_RULE:1+-1*$1ListVarDeclared
+        ` ` \n
+    #END_RULE    
+
+@PRINT_SETS_$1
+    #BEGIN_RULE:100000*$1ImmutableSetVarDeclared
+        `printCollectionVarsMethod_$1(" ` #GET_LOCAL_IDS_OR_EMPTY $1ImmutableSetVar_ `", List( ` #GET_LOCAL_IDS_OR_EMPTY $1ImmutableSetVar_ `  )) ` \n
+    #END_RULE    
+    #BEGIN_RULE:1+-1*$1ImmutableSetVarDeclared
+        ` ` \n
+    #END_RULE    
+
+
+@ASSIGN_METHOD_RESULT
+	#APPEND_RULE:1000000*method_$1_$1Declared
+		`val ` #CREATE_LAZY_ID $1Val_ ` = ` @REUSE_ID_METHOD_$1_$1 ` ( ` @$1_EXPRESSION ` ) ` #REGISTER_LAZY_IDS \n
+        #SET $1ValDeclared=$1ValDeclared+1
+    #END_RULE    
+	

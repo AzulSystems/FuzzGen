@@ -315,7 +315,7 @@
 @LOOP_CNT_UPPER_LIMIT_NOT_ARRAY_SAFE_VAR_LONG_LOOP_$1
     #BEGIN_RULE:200*(LimitCheck$1+-1*250)
         #SET LongLoop=LongLoop+1
-        @[151:5000]
+        @[151:MaxLongLoopLength]
         `/* LOOP_CNT_UPPER_LIMIT_NOT_ARRAY_SAFE_VAR_LONG_LOOP */`
     #END_RULE
     #BEGIN_RULE:(250+-1*LimitCheck$1)

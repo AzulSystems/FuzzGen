@@ -1,0 +1,31 @@
+
+@CHECKSUM_$1_FUNC
+    #BEGIN_RULE
+        `template <typename T>` \n
+        `$1 checksum_$1(T x) {` \n
+        `T y = x;` \n
+        `$1  z = 0; ` \n
+        `$1  sum = 0; ` \n
+        `while (y>0) { ` \n
+        `z = y % 10;` \n
+        `sum += z;` \n
+        `y = (y - z)/10;` \n
+        `}` \n
+       `   return sum;` \n
+
+`}`
+
+    #END_RULE
+
+
+@$2_RETURN_STATEMENT_$1
+    #BEGIN_RULE:$2_is_narrower_than_$1*($1VarDeclared)*1000
+        `(` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1Var_ " + " `) `
+    #END_RULE
+    #BEGIN_RULE:(1-$2_is_narrower_than_$1)*($1VarDeclared)*1000
+        `checksum_$2(` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1Var_ " + " `) `
+    #END_RULE
+    #BEGIN_RULE:1
+        ` 0  ` 
+    #END_RULE
+

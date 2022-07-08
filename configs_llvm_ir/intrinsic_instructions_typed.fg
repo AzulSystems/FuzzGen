@@ -1,0 +1,55 @@
+// $1 - type
+
+
+@MINMAX_INTRINSIC_CALL_$1
+    #BEGIN_RULE
+        `  %`
+        #CREATE_LAZY_ID val_$1_
+        ` = `
+
+        ` call $1 @llvm.` @MINMAX_INTRINSIC_IMPL `.$1($1 %` #REUSE_ID val_$1_ `, $1 %` #REUSE_ID val_$1_ `)`
+        #REGISTER_LAZY_IDS
+        #SET NUM_VALUES_$1=NUM_VALUES_$1+1
+    #END_RULE
+
+
+@INTRINSIC_DECLARE_$1
+    #BEGIN_RULE
+        ` declare $1 @llvm.smin.$1($1, $1) ` \n 
+        ` declare $1 @llvm.umin.$1($1, $1) ` \n
+        ` declare $1 @llvm.smax.$1($1, $1) ` \n
+        ` declare $1 @llvm.umax.$1($1, $1) ` \n
+    #END_RULE
+
+@ASSUME_INTRINSIC
+    #BEGIN_RULE
+        `call void @llvm.assume(i1 %` #REUSE_ID val_i1_  `) `
+    #END_RULE
+        
+
+@MINMAX_INTRINSIC_IMPL
+    #BEGIN_RULE
+        `smin`
+    #END_RULE
+    #BEGIN_RULE
+        `umin`
+    #END_RULE
+    #BEGIN_RULE
+        `smax`
+    #END_RULE
+    #BEGIN_RULE
+        `umax`
+    #END_RULE
+
+
+@INTRINSIC_$1
+    #BEGIN_RULE
+        @MINMAX_INTRINSIC_CALL_$1
+    #END_RULE
+
+@INTRINSIC_INSTRUCTION
+    #APPEND_RULE:NUM_VALUES_$1
+        @INTRINSIC_$1
+    #END_RULE
+
+

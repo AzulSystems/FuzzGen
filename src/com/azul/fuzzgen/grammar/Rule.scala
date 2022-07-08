@@ -20,7 +20,6 @@
 package com.azul.fuzzgen.grammar
 
 import com.azul.fuzzgen.parser.{Expression, Lexeme}
-
 import scala.collection.mutable.ArrayBuffer
 
 /**

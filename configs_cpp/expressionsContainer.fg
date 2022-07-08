@@ -11,23 +11,35 @@
         @bool_LITERAL
     #END_RULE
 
+@VECTORIZATION_TRIGGER_ADDITION
+    #BEGIN_RULE
+    #END_RULE
+    #BEGIN_RULE
+        ` + ` @[1:8]
+    #END_RULE
+
+
+
 @$1_GET_ELEMENT_FROM_CONTAINER
-    #BEGIN_RULE:100*$1ArrayVarDeclared
-        @REUSE_ID_$1_ARRAY_VAR`[($1) (`@$1_EXPRESSION`) % lengthArray(` #GET_LAST_ID $1ArrayVar_ `)]`
+    #APPEND_RULE:100*$1ArrayVarDeclared
+        @REUSE_ID_$1_ARRAY_VAR `[ (`@$1_EXPRESSION `) % lengthArray(` #GET_LAST_ID $1ArrayVar_ `)]`
     #END_RULE
-    #BEGIN_RULE:50*$1VectorDeclared
-        @REUSE_ID_$1_VECTOR`.at(($1) (`@$1_EXPRESSION`) % ` #GET_LAST_ID $1Vector_`.size())`
+    #APPEND_RULE:8000*$1ArrayVarDeclared*$2IndArraySafeVarDeclared
+        @REUSE_ID_$1_ARRAY_VAR `[ `  #REUSE_ID $2IndArraySafeVar_ @VECTORIZATION_TRIGGER_ADDITION `]`
     #END_RULE
-    #BEGIN_RULE:50*$1VectorDeclared
-        @REUSE_ID_$1_VECTOR`[($1) (`@$1_EXPRESSION`) % ` #GET_LAST_ID $1Vector_`.size()]`
+    #APPEND_RULE:50*$1VectorDeclared
+        `(` @REUSE_ID_$1_VECTOR `.empty() ? ` @$1_EXPRESSION ` : ` #GET_LAST_ID $1Vector_  `.at((`@$1_EXPRESSION `) % ` #GET_LAST_ID $1Vector_ `.size()))`
     #END_RULE
-    #BEGIN_RULE:3*$1VectorDeclared
-        @REUSE_ID_$1_VECTOR`.front()`
+    #APPEND_RULE:50*$1VectorDeclared
+        `(` @REUSE_ID_$1_VECTOR `.empty() ? ` @$1_EXPRESSION ` : ` #GET_LAST_ID $1Vector_ `[(`@$1_EXPRESSION`) % ` #GET_LAST_ID $1Vector_ `.size()] )`
     #END_RULE
-    #BEGIN_RULE:3*$1VectorDeclared
-        @REUSE_ID_$1_VECTOR`.back()`
+    #APPEND_RULE:3*$1VectorDeclared
+         `(` @REUSE_ID_$1_VECTOR `.empty() ? ` @$1_EXPRESSION ` : ` #GET_LAST_ID $1Vector_ `.front())`
     #END_RULE
-    #BEGIN_RULE:1
+    #APPEND_RULE:3*$1VectorDeclared
+       `(` @REUSE_ID_$1_VECTOR `.empty() ? ` @$1_EXPRESSION ` : ` #GET_LAST_ID $1Vector_ `.back())`
+    #END_RULE
+    #APPEND_RULE:1
         @$1_LITERAL
     #END_RULE
 

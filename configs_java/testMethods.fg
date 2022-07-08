@@ -13,19 +13,20 @@
 @DECLARE_METHOD
     #APPEND_RULE:Enable$1
     \n \n ` public static $1 ` @CREATE_ID_METHOD_$1_$1 ` ( `
-    #BEGIN_SCOPE ` $1 ` @DECLARE_ID_$1_VAL_ARG ` ) { ` \n
+    #BEGIN_SCOPE 
+        @SET_FLAGS_BEFORE_METHOD_
+        @SET_DECLARED_FLAG_TO_ZERO
+        ` $1 ` @DECLARE_ID_$1_VAL_ARG ` ) { ` \n
     #SET global_method_$1_$1Declared=global_method_$1_$1Declared+1*(1-TestClass)
-//        ` // ` #CREATE_ID $1MethodObjVar_ \n
             @$1_METHOD_BODY \n ` } ` 
 
         #END_SCOPE
             @MAKE_METHOD_CALLABLE_$1 \n
     #SET method_$1_$1Declared=method_$1_$1Declared+1
-  //  #SET global_$1MethodObjVarDeclared=global_$1MethodObjVarDeclared+1
     #END_RULE
 
 @DECLARE_RECURSIVE_FUNCTION
-    #APPEND_RULE:Enable$1
+    #APPEND_RULE:Enable$1*(1-$1IsStringType)
     \n \n ` public static $1 ` @CREATE_ID_RECURSIVE_FUNCTION_$1_$1 ` ( `
     #BEGIN_SCOPE ` $1 ` @DECLARE_ID_$1_VAL_ARG ` ) { ` \n
     #SET global_recursive_function_$1_$1Declared=global_recursive_function_$1_$1Declared+1*(1-TestClass)
@@ -40,8 +41,6 @@
 
 @$1_METHOD_BODY
     #BEGIN_RULE
-        @SET_FLAGS_BEFORE_METHOD_
-        @SET_DECLARED_FLAG_TO_ZERO
         //#SET $1ValDeclared=$1ValDeclared+1
         @DECLARE_VARS
 
@@ -72,16 +71,22 @@
 
 
 @$1_RETURN_CAST_PREFIX
-#BEGIN_RULE:$1IsPrimitiveType
+#BEGIN_RULE:$1IsPrimitiveType*(1-$1IsStringType)
     `( $1 )(`
 #END_RULE
-#BEGIN_RULE:1+-1*$1IsPrimitiveType
+#BEGIN_RULE:(1+-1*$1IsPrimitiveType)*(1-$1IsStringType)
                 `new $1( (`@$1ToPrimitiveType `)`
+#END_RULE
+#BEGIN_RULE:$1IsStringType
+                `(`
 #END_RULE
 
 @$1_RETURN_CAST_SUFFIX
-#BEGIN_RULE
+#BEGIN_RULE:1-$1IsStringType
                         `)`
+#END_RULE
+#BEGIN_RULE:$1IsStringType
+                        ` + "")`
 #END_RULE
 
 
@@ -100,6 +105,7 @@
         @$1_RETURN_STATEMENT_Long ` + ` \n
         @$1_RETURN_STATEMENT_Float ` + ` \n
         @$1_RETURN_STATEMENT_Double ` + `  \n
+        @$1_RETURN_STATEMENT_String ` + `  \n
        `  0) `
        @$1_RETURN_CAST_SUFFIX `; ` \n
         #END_RULE

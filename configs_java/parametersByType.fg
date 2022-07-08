@@ -16,12 +16,19 @@
 #SET $1UknownZeroVarDeclared=0
 #SET AnotherClassObjVarDeclared=0
 #SET $1MethodObjVarDeclared=0
+#SET $1FieldObjVarDeclared=0
 
 #SET $1ArrayFieldValCopyOfDone=0
 #SET $1ArrayFieldVarCopyOfDone=0
 
 #SET $1ArrayValCopyOfDone=0
 #SET $1ArrayVarCopyOfDone=0
+
+#SET StringNumericVarDeclared=0
+#SET String$1NumericVarDeclared=0
+
+#SET StringNumericValDeclared=0
+#SET String$1NumericValDeclared=0
 
 @SET_GLOBAL_COUNTERS_TO_ZERO_$1_$2
     #BEGIN_RULE
@@ -32,6 +39,7 @@
 //Fake
 #SET global_$1Array$2Declared=0
 #SET global_$1MethodObjVarDeclared=0
+#SET global_$1FieldObjVarDeclared=0
     #END_RULE
 
 #SET global_method_$1_$1Declared=0
@@ -41,6 +49,7 @@
 //Fake
 #SET global_$1Array$2Declared=0
 #SET global_$1MethodObjVarDeclared=0
+#SET global_$1FieldObjVarDeclared=0
 
 #SET $1RecursiveFunction=0
 
@@ -73,6 +82,12 @@
         #SET $1ArrayValCopyOfDone=0
         #SET $1ArrayVarCopyOfDone=0
         #SET $1MethodObjVarDeclared=0
+        #SET $1FieldObjVarDeclared=0
+        #SET StringNumericVarDeclared=0
+        #SET String$1NumericVarDeclared=0
+
+        #SET StringNumericValDeclared=0
+        #SET String$1NumericValDeclared=0
     #END_RULE
         
         

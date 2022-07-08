@@ -21,30 +21,30 @@
 
 @PRINT_VARS_$1
     #BEGIN_RULE
-		`result += "` #GET_LOCAL_IDS_OR_EMPTY $1Var_ ` " + to_string(` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1Var_ ") + to_string(" `); ` \n
+		`result += "` #GET_LOCAL_IDS_OR_EMPTY $1Var_ ` " + to_string(` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1Var_ ") + to_string(" `) + "\n"; ` \n
 		#SET $1VarDeclared=0
     #END_RULE
 
 @PRINT_POINTERS_$1
     #BEGIN_RULE
-		`result += "` #GET_LOCAL_IDS_OR_EMPTY $1Pointer_ ` " + to_string(*` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1Pointer_ ") + to_string(*" `); ` \n
+		`result += "` #GET_LOCAL_IDS_OR_EMPTY $1Pointer_ ` " + to_string(*` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1Pointer_ ") + to_string(*" `) + "\n"; ` \n
 		#SET $1PointerDeclared=0
     #END_RULE
 
 @PRINT_ARRAYS_$1
     #BEGIN_RULE
-        `result += "` #GET_LOCAL_IDS_OR_EMPTY $1ArrayVar_ ` " + to_string(print(` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1ArrayVar_ ")) + to_string(print(" `)); ` \n
+        `result += "` #GET_LOCAL_IDS_OR_EMPTY $1ArrayVar_ ` " + to_string(print(` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1ArrayVar_ ")) + to_string(print(" `)) + "\n"; ` \n
         #SET $1ArrayVarDeclared=0
     #END_RULE
 
 @PRINT_VECTORS_$1
     #BEGIN_RULE
-        `result += "` #GET_LOCAL_IDS_OR_EMPTY $1Vector_ ` " + to_string(print(` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1Vector_ ")) + to_string(print(" `)); ` \n
+        `result += "` #GET_LOCAL_IDS_OR_EMPTY $1Vector_ ` " + to_string(print(` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1Vector_ ")) + to_string(print(" `)) + "\n"; ` \n
         #SET $1VectorDeclared=0
     #END_RULE
 
 @PRINT_SETS_$1
     #BEGIN_RULE
-        `result += "` #GET_LOCAL_IDS_OR_EMPTY $1Set_ ` " + to_string(print(` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1Set_ ")) + to_string(print(" `)); ` \n
+        `result += "` #GET_LOCAL_IDS_OR_EMPTY $1Set_ ` " + to_string(print(` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1Set_ ")) + to_string(print(" `)) + "\n"; ` \n
         #SET $1SetDeclared=0
     #END_RULE

@@ -125,15 +125,15 @@
 
 
 @REUSE_ID_$1_FIELD_VAR
-    #BEGIN_RULE:2*global_$1FieldVarDeclared
+    #APPEND_RULE:2*global_$1FieldVarDeclared
          #LEND_SCOPE_WITH_ID Cls_ $1FieldVar_
             #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID $1FieldVar_
          #RETURN_SCOPE
     #END_RULE
-    #BEGIN_RULE:20*$1FieldVarDeclared
+    #APPEND_RULE:20*$1FieldVarDeclared
             #REUSE_ID $1FieldVar_
     #END_RULE
-    #BEGIN_RULE:TestClass*0
+    #APPEND_RULE:TestClass*0
          #LEND_SCOPE_WITH_ID Test_ $1FieldVar_
              `Test.`  #REUSE_LOCAL_ID $1FieldVar_
          #RETURN_SCOPE
@@ -195,10 +195,10 @@
 
 
 @$1_LITERAL
-    #APPEND_RULE:10
-        @$1_CONSTANT @$1_CONSTANT_SUFFIX
+    #APPEND_RULE:2
+@$1_CONSTANT @$1_CONSTANT_SUFFIX
     #END_RULE
-    #APPEND_RULE:6*$1ValDeclared
+    #APPEND_RULE:20*$1ValDeclared
         @REUSE_ID_$1_VAL
     #END_RULE
     #APPEND_RULE:60*$1VarDeclared

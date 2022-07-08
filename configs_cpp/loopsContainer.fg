@@ -36,6 +36,5 @@
         #END_SCOPE
     #END_RULE
     #APPEND_RULE:1
-        @STATEMENT_
     #END_RULE
 

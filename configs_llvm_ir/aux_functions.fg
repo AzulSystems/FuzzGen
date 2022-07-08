@@ -1,3 +1,6 @@
+//#INCLUDE "configs_llvm_ir/intrinsic_instructions_typed.fg" (i1 i8 i16 i32 i64)
+
+
 @AUX_FUNCTON_DEFS
 #BEGIN_RULE
     `; TODO: Here will be aux function defs`

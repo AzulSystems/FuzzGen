@@ -2,6 +2,19 @@
 @DECLARE_ID_int32_t_VAR
 @$1_LITERAL
 
+@ARRAY_INIT_MACROS_$1
+    #BEGIN_RULE
+        `#define INITS_$1(...) __VA_ARGS__ ` \n
+        `#define INITS10_$1 INITS_$1(` @$1_CONSTANT `, ` @$1_CONSTANT `, ` @$1_CONSTANT `, `  @$1_CONSTANT `, `  @$1_CONSTANT `, ` @$1_CONSTANT `, ` @$1_CONSTANT `, ` @$1_CONSTANT `, `  @$1_CONSTANT `, `  @$1_CONSTANT  `)` \n
+        `#define INITS100_$1 INITS_$1(INITS10_$1, INITS10_$1, INITS10_$1, INITS10_$1, INITS10_$1, INITS10_$1, INITS10_$1, INITS10_$1, INITS10_$1, INITS10_$1)` \n
+        `#define INITS1000_$1 INITS_$1(INITS100_$1, INITS100_$1, INITS100_$1, INITS100_$1, INITS100_$1, INITS100_$1, INITS100_$1, INITS100_$1, INITS100_$1, INITS100_$1)` \n \n
+
+    #END_RULE
+
+@ARRAY_INIT_MACROS_10_$1
+    #BEGIN_RULE
+    #END_RULE
+
 @DECLARE_$1_ARRAY_VAR
     #BEGIN_RULE
         #SET $1ArrayVarDeclared=$1ArrayVarDeclared+1
@@ -18,10 +31,34 @@
     #BEGIN_RULE:$1ArrayVarDeclared
         #REUSE_ID $1ArrayVar_
     #END_RULE
+    #BEGIN_RULE:2*$1ArrayFieldVarDeclared
+        @REUSE_ID_$1_ARRAY_FIELD_VAR
+    #END_RULE
 
 @DECLARE_VAR_OF_TYPE
-    #APPEND_RULE:30*Enable$1
+    #APPEND_RULE:50*Enable$1
         @DECLARE_$1_ARRAY_VAR
+    #END_RULE
+
+@DECLARE_$1_ARRAY_FIELD_VAR
+    #BEGIN_RULE
+        #SET $1ArrayFieldVarDeclared=$1ArrayFieldVarDeclared+1
+        `$1 ` @DECLARE_ID_$1_ARRAY_FIELD_VAR `[1000] = {INITS1000_$1};` \n
+    #END_RULE
+
+@DECLARE_ID_$1_ARRAY_FIELD_VAR
+    #BEGIN_RULE
+        #CREATE_ID $1ArrayFieldVar_
+    #END_RULE
+
+@REUSE_ID_$1_ARRAY_FIELD_VAR
+    #BEGIN_RULE
+        `this->` #REUSE_ID $1ArrayFieldVar_
+    #END_RULE
+
+@DECLARE_FIELD_VAR_OF_TYPE
+    #APPEND_RULE:20*Enable$1
+        @DECLARE_$1_ARRAY_FIELD_VAR
     #END_RULE
 
 

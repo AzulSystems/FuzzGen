@@ -1,7 +1,7 @@
 #INCLUDE "configs_java/parameters.fg"
 #INCLUDE "configs_java/synchronizedBlock.fg"
 #INCLUDE "configs_java/methods.fg"
-#INCLUDE "configs_java/mainPrintByType.fg" (int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/mainPrintByType.fg" (int short byte long float double Integer Short Byte Long Float Double String)
 #INCLUDE "configs_java/utils.fg"
 
 @MAIN
@@ -127,7 +127,7 @@
 #BEGIN_SCOPE
             `   try {` \n
                 `   Test _instance = new Test(); ` \n
-                    `      for (int i = 0; i < 1000; i++ ) { ` \n
+                    `      for (int i = 0; i < 400; i++ ) { ` \n
                         `            _instance.mainTest(args); ` \n
                             `       }` \n
                             `   } catch (Exception ex) {`     \n
@@ -212,6 +212,8 @@
         @DECLARE_PRINT_VARS_METHOD_Long
         @DECLARE_PRINT_VARS_METHOD_Float
         @DECLARE_PRINT_VARS_METHOD_Double
+
+        @DECLARE_PRINT_VARS_METHOD_String
     #END_RULE
 
 @DECLARE_PRINT_COLLECTION_VARS_METHOD
@@ -235,11 +237,8 @@
 
 @PRINTS
     #BEGIN_RULE
+        @ASSIGN_METHOD_RESULT
         @ASSIGN_METHODS_RESULTS
-		@ASSIGN_METHODS_RESULTS
-		@ASSIGN_METHODS_RESULTS
-		@ASSIGN_METHODS_RESULTS
-		@ASSIGN_METHODS_RESULTS
         @PRINT_VARS
     #END_RULE
 
@@ -258,10 +257,12 @@
         @PRINT_VARS_Long
         @PRINT_VARS_Float
         @PRINT_VARS_Double
+
+        @PRINT_VARS_String
     #END_RULE
 
 @ASSIGN_METHODS_RESULTS
-	#BEGIN_RULE:1*(MaxExplicitCallsInMain-ExplicitCallsInMain)
+	#BEGIN_RULE:(MaxExplicitCallsInMain-ExplicitCallsInMain)
         #SET ExplicitCallsInMain=ExplicitCallsInMain+1
 		@ASSIGN_METHOD_RESULT @ASSIGN_METHODS_RESULTS 
 	#END_RULE

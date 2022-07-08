@@ -7,6 +7,7 @@
         @TARGET_INFO \n\n
         @DECLARE_GLOBALS \n\n
         @AUX_FUNCTON_DEFS \n\n
+        @INTRINSIC_DECLARE \n\n
         @MAIN_FUNCTION
     #END_SCOPE
 #END_RULE

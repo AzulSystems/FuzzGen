@@ -20,7 +20,7 @@
 package com.azul.fuzzgen.fuzzer
 
 import com.azul.fuzzgen.grammar.Grammar
-import com.azul.fuzzgen.parser.{DoubleFromRangeLexeme, GetAllIDsLexeme, GetLocalIDsLexeme, GetLocalIDsLexemeSeparator, IDLexeme, IntExprFromRangeLexeme, LendScopeWithIDLexeme, Lexeme, LexemeType, Lexer, LongFromRangeLexeme, NonTerminalLexeme, SetEnvVarLexeme}
+import com.azul.fuzzgen.parser._
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -39,7 +39,7 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
   private var returnToScope: Option[Scope] = _
   private val allScopes = new ArrayBuffer[Scope]()
   private var grammar: Grammar = _
-  private val lastID = new mutable.HashMap[String, String]() // last id with prefix: prefix -> last reused id with this prefix
+  val lastID = new mutable.HashMap[String, String]() // last id with prefix: prefix -> last reused id with this prefix
   private var stage: Option[Int] = _
   private var seenNextStage: Option[Int] = _
   private val outputNodes = new mutable.HashMap[NonTerminalLexeme, NonTerminalFuzzNode]()
@@ -117,7 +117,6 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
     }
     if (matchingScopes.isEmpty)
         fuzzingError("LendScope: No IDs declared with prefix \"" + curr.token + "\"")
-    println("DEBUG: lending scope...")
     val index = rnd.nextInt(matchingScopes.size)
     returnToScope = Some(getCurrentScope)
     currentScope = Some(matchingScopes(index))
@@ -141,12 +140,51 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
     currentScope = Some(matchingScopes(index))
   }
 
+  // "Lends" scope containing local ids specified as parameter and puts it on top of stack
+  private def lendScopeWithIDByPrefix(curr: LendScopeWithIDByPrefixLexeme): Unit = {
+      if (returnToScope != null && !returnToScope.isEmpty) {
+          fuzzingError("LendScopeWithIDByPrefix: can't lend scope for ID declared with prefix \"" + curr.scopePrefix + "\" because current scope is already lent")
+      }
+
+      val firstTerminalMask = curr.scopePrefix + "%" + curr.IDtoken  // Cls_%_ObjVar_
+
+          if (!getCurrentScope.getID(firstTerminalMask, true).isDefined) {
+              fuzzingError("LendScopeWithIDByPrefix: can't lend scope for ID declared with prefix " + firstTerminalMask + " because this ID is not found in current scope")
+          }
+
+      val firstTerminalNode = getCurrentScope.getID(firstTerminalMask, true).get // Cls_0_ObjVar_1
+          val firstTerminalPrefix = curr.scopePrefix // Cls_
+          val firstTerminalSuffix =  curr.IDtoken //firstTerminalMask.split("%")(1) // _ObjVar_
+          val firstTerminalPrefixWithID = firstTerminalNode.token.split(firstTerminalSuffix)(0) //Cls_0
+          val secondTerminalPrefix = curr.scopeContains // method_
+
+          lastID(firstTerminalMask) = firstTerminalNode.token
+          lastID(curr.token) = firstTerminalNode.token
+          lastID(firstTerminalPrefix) = firstTerminalPrefixWithID
+          val matchingScopes =new ArrayBuffer[Scope] ()
+          for (s <- allScopes) {
+
+              if (s.getID(firstTerminalPrefix, false).isDefined &&
+                      s.getID(firstTerminalPrefix, false).get.token == firstTerminalPrefixWithID &&
+                      s.getID(secondTerminalPrefix, true).isDefined ){
+                  matchingScopes += s
+              }
+          }
+
+      if (matchingScopes.isEmpty)
+          fuzzingError("LendScopeWithIDByPrefix: No IDs declared with prefix \"" + firstTerminalMask + "\" and \"" +curr.IDtoken  +  "\"" )
+              val index = rnd.nextInt(matchingScopes.size)
+              returnToScope = Some(getCurrentScope)
+              currentScope = Some(matchingScopes(index))
+  }
+
+
   // End the current scope and drop all its contents.
   private def endScope(curr: Lexeme): Unit = {
     if (currentScope.isEmpty)
       fuzzingError("Scope closed before it was open!")
     currentScope.get.verify()
-    currentScope = currentScope.get.getParent
+    currentScope = currentScope.get.getParent()
   }
 
   // Return the current scope if it was lended and drop all its contents and remove from scopes stack.
@@ -192,6 +230,18 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
     val f = getCurrentScope.declareID(lexeme.token)
     lastID(lexeme.token) = f.token
     currentFuzzNode.addChild(f)
+  }
+
+  // Creates a new ID in the current scope using last id as a prefix (e.g.: Cls_5_ObjVar_)
+  def createIDFromLastID(lexeme: CreateIDFromLastIDLexeme) = {
+
+      val lastIDStr = lastID(lexeme.lastIDAsPrefix)
+          val newPrefix = lastIDStr + lexeme.suffix
+
+          currentFuzzNode.addChild(getCurrentScope.createLazyID(newPrefix))
+          //    val f = getCurrentScope.declareID(newPrefix)
+          //    lastID(newPrefix) = f.token
+          //    currentFuzzNode.addChild(f)
   }
 
   // Creates a "lazy" ID in the current scope which will only be published when registerLazyIDs is called.
@@ -263,7 +313,7 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
 
   // Makes all lazily created IDs available for reuse.
   def registerLazyIDs(): Unit = {
-    getCurrentScope.registerLazyIDs()
+    getCurrentScope.registerLazyIDs(this)
   }
 
   // Sets an environment variable to the grammar.
@@ -280,6 +330,7 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
       case LexemeType.Literal => processLiteral(curr)
       case LexemeType.BeginScope => beginScope(curr)
       case LexemeType.EndScope => endScope(curr)
+      case LexemeType.LendScopeWithIDByPrefix => lendScopeWithIDByPrefix(curr.asInstanceOf[LendScopeWithIDByPrefixLexeme])
       case LexemeType.LendScopeWithID => lendScopeWithID(curr.asInstanceOf[LendScopeWithIDLexeme])
       case LexemeType.LendScope => lendScope(curr.asInstanceOf[IDLexeme])
       case LexemeType.ReturnScope => returnScope()
@@ -287,6 +338,7 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
       case LexemeType.LongFromRange => getLongFromRange(curr.asInstanceOf[LongFromRangeLexeme])
       case LexemeType.DoubleFromRange => getDoubleFromRange(curr.asInstanceOf[DoubleFromRangeLexeme])
       case LexemeType.CreateID => createID(curr.asInstanceOf[IDLexeme])
+      case LexemeType.CreateIDFromLastID => createIDFromLastID(curr.asInstanceOf[CreateIDFromLastIDLexeme])
       case LexemeType.ReuseID => reuseID(curr.asInstanceOf[IDLexeme], lookupParentScopes = true)
       case LexemeType.ReuseIDAndLink => reuseIDAndLink(curr.asInstanceOf[IDLexeme])
       case LexemeType.ReuseLocalID => reuseID(curr.asInstanceOf[IDLexeme], lookupParentScopes = false)

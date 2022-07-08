@@ -7,6 +7,7 @@
 #INCLUDE "configs_cpp/random.fg" 10072001
 #INCLUDE "configs_cpp/statements.fg"
 #INCLUDE "configs_cpp/mainPrintByType.fg" (bool int8_t uint8_t int16_t uint16_t int32_t uint32_t int64_t uint64_t)
+#INCLUDE "configs_cpp/functions.fg"
 
 @MAIN
     #BEGIN_RULE
@@ -16,6 +17,7 @@
 @TEST
     #BEGIN_RULE
         @INCLUDE_FIELD
+        @ARRAY_INIT_MACROS
         @NAMESPACE_FIELD
         @CLASS_TEST
         @INT_MAIN
@@ -31,7 +33,12 @@
         @CREATE_RANDOM_FUNC
         @ARRAY_FUNCTIONS
         @CONTAINERS_FUNCTIONS
+        @CHECKSUM_FUNCTIONS
+        @SET_DECLARED_FIELDS_FLAG_TO_ZERO
+        @SET_DECLARED_FUNC_FLAG_TO_ZERO
         @PUBLIC
+        @DECLARE_FIELDS
+        @DECLARE_FUNCTIONS
         @MAIN_TEST
         @END_CLASS
         #END_SCOPE
@@ -52,18 +59,21 @@
 
 @MAIN_TEST
     #BEGIN_RULE
+        #SET runFunc=1
         `string run() { ` \n
         #BEGIN_SCOPE
         @MAIN_TEST_BODY
         #END_SCOPE
         `    return result;`\n
         `}` \n
+        #SET runFunc=0
     #END_RULE
 
 @MAIN_TEST_BODY
     #BEGIN_RULE
         #SET LoopCount=0
         #SET StatementsInFuncCount=0
+        @SET_FLAGS_BEFORE_FUNC
         #BEGIN_SCOPE
         @SET_DECLARED_FLAG_TO_ZERO
         @DECLARES
@@ -98,4 +108,18 @@
 @PUBLIC
     #BEGIN_RULE
         `public:` \n
+    #END_RULE
+
+
+@CHECKSUM_FUNCTIONS
+    #BEGIN_RULE
+        @CHECKSUM_bool_FUNC
+        @CHECKSUM_int8_t_FUNC
+        @CHECKSUM_uint8_t_FUNC
+        @CHECKSUM_int16_t_FUNC
+        @CHECKSUM_uint16_t_FUNC
+        @CHECKSUM_int32_t_FUNC
+        @CHECKSUM_uint32_t_FUNC
+        @CHECKSUM_int64_t_FUNC
+        @CHECKSUM_uint64_t_FUNC
     #END_RULE

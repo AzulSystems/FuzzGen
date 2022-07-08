@@ -1,0 +1,196 @@
+// $1 = String, $2 = boolean, Boolean, $3 = Integer, Long, Short, ...
+
+@$1_EXPRESSION
+
+@DECLARE_$1_VAR
+    #APPEND_RULE
+        #SET $1VarDeclared=$1VarDeclared+1
+        `$1 ` @DECLARE_ID_$1_VAR ` = ` @$1_CONSTANT `; `\n
+    #END_RULE
+    #APPEND_RULE:10
+        @DECLARE_$1_$3_NUMERIC_VAR
+        #SET $1VarDeclared=$1VarDeclared+1
+    #END_RULE
+
+@DECLARE_$1_$3_NUMERIC_VAR
+    #BEGIN_RULE
+        #SET $1$3NumericVarDeclared=$1$3NumericVarDeclared+1
+        `$1 ` @DECLARE_ID_$1_$3_NUMERIC_VAR ` = ` @$1_$3_NUMERIC_CONSTANT `; `\n
+    #END_RULE
+
+@DECLARE_$1_$3_NUMERIC_VAL
+    #BEGIN_RULE
+        #SET $1$3NumericValDeclared=$1$3NumericValDeclared+1
+        `final $1 ` @DECLARE_ID_$1_$3_NUMERIC_VAL ` = ` @$1_$3_NUMERIC_CONSTANT `; `\n
+    #END_RULE
+
+
+@DECLARE_$1_VAL
+    #APPEND_RULE
+        #SET $1ValDeclared=$1ValDeclared+1
+        `final $1 ` @DECLARE_ID_$1_VAL ` = ` @$1_CONSTANT `; `\n
+    #END_RULE
+    #APPEND_RULE:10
+        @DECLARE_$1_$3_NUMERIC_VAL
+        #SET $1ValDeclared=$1ValDeclared+1
+    #END_RULE
+
+@DECLARE_ID_$1_VAR
+    #BEGIN_RULE
+        #CREATE_ID $1Var_
+    #END_RULE
+
+@DECLARE_ID_$1_$3_NUMERIC_VAR
+    #BEGIN_RULE
+        #CREATE_ID $1$3NumericVar_
+    #END_RULE
+
+@DECLARE_ID_$1_VAL
+    #BEGIN_RULE
+        #CREATE_ID $1Val_
+    #END_RULE
+
+@DECLARE_ID_$1_$3_NUMERIC_VAL
+    #BEGIN_RULE
+        #CREATE_ID $1$3NumericVal_
+    #END_RULE
+
+
+@DECLARE_ID_$1_VAL_ARG
+    #APPEND_RULE
+        #CREATE_ID $1Val_
+        #SET $1ValDeclared=$1ValDeclared+1
+    #END_RULE
+    #APPEND_RULE
+        #CREATE_ID $1$3NumericVal_
+        #SET $1$3NumericValDeclared=$1$3NumericValDeclared+1
+        #SET $1ValDeclared=$1ValDeclared+1
+    #END_RULE
+
+
+@REUSE_ID_$1_VAR
+    #BEGIN_RULE
+        #REUSE_ID $1%Var_
+    #END_RULE
+
+@REUSE_ID_$1_VAL
+    #BEGIN_RULE
+        #REUSE_ID $1%Val_
+    #END_RULE
+
+@REUSE_ID_$1_$3_NUMERIC_VAR
+    #BEGIN_RULE
+        #REUSE_ID $1$3NumericVar_
+    #END_RULE
+
+@REUSE_ID_$1_$3_NUMERIC_VAL
+    #BEGIN_RULE
+        #REUSE_ID $1$3NumericVal_
+    #END_RULE
+
+
+
+
+@OP_$2$2_$1
+    #BEGIN_RULE:2
+        ` == `
+    #END_RULE
+    #BEGIN_RULE:3
+                ` != `
+    #END_RULE
+
+  @$1_$3_NUMERIC_CONSTANT
+#BEGIN_RULE
+                `"` @$3_CONSTANT @$3_CONSTANT_SUFFIX `"`
+#END_RULE
+
+@$1_CONSTANT
+    #APPEND_RULE
+        @$1_$3_NUMERIC_CONSTANT
+    #END_RULE
+    #APPEND_RULE
+                `"qwertyQWERTY"`
+    #END_RULE
+    #APPEND_RULE
+                `"abc. def."`
+    #END_RULE
+
+@$1_CONSTANT_SUFFIX
+#BEGIN_RULE
+#END_RULE
+
+                @$1_LITERAL
+#BEGIN_RULE:10
+                @$1_CONSTANT @$1_CONSTANT_SUFFIX
+#END_RULE
+#BEGIN_RULE:60*$1ValDeclared
+                @REUSE_ID_$1_VAL
+#END_RULE
+#BEGIN_RULE:60*$1VarDeclared
+                @REUSE_ID_$1_VAR
+#END_RULE
+
+                @OP_$1$1_$1
+#BEGIN_RULE
+                ` + `
+#END_RULE
+
+
+
+
+//@ASSIGN_$1_VAR
+//    #BEGIN_RULE:20*$1VarDeclared*0
+//        @REUSE_ID_$1_VAR ` = ` @$1_EXPRESSION  `; ` \n
+//            #END_RULE
+//    #BEGIN_RULE:(1-$1VarDeclared)
+
+
+@ASSIGN
+    #APPEND_RULE:20*$1VarDeclared
+        //@ASSIGN_$1_VAR
+        @REUSE_ID_$1_VAR ` = ` @$1_EXPRESSION  `; ` \n
+    #END_RULE
+
+
+@$1_CAST_OPEN
+    #BEGIN_RULE
+    #END_RULE
+
+@$1_CAST_CLOSE
+    #BEGIN_RULE
+    #END_RULE
+
+@CREATE_ID_METHOD_$1_$1
+    #BEGIN_RULE
+        #CREATE_LAZY_ID method_$1_$1_
+//        #CREATE_ID method_$1_$1_
+    #END_RULE
+
+
+
+
+
+
+@REUSE_ID_METHOD_$1_$1
+    #APPEND_RULE:1+25*method_$1_$1Declared
+        #REUSE_ID method_$1_$1_
+    #END_RULE
+
+@CREATE_ID_RECURSIVE_FUNCTION_$1_$1
+    #BEGIN_RULE
+        #CREATE_ID recursive_function_$1_$1_
+    #END_RULE
+             @REUSE_ID_RECURSIVE_FUNCTION_$1_$1
+                 #BEGIN_RULE:1+25*recursive_function_$1_$1Declared
+                     #REUSE_ID recursive_function_$1_$1_
+                 #END_RULE
+
+
+@$3_EXPRESSION_SPECIFIC
+  #APPEND_RULE:5*$1$3NumericVarDeclared*$3IsPrimitiveType
+     @$3ToReferenceType `.parse` @$3ToParseNumericType `(` @REUSE_ID_String_$3_NUMERIC_VAR `)`
+         #END_RULE
+  #APPEND_RULE:200*$1$3NumericValDeclared*$3IsPrimitiveType
+     @$3ToReferenceType `.parse` @$3ToParseNumericType `(` @REUSE_ID_String_$3_NUMERIC_VAL `)`
+         #END_RULE
+
