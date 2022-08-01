@@ -1,0 +1,107 @@
+#INCLUDE "configs_java/parametersBasic.fg"
+
+
+
+@LAMBDA_INTERFACE_ONE_ARG_$1
+    #BEGIN_RULE
+        ` interface ` #CREATE_ID LambdaInterfaceOneArg$1_ ` { ` \n
+        #SET  LambdaInterfaceOneArg$1=LambdaInterfaceOneArg$1+1  
+        #BEGIN_SCOPE
+         `   $1 lambdaFunctionOneArg$1($1 ` #CREATE_ID lambdaVal$1_ `);` \n
+        #END_SCOPE
+         `}` \n    
+    #END_RULE
+
+@LAMBDA_INTERFACE_TWO_ARGS_$1
+    #BEGIN_RULE
+        ` interface ` #CREATE_ID LambdaInterfaceTwoArgs$1_ ` { ` \n
+        #SET LambdaInterfaceTwoArgs$1=LambdaInterfaceTwoArgs$1+1  
+        #BEGIN_SCOPE
+         `   $1 lambdaFunctionTwoArgs$1($1 ` #CREATE_ID lambdaVal$1_ `, $1 ` #CREATE_ID lambdaVal$1_ `);` \n
+        #END_SCOPE
+         `}` \n    
+    #END_RULE
+
+@LAMBDA_INTERFACE
+    #APPEND_RULE
+        @LAMBDA_INTERFACE_ONE_ARG_$1
+    #END_RULE
+    #APPEND_RULE
+        @LAMBDA_INTERFACE_TWO_ARGS_$1
+    #END_RULE
+
+@DECLARE_LAMBDA_FUNCTION_ONE_ARG_$1
+    #BEGIN_RULE
+        #REUSE_ID LambdaInterfaceOneArg$1_ ` ` #CREATE_LAZY_ID lambdaFunctionOneArg$1_ 
+        #BEGIN_SCOPE
+         ` =  ( $1 `  #CREATE_ID lambdaVal$1_ `) -> (` 
+        #SET lambdaVal$1=lambdaVal$1+1
+        #SET lambdaVal=lambdaVal+1
+        @$1_CAST_LAMBDA_OPEN  @$1_EXPRESSION @$1_CAST_LAMBDA_CLOSE
+        `);` \n
+        #SET lambdaVal$1=lambdaVal$1-1
+        #SET lambdaVal=lambdaVal-1
+        #END_SCOPE
+        #REGISTER_LAZY_IDS
+        #SET lambdaFunctionOneArg$1=lambdaFunctionOneArg$1+1
+    #END_RULE
+
+@DECLARE_LAMBDA_FUNCTION_TWO_ARGS_$1
+    #BEGIN_RULE
+        #REUSE_ID LambdaInterfaceTwoArgs$1_ `  ` #CREATE_LAZY_ID lambdaFunctionTwoArgs$1_ 
+        #BEGIN_SCOPE
+         ` =  ( $1 `  #CREATE_ID lambdaVal$1_ `, $1 `  #CREATE_ID lambdaVal$1_ ` ) -> (` 
+        #SET lambdaVal$1=lambdaVal$1+2
+        #SET lambdaVal=lambdaVal+2
+        @$1_CAST_LAMBDA_OPEN  @$1_EXPRESSION @$1_CAST_LAMBDA_CLOSE
+        `);` \n
+        #SET lambdaVal$1=lambdaVal$1-2
+        #SET lambdaVal=lambdaVal-2
+        #END_SCOPE
+        #REGISTER_LAZY_IDS
+        #SET lambdaFunctionTwoArgs$1=lambdaFunctionTwoArgs$1+1
+    #END_RULE
+
+
+@DECLARE_LAMBDA
+    #APPEND_RULE:2000*LambdaInterfaceOneArg$1
+        @DECLARE_LAMBDA_FUNCTION_ONE_ARG_$1
+    #END_RULE
+    #APPEND_RULE:2000*LambdaInterfaceTwoArgs$1
+        @DECLARE_LAMBDA_FUNCTION_TWO_ARGS_$1
+    #END_RULE
+    #APPEND_RULE
+    #END_RULE
+
+
+
+@$1_CAST_LAMBDA_OPEN
+    #BEGIN_RULE:$1IsPrimitiveType
+        `( $1 )(`
+    #END_RULE
+    #BEGIN_RULE:1-$1IsPrimitiveType
+        `( $1 )(` @$1ToPrimitiveType `)(`
+    #END_RULE
+
+@$1_CAST_LAMBDA_CLOSE
+    #BEGIN_RULE:$1IsPrimitiveType
+        `)`
+    #END_RULE
+    #BEGIN_RULE:1-$1IsPrimitiveType
+        `)`
+    #END_RULE
+
+
+
+@$1_LAMBDA_EXPRESSION
+    #BEGIN_RULE:lambdaFunctionOneArg$1
+        #REUSE_ID lambdaFunctionOneArg$1_ `.lambdaFunctionOneArg$1(` @$1_CAST_LAMBDA_OPEN  @$1_EXPRESSION @$1_CAST_LAMBDA_CLOSE `)`
+    #END_RULE
+    #BEGIN_RULE:lambdaFunctionTwoArgs$1
+        #REUSE_ID lambdaFunctionTwoArgs$1_ `.lambdaFunctionTwoArgs$1(` @$1_CAST_LAMBDA_OPEN  @$1_EXPRESSION @$1_CAST_LAMBDA_CLOSE `, ` @$1_CAST_LAMBDA_OPEN  @$1_EXPRESSION @$1_CAST_LAMBDA_CLOSE `)`
+    #END_RULE
+    #BEGIN_RULE:1-(lambdaFunctionOneArg$1+lambdaFunctionTwoArgs$1)
+        @$1_EXPRESSION
+    #END_RULE
+
+
