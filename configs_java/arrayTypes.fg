@@ -60,11 +60,14 @@
     #END_RULE
 
 @REUSE_ID_$1_ARRAY_VAR_OR_VAL
-    #BEGIN_RULE:($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*10+global_$1ArrayFieldVarDeclared
+    #BEGIN_RULE:(($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*10+global_$1ArrayFieldVarDeclared)*(1-lambdaVal)
         @REUSE_ID_$1_ARRAY_VAR
     #END_RULE
     #BEGIN_RULE:($1ArrayValDeclared+$1ArrayFieldValDeclared)+global_$1ArrayFieldValDeclared
         @REUSE_ID_$1_ARRAY_VAL
+    #END_RULE
+    #BEGIN_RULE:lambdaVal*(1- $1ArrayValDeclared+$1ArrayFieldValDeclared-global_$1ArrayFieldValDeclared)
+        `(new $1[` @ARRAY_MAX_LENGTH `])`
     #END_RULE
 
 @DECLARE_VAR_OF_TYPE

@@ -147,6 +147,10 @@ class Grammar(private val filename: String) {
     val sumWeight = ruleWeights.sum
 
     assert(sumWeight > 0, "Sum weight of rules expected to be positive!")
+    // if there is only 1 valid rule, return it now
+    if (rules.length == 1 ) {
+      return rules(0)
+    }
     var index = 0
     var currentSum = ruleWeights(0)
     val threshold = rnd.nextInt(sumWeight)

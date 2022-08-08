@@ -30,6 +30,13 @@
 #SET StringNumericValDeclared=0
 #SET String$1NumericValDeclared=0
 
+#SET lambdaVal$1=0
+#SET lambdaVal=0
+#SET LambdaInterfaceOneArg$1=0
+#SET LambdaInterfaceTwoArgs$1=0
+#SET lambdaFunctionOneArg$1=0
+#SET lambdaFunctionTwoArgs$1=0
+
 @SET_GLOBAL_COUNTERS_TO_ZERO_$1_$2
     #BEGIN_RULE
 #SET global_method_$1_$1Declared=0
@@ -88,6 +95,11 @@
 
         #SET StringNumericValDeclared=0
         #SET String$1NumericValDeclared=0
+        
+        #SET  lambdaVal$1=0
+        #SET  lambdaVal=0
+        #SET lambdaFunctionOneArg$1=0
+        #SET lambdaFunctionTwoArgs$1=0
     #END_RULE
         
         

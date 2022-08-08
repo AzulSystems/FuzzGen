@@ -1,12 +1,11 @@
 #INCLUDE "configs_java/booleanType.fg" (boolean Boolean)  (int short byte long float double Integer Short Byte Long Float Double)
 #INCLUDE "configs_java/numericTypesCommon.fg" (int short byte long float double Integer Short Byte Long Float Double)
 #INCLUDE "configs_java/objectType.fg" (int short byte long float double Integer Short Byte Long Float Double)
-#INCLUDE "configs_java/lambda.fg" int short byte long float double Integer Short Byte Long Float Double
 #INCLUDE "configs_java/list.fg" int short byte long float double Integer Short Byte Long Float Double
 #INCLUDE "configs_java/set.fg" int short byte long float double Integer Short Byte Long Float Double
 
 #INCLUDE "configs_java/string.fg" (String) (boolean Boolean)  ( int short byte long float double Integer Short Byte Long Float Double  )
-
+#INCLUDE "configs_java/lambdaByType.fg" (int short byte long float double Integer Short Byte Long Float Double)
 
 @DECLARE_VARS
     #BEGIN_RULE:20
@@ -41,33 +40,12 @@
     #BEGIN_RULE:1
         @DECLARE_ANOTHER_CLASS_OBJ
     #END_RULE
-//    #BEGIN_RULE:3
-//        @DECLARE_LAMBDA_VAR
-//    #END_RULE
-//    #BEGIN_RULE:3
-//        @DECLARE_LIST_VAR
-//    #END_RULE
-//    #BEGIN_RULE:3
-//        @DECLARE_IMMUTABLE_SET_VAR
-//    #END_RULE
+    #BEGIN_RULE:3
+        @DECLARE_LAMBDA
+    #END_RULE
 
 @DECLARE_BASIC_VAR
         
-@DECLARE_LAMBDA_VAR
-    #BEGIN_RULE
-        @DECLARE_LAMBDA_ONE_ARG_VAR ` `\n
-    #END_RULE
-    #BEGIN_RULE
-        @DECLARE_LAMBDA_TWO_ARGS_VAR ` `\n
-    #END_RULE
-    #BEGIN_RULE
-        @DECLARE_LAMBDA_ONE_ARG_VAL ` `\n
-    #END_RULE
-    #BEGIN_RULE
-        @DECLARE_LAMBDA_TWO_ARGS_VAL ` `\n
-    #END_RULE
-
-
 @DECLARE_COLLECTION_VAL
     #BEGIN_RULE
         #SET collectionValDeclared=1

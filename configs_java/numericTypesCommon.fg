@@ -55,9 +55,13 @@
     #END_RULE
 
 @DECLARE_$1_VAL
-    #BEGIN_RULE
+    #BEGIN_RULE:5
         #SET $1ValDeclared=$1ValDeclared+1
         `final $1 ` @DECLARE_ID_$1_VAL ` = ` @$1_CONSTANT @$1_CONSTANT_SUFFIX `; `  \n
+    #END_RULE
+    #BEGIN_RULE // Effectively final
+        #SET $1ValDeclared=$1ValDeclared+1
+        `$1 ` @DECLARE_ID_$1_VAL ` = ` @$1_CONSTANT @$1_CONSTANT_SUFFIX `; `  \n
     #END_RULE
 
 @DECLARE_ID_$1_VAR
@@ -170,6 +174,10 @@
     #BEGIN_RULE:1*$1FieldValDeclared+1*global_$1FieldValDeclared
         @REUSE_ID_$1_FIELD_VAL
     #END_RULE
+    #BEGIN_RULE:100*lambdaVal$1
+        #REUSE_ID lambdaVal$1_
+    #END_RULE
+
 
 @DECLARE_FIELD_VAR_OF_TYPE
 #APPEND_RULE:10*Enable$1
@@ -198,11 +206,14 @@
     #APPEND_RULE:2
 @$1_CONSTANT @$1_CONSTANT_SUFFIX
     #END_RULE
-    #APPEND_RULE:20*$1ValDeclared
+    #APPEND_RULE:40*$1ValDeclared
         @REUSE_ID_$1_VAL
     #END_RULE
-    #APPEND_RULE:60*$1VarDeclared
+    #APPEND_RULE:60*$1VarDeclared*(1-lambdaVal)
         @REUSE_ID_$1_VAR
+    #END_RULE
+    #APPEND_RULE:50*lambdaVal$1
+        #REUSE_ID lambdaVal$1_
     #END_RULE
 
 @DECLARE_BASIC_VAR

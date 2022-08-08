@@ -78,16 +78,16 @@
     #APPEND_RULE
          @byte_EXPRESSION
     #END_RULE
-    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)
+    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)*(1-lambdaValint)
          @REUSE_ID_int_VAR `++`
     #END_RULE
-    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)
+    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)*(1-lambdaValint)
         `++` @REUSE_ID_int_VAR 
     #END_RULE
-    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)
+    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)*(1-lambdaValint)
          @REUSE_ID_int_VAR `--`
     #END_RULE
-    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)
+    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)*(1-lambdaValint)
         `--` @REUSE_ID_int_VAR 
     #END_RULE
     #APPEND_RULE:StringVarDeclared

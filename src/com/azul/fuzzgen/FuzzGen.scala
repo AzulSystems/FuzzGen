@@ -21,6 +21,7 @@ package com.azul.fuzzgen
 
 import java.io.PrintWriter
 import com.azul.fuzzgen.fuzzer.Fuzzer
+import com.azul.fuzzgen.grammar.Grammar
 import com.azul.fuzzgen.parser.{RulesFileReader, RulesParser}
 
 import scala.collection.mutable
@@ -38,6 +39,7 @@ object FuzzGen {
       "\t--verbose\tPrint details as generation goes on.\n" +
       "\t--dont-fail-on-warnings\tIgnore warning messages and proceed fuzzing.\n" +
       "\t--grammar=<path>\tSpecify path to grammar file. Must be specified.\n" +
+      "\t--grammarParams=<path>\tSpecify path to additional grammar file, e.g., parameters for the current grammar. Optional.\n" +
       "\t--output=<path>\tPath to output directory. Defaulted to current directory.\n" +
       "\t--seed=<int>\tSpecify seed for generation. Defaulted to 0.\n" +
       "\t--num-tests=<int>\tSpecify the number of tests to generate. Defaulted to 1.\n" +
@@ -61,6 +63,7 @@ object FuzzGen {
 
   def main(args: Array[String]): Unit = {
     var pathToGrammar: Option[String] = None
+    var pathToGrammarParams: Option[String] = None
     var pathToOutputDir: String = "."
     var seed = 0
     var verbose = false
@@ -78,6 +81,8 @@ object FuzzGen {
         return
       } else if (currArg.startsWith("--grammar=")) {
         pathToGrammar = Some(currArg.substring("--grammar=".length))
+      } else if (currArg.startsWith("--grammarParams=")) {
+        pathToGrammarParams = Some(currArg.substring("--grammarParams=".length))
       } else if (currArg.equals("--dont-fail-on-warnings")) {
         this.dontFailOnWarnings = true
       } else if (currArg.startsWith("--output=")) {
@@ -106,13 +111,25 @@ object FuzzGen {
       "Grammar read from \"" + pathToGrammar.get + "\", output written to \"" + pathToOutputDir + "\"")
 
     val reader = new RulesFileReader
+    val readerParams = new RulesFileReader
+    var grammarParams:Grammar = null
+
     val rulesText = reader.readFrom(pathToGrammar.get)
+
+    if (!pathToGrammarParams.isEmpty) {
+      val rulesTextParams = readerParams.readFrom(pathToGrammarParams.get)
+      val includesParams = new mutable.TreeMap[(String, String), (String, String)]()
+      includesParams.put((pathToGrammarParams.get, ""), (null, ""))
+      grammarParams = new RulesParser(pathToGrammarParams.get, "").parse(rulesTextParams, includesParams.toList, "", "", null)
+    }
+
     val includeLexemes = new mutable.TreeMap[String, (String, String)]()
     includeLexemes.put(pathToGrammar.get, (null, ""))
     val includes = new mutable.TreeMap[(String,String), (String, String)]()
     includes.put((pathToGrammar.get, ""), (null, ""))
-    val grammar = new RulesParser(pathToGrammar.get, "").parse(rulesText, includes.toList, "", "", null)
-    grammar.verify()
+    val grammar_ = new RulesParser(pathToGrammar.get, "").parse(rulesText, includes.toList, "", "", null)
+    val grammar = if (pathToGrammarParams.isEmpty) grammar_
+    else grammarParams + grammar_
     if (verbose)
       println(grammar)
     val fuzzStartTime = System.currentTimeMillis()

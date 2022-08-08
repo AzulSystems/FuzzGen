@@ -3,6 +3,8 @@
 #INCLUDE "configs_java/methods.fg"
 #INCLUDE "configs_java/mainPrintByType.fg" (int short byte long float double Integer Short Byte Long Float Double String)
 #INCLUDE "configs_java/utils.fg"
+#INCLUDE "configs_java/lambdaByType.fg" (int short byte long float double Integer Short Byte Long Float Double)
+
 
 @MAIN
 #BEGIN_RULE
@@ -11,6 +13,7 @@
     @ANOTHER_CLASS
     @SET_GLOBAL_COUNTERS_TO_ZERO
     #BEGIN_SCOPE
+        @LAMBDA_INTERFACES
         @OTHER_CLASSES
         @TEST_CLASS
     #END_SCOPE
@@ -22,6 +25,14 @@
         `import java.util.Random;` \n
         `import java.util.Arrays;` \n
 #END_RULE
+
+@LAMBDA_INTERFACES
+    #BEGIN_RULE:5
+        @LAMBDA_INTERFACE @LAMBDA_INTERFACES
+            #END_RULE
+            #BEGIN_RULE
+            #END_RULE
+
 
 @OTHER_CLASSES
     #BEGIN_RULE:2*(MaxClasses-ClassesCount)

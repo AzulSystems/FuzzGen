@@ -145,9 +145,5 @@
     @REUSE_ID_$1_VAR ` = List( ` #GET_ALL_IDS $1Val_ ` ).map( ` @REUSE_ID_METHOD_$1_$1 ` ).` @LIST_TO_INT_FUNC \n
 #END_RULE
 
-@LAMBDA_MAP
-#APPEND_RULE:$1VarDeclared*$1ValDeclared*Enable$1
-    @REUSE_ID_$1_VAR ` = List( ` #GET_ALL_IDS $1Val_ ` ).map( ` @LAMBDA_1_$1 ` ).` @LIST_TO_INT_FUNC \n
-#END_RULE
 
 
