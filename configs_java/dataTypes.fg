@@ -37,10 +37,10 @@
     #BEGIN_RULE:2
         @DECLARE_String_VAL
     #END_RULE
-    #BEGIN_RULE:1
+    #BEGIN_RULE:2
         @DECLARE_ANOTHER_CLASS_OBJ
     #END_RULE
-    #BEGIN_RULE:3
+    #BEGIN_RULE:20
         @DECLARE_LAMBDA
     #END_RULE
 

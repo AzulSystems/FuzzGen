@@ -65,6 +65,12 @@
           `500`
 #END_RULE
 
+@MAIN_TEST_ITERATIONS
+#BEGIN_RULE
+          `300`
+#END_RULE
+
+
 #SET MaxArrayCount=500
 
 #SET StatementProb=8
@@ -90,7 +96,7 @@
 #SET MaxListCount=2
 #SET MaxSetCount=2
 
-#SET MethodCallInExprWeight=4
+#SET MethodCallInExprWeight=3
 
 #SET MaxStatementsInMethodCount=30
 #SET StatementsInMethodCount=0

@@ -20,6 +20,7 @@
 #END_RULE
 
 
+
 @IMPORTS
     #BEGIN_RULE
         `import java.util.Random;` \n
@@ -138,7 +139,7 @@
 #BEGIN_SCOPE
             `   try {` \n
                 `   Test _instance = new Test(); ` \n
-                    `      for (int i = 0; i < 400; i++ ) { ` \n
+                    `      for (int i = 0; i < ` @MAIN_TEST_ITERATIONS  `; i++ ) { ` \n
                         `            _instance.mainTest(args); ` \n
                             `       }` \n
                             `   } catch (Exception ex) {`     \n
