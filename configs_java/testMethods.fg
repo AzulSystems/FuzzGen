@@ -10,13 +10,24 @@
 @DECLARE_VARS
 
 
+@METHOD_ARG_$1
+    #BEGIN_RULE:MethodOneArgWeight
+        ` $1 ` @DECLARE_ID_$1_VAL_ARG 
+    #END_RULE
+    #BEGIN_RULE:OtherMethodArgsWeight
+        @OTHER_METHOD_ARGS_$1
+    #END_RULE
+
 @DECLARE_METHOD
     #APPEND_RULE:Enable$1
-    \n \n ` public static $1 ` @CREATE_ID_METHOD_$1_$1 ` ( `
+    \n \n 
+    @TEST_METHOD_COMMENTS
+    ` public static $1 ` @CREATE_ID_METHOD_$1_$1 ` ( `
     #BEGIN_SCOPE 
         @SET_FLAGS_BEFORE_METHOD_
         @SET_DECLARED_FLAG_TO_ZERO
-        ` $1 ` @DECLARE_ID_$1_VAL_ARG ` ) { ` \n
+        @METHOD_ARG_$1
+        ` ) { ` \n
     #SET global_method_$1_$1Declared=global_method_$1_$1Declared+1*(1-TestClass)
             @$1_METHOD_BODY \n ` } ` 
 
@@ -109,7 +120,7 @@
        `  0) `
        @$1_RETURN_CAST_SUFFIX `; ` \n
         #END_RULE
-    #BEGIN_RULE:1*(1-$1RecursiveFunction)
+    #BEGIN_RULE:1*(1-$1RecursiveFunction)*AllowReturnExpression
         `return ` @$1_RETURN_CAST_PREFIX  @$1_EXPRESSION @$1_RETURN_CAST_SUFFIX `; ` \n
     #END_RULE
 

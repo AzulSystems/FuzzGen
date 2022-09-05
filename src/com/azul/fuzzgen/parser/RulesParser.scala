@@ -19,6 +19,8 @@
 
 package com.azul.fuzzgen.parser
 
+import com.azul.fuzzgen.FuzzGen
+import com.azul.fuzzgen.FuzzGen.warning
 import com.azul.fuzzgen.grammar.{Grammar, NonTerminal, Rule}
 import com.azul.fuzzgen.parser.LexemeType._
 
@@ -118,6 +120,9 @@ class RulesParser(filename: String, params: String) {
 
   def parseSetEnvVar(): Option[Int] = {
     val setVarLexeme = expect(LexemeType.SetEnvVar).asInstanceOf[SetEnvVarLexeme]
+    println("DEBUG: setVarLexeme.token " + setVarLexeme.token + " = " + setVarLexeme.value.eval(grammar))
+    if (grammar.containsEnvVar(setVarLexeme.token) && grammar.getEnvVar(setVarLexeme.token) != setVarLexeme.value.eval(grammar))
+      warning("Might be a mistake: global scope environment variable " + setVarLexeme.token + " has already been set to " + grammar.getEnvVar(setVarLexeme.token) + ", now trying to set it to " + setVarLexeme.value.eval(grammar))
     grammar.setEnvVar(setVarLexeme.token, setVarLexeme.value.eval(grammar))
   }
 

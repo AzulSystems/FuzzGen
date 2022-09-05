@@ -16,31 +16,31 @@
     #END_RULE
 
 @DECLARE_VAR
-    #BEGIN_RULE:100
+    #BEGIN_RULE:NumericVarWeight
         @DECLARE_VAR_OF_TYPE
     #END_RULE
-    #BEGIN_RULE:20
+    #BEGIN_RULE:BooleanVarWeight
         @DECLARE_boolean_VAR
     #END_RULE
-    #BEGIN_RULE:2
+    #BEGIN_RULE:BooleanValWeight
         @DECLARE_boolean_VAL
     #END_RULE
-    #BEGIN_RULE:2
+    #BEGIN_RULE:BooleanVarWeight/2
         @DECLARE_Boolean_VAR
     #END_RULE
-    #BEGIN_RULE:2
+    #BEGIN_RULE:BooleanValWeight/2
         @DECLARE_Boolean_VAL
     #END_RULE
-    #BEGIN_RULE:20
+    #BEGIN_RULE:StringVarWeight
         @DECLARE_String_VAR
     #END_RULE
-    #BEGIN_RULE:2
+    #BEGIN_RULE:StringValWeight
         @DECLARE_String_VAL
     #END_RULE
-    #BEGIN_RULE:2
+    #BEGIN_RULE:ObjVarWeight
         @DECLARE_ANOTHER_CLASS_OBJ
     #END_RULE
-    #BEGIN_RULE:20
+    #BEGIN_RULE:LambdaVarWeight
         @DECLARE_LAMBDA
     #END_RULE
 

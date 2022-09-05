@@ -161,6 +161,13 @@ class Grammar(private val filename: String) {
     rules(index)
   }
 
+  def containsEnvVar(id: String): Boolean = {
+    if (envVars.contains(id))
+      return true
+    else
+      return false
+  }
+
   def getEnvVar(id: String): Int = {
     val envVar = envVars.get(id)
     if (envVar.isEmpty)

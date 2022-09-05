@@ -277,8 +277,11 @@
     #BEGIN_RULE:1
         `String.valueOf( ` @double_EXPRESSION ` )`
     #END_RULE
-    #BEGIN_RULE:2*method_String_StringDeclared
+    #BEGIN_RULE:2*method_String_StringDeclared*MethodOneArgWeight
         @REUSE_ID_METHOD_String_String `(` @String_EXPRESSION `)`
+    #END_RULE
+    #BEGIN_RULE:2*method_String_StringDeclared*MethodEmptyArgWeight
+        @REUSE_ID_METHOD_String_String `(` `)`
     #END_RULE
 
 

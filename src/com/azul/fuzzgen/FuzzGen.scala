@@ -71,6 +71,7 @@ object FuzzGen {
     var fuzzAttempts = 20
     var parallel = false
     var localIdSeparator: String = ","
+    var grammar:Grammar = null
 
     for (currArg <- args) {
       if (currArg.equals("--version")) {
@@ -112,24 +113,26 @@ object FuzzGen {
 
     val reader = new RulesFileReader
     val readerParams = new RulesFileReader
-    var grammarParams:Grammar = null
 
-    val rulesText = reader.readFrom(pathToGrammar.get)
-
-    if (!pathToGrammarParams.isEmpty) {
-      val rulesTextParams = readerParams.readFrom(pathToGrammarParams.get)
-      val includesParams = new mutable.TreeMap[(String, String), (String, String)]()
-      includesParams.put((pathToGrammarParams.get, ""), (null, ""))
-      grammarParams = new RulesParser(pathToGrammarParams.get, "").parse(rulesTextParams, includesParams.toList, "", "", null)
-    }
+    var rulesText = reader.readFrom(pathToGrammar.get)
+    var rulesTextParams = if (!pathToGrammarParams.isEmpty) readerParams.readFrom(pathToGrammarParams.get) else ""
 
     val includeLexemes = new mutable.TreeMap[String, (String, String)]()
     includeLexemes.put(pathToGrammar.get, (null, ""))
     val includes = new mutable.TreeMap[(String,String), (String, String)]()
-    includes.put((pathToGrammar.get, ""), (null, ""))
-    val grammar_ = new RulesParser(pathToGrammar.get, "").parse(rulesText, includes.toList, "", "", null)
-    val grammar = if (pathToGrammarParams.isEmpty) grammar_
-    else grammarParams + grammar_
+
+    if (pathToGrammarParams.isEmpty) {
+      includes.put((pathToGrammar.get, ""), (null, ""))
+
+      grammar = new RulesParser(pathToGrammar.get, "").parse(rulesText, includes.toList, "", "", null)
+    }
+    else {
+      rulesText=rulesTextParams+rulesText
+      includes.put((pathToGrammarParams.get, ""), (null, ""))
+      includes.put((pathToGrammar.get, ""), (pathToGrammarParams.get, ""))
+      grammar = new RulesParser(pathToGrammar.get, "").parse(rulesText, includes.toList, "", "", null)
+    }
+
     if (verbose)
       println(grammar)
     val fuzzStartTime = System.currentTimeMillis()

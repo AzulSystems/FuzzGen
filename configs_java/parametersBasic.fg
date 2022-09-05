@@ -60,76 +60,66 @@
 #SET TestClass=0
 
 
-@ARRAY_MAX_LENGTH
-#BEGIN_RULE
-          `500`
-#END_RULE
 
-@MAIN_TEST_ITERATIONS
-#BEGIN_RULE
-          `300`
-#END_RULE
+//#SET MaxArrayCount=500
 
-
-#SET MaxArrayCount=500
-
-#SET StatementProb=8
-#SET MaxLoopNest=4
+//#SET StatementProb=8
+//#SET MaxLoopNest=4
 #SET LoopNest=0
-#SET MaxLoopCount=50
+//#SET MaxLoopCount=50
 #SET LoopCount=0
 
 
-#SET LoopCntLimitMin=10
-#SET LoopCntLimitMax=150
+//#SET LoopCntLimitMin=10
+//#SET LoopCntLimitMax=150
 
-#SET MaxCondCount=15
+//#SET MaxCondCount=15
 #SET CondCount=0
-#SET MaxCondNest=4
+//#SET MaxCondNest=4
 #SET CondNest=0
 
-#SET BinExprMaxDepth=3
-#SET ExprMaxDepth=3
-#SET ExprBlockMaxDepth=1
+//#SET BinExprMaxDepth=3
+//#SET ExprMaxDepth=3
+//#SET ExprBlockMaxDepth=1
 
-#SET MaxLambdaCount=1
-#SET MaxListCount=2
-#SET MaxSetCount=2
+//#SET MaxLambdaCount=1
+//#SET MaxListCount=2
+//#SET MaxSetCount=2
 
-#SET MethodCallInExprWeight=3
+//#SET MethodCallInExprWeight=3
 
-#SET MaxStatementsInMethodCount=30
+//#SET MaxStatementsInMethodCount=30
 #SET StatementsInMethodCount=0
 
 #SET LambdaCount=0
 
 #SET UknownZeroAssigned=0
 
-#SET SwitchMatch=-10
+//#SET SwitchMatch=-10
 
-#SET MaxSynchronizedBlockNestDepth=2
+//#SET MaxSynchronizedBlockNestDepth=2
 #SET SynchronizedBlockNestDepth=0
 
-#SET MaxLongLoop=1
-#SET MaxLongLoopDepth=2
+//#SET MaxLongLoop=1
+//#SET MaxLongLoopDepth=2
 #SET LongLoop=0
-#SET MaxLongLoopLength=2000
+//#SET MaxLongLoopLength=2000
 
-#SET MaxTryCatchDepth=1
+//#SET MaxTryCatchDepth=1
 #SET TryCatchDepth=0
 
 #SET Neq=0
 
-#SET MaxMethodsInClass=4
+//#SET MaxMethodsInClass=4
 #SET MethodCallCount=0
 
-#SET MaxClasses=4
+//#SET MaxClasses=4
 #SET ClassesCount=0
 
-#SET MaxExplicitCallsInMain=5
+//#SET MaxExplicitCallsInMain=5
 #SET ExplicitCallsInMain=0
 
-#SET MaxLoopNestForMethodCall=2
+//#SET MaxLoopNestForMethodCall=2
 
 @SET_FLAGS_BEFORE_METHOD_
 #BEGIN_RULE

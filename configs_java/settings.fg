@@ -1,0 +1,108 @@
+#INCLUDE "configs_java/settingsByType.fg" (int short byte long float double Integer Short Byte Long Float Double String)
+@ARRAY_MAX_LENGTH
+    #BEGIN_RULE
+          `500`
+    #END_RULE
+
+@MAIN_TEST_ITERATIONS
+    #BEGIN_RULE
+        `300`
+    #END_RULE
+
+@PACKAGE_DECLARATION
+    #BEGIN_RULE
+    #END_RULE
+
+@IMPORTS_MAIN
+    #BEGIN_RULE
+        `import java.util.Random;` \n
+        `import java.util.Arrays;` \n
+    #END_RULE
+    
+@IMPORTS_ADDITIONAL
+    #BEGIN_RULE
+    #END_RULE
+    
+@TEST_CLASS_COMMENTS
+    #BEGIN_RULE
+       `// Test class ` \n 
+    #END_RULE
+   
+@OTHER_CLASS_COMMENTS
+    #BEGIN_RULE
+       `// Additional test class ` \n 
+    #END_RULE
+
+
+@METHOD_MAIN_TEST_COMMENTS
+    #BEGIN_RULE
+        ` // Main test method that calls other test methods ` \n
+    #END_RULE
+    
+@TEST_METHOD_COMMENTS
+    #BEGIN_RULE
+        ` // Test method ` \n
+    #END_RULE
+
+
+// Main test parameters 
+
+#SET MaxArrayCount=500
+
+#SET StatementProb=8
+#SET MaxLoopNest=4
+#SET MaxLoopCount=50
+
+
+#SET LoopCntLimitMin=10
+#SET LoopCntLimitMax=150
+
+#SET MaxCondCount=15
+#SET MaxCondNest=4
+
+#SET BinExprMaxDepth=3
+#SET ExprMaxDepth=3
+#SET ExprBlockMaxDepth=1
+
+#SET MaxLambdaCount=1
+#SET MaxListCount=2
+#SET MaxSetCount=2
+
+#SET MethodCallInExprWeight=3
+
+#SET MaxStatementsInMethodCount=30
+
+#SET SwitchMatch=-10
+
+#SET MaxSynchronizedBlockNestDepth=2
+
+#SET MaxLongLoop=1
+#SET MaxLongLoopDepth=2
+#SET MaxLongLoopLength=2000
+
+#SET MaxTryCatchDepth=1
+
+#SET MaxMethodsInClass=4
+#SET MaxClasses=4
+
+#SET MaxExplicitCallsInMain=5
+
+#SET MaxLoopNestForMethodCall=2
+
+#SET NumericVarWeight=100
+#SET BooleanVarWeight=20
+#SET BooleanValWeight=2
+#SET StringVarWeight=20
+#SET StringValWeight=2
+#SET ObjVarWeight=2
+#SET LambdaVarWeight=20
+#SET MethodNonEmptyArgWeight=20
+#SET MethodOneArgWeight=1
+#SET OtherMethodArgsWeight=0
+#SET MethodEmptyArgWeight=0
+
+#SET AllowReturnExpression=0
+
+@ADDITIONAL_TEST_CLASS_FIELDS
+    #BEGIN_RULE
+    #END_RULE

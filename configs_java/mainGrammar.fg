@@ -8,6 +8,7 @@
 
 @MAIN
 #BEGIN_RULE
+    @PACKAGE_DECLARATION
     @IMPORTS
     @UTILS_CLASS
     @ANOTHER_CLASS
@@ -23,8 +24,8 @@
 
 @IMPORTS
     #BEGIN_RULE
-        `import java.util.Random;` \n
-        `import java.util.Arrays;` \n
+        @IMPORTS_MAIN
+        @IMPORTS_ADDITIONAL
 #END_RULE
 
 @LAMBDA_INTERFACES
@@ -51,8 +52,11 @@
         @SET_DECLARED_FLAG_TO_ZERO
         @SET_DECLARED_FIELDS_FLAG_TO_ZERO
         @SET_DECLARED_METHOD_FLAG_TO_ZERO
-        \n \n ` class ` @OTHER_CLASS_NAME_DECLARE `{ ` \n
+        \n \n
+        @OTHER_CLASS_COMMENTS 
+        ` class ` @OTHER_CLASS_NAME_DECLARE `{ ` \n
         @TEST_CLASS_FIELDS
+        @ADDITIONAL_TEST_CLASS_FIELDS
         #SET MethodCount=0
         //@SET_METHOD_COUNT_TO_ZERO_1[1]
         @SET_METHOD_COUNT_TO_ZERO
@@ -116,13 +120,15 @@
 #BEGIN_RULE
 #SET TestClass=1
     #BEGIN_SCOPE
+        @TEST_CLASS_COMMENTS
         `//` #CREATE_ID Test_ \n
-        ` class ` @TEST_CLASS_NAME `{ ` \n
+        `public class ` @TEST_CLASS_NAME `{ ` \n
         @SET_DECLARED_FLAG_TO_ZERO
         @SET_DECLARED_FIELDS_FLAG_TO_ZERO
         @SET_DECLARED_METHOD_FLAG_TO_ZERO
         @BASE_FIELDS
         @TEST_CLASS_FIELDS
+        @ADDITIONAL_TEST_CLASS_FIELDS
         #SET MethodCount=0
         @SET_METHOD_COUNT_TO_ZERO
         @DECLARE_METHODS
@@ -168,7 +174,8 @@
 
 @METHOD_MAIN_TEST
 #BEGIN_RULE
-                                    \n `  public void mainTest(String[] strArr1) { ` \n
+    @METHOD_MAIN_TEST_COMMENTS
+    \n `  public void mainTest(String[] strArr1) { ` \n
 #BEGIN_SCOPE
      @MAIN_TEST_OBJECT_BODY
 #END_SCOPE
@@ -249,7 +256,7 @@
 
 @PRINTS
     #BEGIN_RULE
-        @ASSIGN_METHOD_RESULT
+        //@ASSIGN_METHOD_RESULT
         @ASSIGN_METHODS_RESULTS
         @PRINT_VARS
     #END_RULE
@@ -274,7 +281,7 @@
     #END_RULE
 
 @ASSIGN_METHODS_RESULTS
-	#BEGIN_RULE:(MaxExplicitCallsInMain-ExplicitCallsInMain)
+	#BEGIN_RULE:2*(MaxExplicitCallsInMain-ExplicitCallsInMain)
         #SET ExplicitCallsInMain=ExplicitCallsInMain+1
 		@ASSIGN_METHOD_RESULT @ASSIGN_METHODS_RESULTS 
 	#END_RULE
