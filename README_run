@@ -1,0 +1,6 @@
+How to run FuzzGen to generate tests (e.g., using Java grammar)
+
+    1. Specify JAVA_HOME, get Scala library
+    2. Generate a random number to be used as seed (set to $seed variable)
+    3. Example of a run command: ${JAVA_HOME}/bin/java -cp FuzzGen.jar:scala-library-2.13.5.jar com.azul.fuzzgen.FuzzGen --verbose --grammarParams=./configs_java/settings.fg --grammar=./configs_java/mainGrammar.fg --output=./generated_tests --seed=$seed --num-tests=5 --num-attempts=10
+
