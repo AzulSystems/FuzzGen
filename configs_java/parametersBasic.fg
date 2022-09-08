@@ -2,7 +2,7 @@
 //Keep EnableInt always equal to 1! Other types should be set to 1 or 0 only.
 #SET Enableint=10
 #SET Enableshort=2
-#SET Enablebyte=2
+#SET Enablebyte=5
 #SET Enablelong=5
 #SET Enablefloat=5
 #SET Enabledouble=5

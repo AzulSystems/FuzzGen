@@ -107,7 +107,7 @@
         @ASSIGN_Boolean_VAR
     #END_RULE
 
-@ASSIGN_Boolean_VAR
+    @ASSIGN_Boolean_VAR
     #BEGIN_RULE
         @REUSE_ID_Boolean_VAR ` = ` @Boolean_EXPRESSION `; ` \n
     #END_RULE
@@ -116,7 +116,8 @@
     #BEGIN_RULE
         @REUSE_ID_boolean_VAR ` = ` @boolean_EXPRESSION `; ` \n
     #END_RULE
-    
+
+   
 @IF
     #BEGIN_RULE:10
         `if ( ` @boolean_EXPRESSION ` ) { ` @STATEMENT ` } else { ` @STATEMENT ` } `  \n

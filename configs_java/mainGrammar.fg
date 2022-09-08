@@ -92,7 +92,7 @@
 #END_RULE
 
 @UTILS_CLASS
-#BEGIN_RULE
+#BEGIN_RULE:IsARegularConfiguration
 ` class ` @UTILS_CLASS_NAME ` { ` \n
 #BEGIN_SCOPE
     @UTILS_FIELDS
@@ -104,6 +104,10 @@
 #END_SCOPE
         ` } ` \n
 #END_RULE
+#BEGIN_RULE:1-IsARegularConfiguration
+        @CUSTOM_UTILS_CLASS
+#END_RULE
+
 
 @TEST_CLASS_NAME
 #BEGIN_RULE
@@ -255,11 +259,15 @@
 
 
 @PRINTS
-    #BEGIN_RULE
+    #BEGIN_RULE:IsARegularConfiguration
         //@ASSIGN_METHOD_RESULT
         @ASSIGN_METHODS_RESULTS
         @PRINT_VARS
     #END_RULE
+    #BEGIN_RULE:1-IsARegularConfiguration
+                @CUSTOM_PRINTS
+    #END_RULE
+
 
 @PRINT_VARS
     #BEGIN_RULE

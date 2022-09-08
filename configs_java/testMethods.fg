@@ -102,7 +102,7 @@
 
 
 @$1_RETURN_STATEMENT
-    #BEGIN_RULE:10
+    #BEGIN_RULE:10*IsARegularConfiguration
         `return `@$1_RETURN_CAST_PREFIX  ` (0 + ` \n
         @$1_RETURN_STATEMENT_int ` + ` \n
         @$1_RETURN_STATEMENT_short ` + ` \n
@@ -120,10 +120,12 @@
        `  0) `
        @$1_RETURN_CAST_SUFFIX `; ` \n
         #END_RULE
-    #BEGIN_RULE:1*(1-$1RecursiveFunction)*AllowReturnExpression
+    #BEGIN_RULE:1*(1-$1RecursiveFunction)*AllowReturnExpression*IsARegularConfiguration
         `return ` @$1_RETURN_CAST_PREFIX  @$1_EXPRESSION @$1_RETURN_CAST_SUFFIX `; ` \n
     #END_RULE
-
+    #BEGIN_RULE:1-IsARegularConfiguration
+        @$1_ANOTHER_RETURN_STATEMENT
+    #END_RULE
 
 @MAKE_METHOD_CALLABLE_$1
     #BEGIN_RULE

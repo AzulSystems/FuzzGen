@@ -16,7 +16,7 @@
 		#SET MethodCount=MethodCount+1
         @DECLARE_METHOD \n @DECLARE_METHODS
     #END_RULE
-    #BEGIN_RULE:MaxMethodsInClass+-1*MethodCount
+    #BEGIN_RULE:(MaxMethodsInClass+-1*MethodCount)*IsARegularConfiguration
 		#SET MethodCount=MethodCount+1
         @DECLARE_RECURSIVE_FUNCTION \n @DECLARE_METHODS
     #END_RULE

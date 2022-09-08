@@ -6,7 +6,7 @@
 
 @MAIN_TEST_ITERATIONS
     #BEGIN_RULE
-        `300`
+        `400`
     #END_RULE
 
 @PACKAGE_DECLARATION
@@ -17,6 +17,7 @@
     #BEGIN_RULE
         `import java.util.Random;` \n
         `import java.util.Arrays;` \n
+        `import java.nio.charset.Charset;` \n
     #END_RULE
     
 @IMPORTS_ADDITIONAL
@@ -106,3 +107,14 @@
 @ADDITIONAL_TEST_CLASS_FIELDS
     #BEGIN_RULE
     #END_RULE
+
+#SET IsARegularConfiguration=1
+
+@CUSTOM_PRINTS
+    #BEGIN_RULE
+    #END_RULE
+
+@CUSTOM_UTILS_CLASS
+    #BEGIN_RULE
+    #END_RULE
+

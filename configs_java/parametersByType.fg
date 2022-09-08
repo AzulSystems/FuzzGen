@@ -30,6 +30,9 @@
 #SET StringNumericValDeclared=0
 #SET String$1NumericValDeclared=0
 
+#SET StringVarDeclared=0
+#SET StringValDeclared=0
+
 #SET lambdaVal$1=0
 #SET lambdaVal=0
 #SET LambdaInterfaceOneArg$1=0
@@ -95,6 +98,8 @@
 
         #SET StringNumericValDeclared=0
         #SET String$1NumericValDeclared=0
+        #SET StringVarDeclared=0
+        #SET StringValDeclared=0
         
         #SET  lambdaVal$1=0
         #SET  lambdaVal=0
