@@ -180,7 +180,7 @@
 #END_RULE
 
                 @$1_LITERAL
-#BEGIN_RULE:10
+#BEGIN_RULE:5
                 @$1_CONSTANT @$1_CONSTANT_SUFFIX
 #END_RULE
 #BEGIN_RULE:60*$1ValDeclared
@@ -247,7 +247,7 @@
 
 
 @$3_EXPRESSION_SPECIFIC
-  #APPEND_RULE:5*$1$3NumericVarDeclared*$3IsPrimitiveType
+  #APPEND_RULE:5*$1$3NumericVarDeclared*$3IsPrimitiveType*(1-lambdaVal)
      @$3ToReferenceType `.parse` @$3ToParseNumericType `(` @REUSE_ID_String_$3_NUMERIC_VAR `)`
          #END_RULE
   #APPEND_RULE:200*$1$3NumericValDeclared*$3IsPrimitiveType

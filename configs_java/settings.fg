@@ -62,6 +62,10 @@
 #SET MaxCondNest=4
 
 #SET BinExprMaxDepth=3
+#SET StringExprMaxDepth=3
+#SET booleanExprMaxDepth=3
+#SET BooleanExprMaxDepth=3
+#SET intStringExprMaxDepth=3
 #SET ExprMaxDepth=3
 #SET ExprBlockMaxDepth=1
 
@@ -91,10 +95,10 @@
 #SET MaxLoopNestForMethodCall=2
 
 #SET NumericVarWeight=100
-#SET BooleanVarWeight=20
-#SET BooleanValWeight=2
-#SET StringVarWeight=20
-#SET StringValWeight=2
+#SET BooleanVarWeight=10
+#SET BooleanValWeight=3
+#SET StringVarWeight=30
+#SET StringValWeight=5
 #SET ObjVarWeight=2
 #SET LambdaVarWeight=20
 #SET MethodNonEmptyArgWeight=20

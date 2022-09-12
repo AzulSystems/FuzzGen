@@ -2,15 +2,6 @@
 #INCLUDE "configs_java/expressionsPrimitives.fg"  (int short byte long float double)
 #INCLUDE "configs_java/expressionsReferences.fg"  (Integer Short Byte Long Float Double)
 #INCLUDE "configs_java/parametersByType.fg" (boolean Boolean) (Val Var)
-//#INCLUDE "configs_java/intrinsic.fg"  (int short byte long float double Integer Short Byte Long Float Double)
-
-
-//#SET MethodCallCount=0
-
-#SET ExprDepth=0
-#SET BinExprDepth=0
-#SET ExprBlockDepth=0
-
 
 @Boolean_CONSTANT
 @boolean_CONSTANT
@@ -78,49 +69,78 @@
     #APPEND_RULE
          @byte_EXPRESSION
     #END_RULE
-    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)*(1-lambdaValint)
+    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)*(1-lambdaVal)
          @REUSE_ID_int_VAR `++`
     #END_RULE
-    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)*(1-lambdaValint)
+    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)*(1-lambdaVal)
         `++` @REUSE_ID_int_VAR 
     #END_RULE
-    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)*(1-lambdaValint)
+    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)*(1-lambdaVal)
          @REUSE_ID_int_VAR `--`
     #END_RULE
-    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)*(1-lambdaValint)
+    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)*(1-lambdaVal)
         `--` @REUSE_ID_int_VAR 
     #END_RULE
-    #APPEND_RULE:StringVarDeclared
+    #APPEND_RULE:StringVarWeight*(StringVarDeclared+StringValDeclared)
+        @int_String_EXPRESSION 
+    #END_RULE
+  
+
+@int_String_EXPRESSION_RECURSIVE 
+    #APPEND_RULE:StringVarDeclared*StringVarWeight*(1-lambdaVal)
+         @REUSE_ID_String_VAR `.indexOf(` @int_EXPRESSION   `)`
+    #END_RULE
+    #APPEND_RULE:StringVarDeclared*StringVarWeight*(1-lambdaVal)
+         @REUSE_ID_String_VAR `.indexOf(` @int_EXPRESSION `,` @int_EXPRESSION `)`
+    #END_RULE
+    #APPEND_RULE:StringValDeclared*StringVarWeight*(1-lambdaVal)
+         @REUSE_ID_String_VAL `.lastIndexOf(` @int_EXPRESSION `)`
+    #END_RULE
+    #APPEND_RULE:StringValDeclared*StringVarWeight
+         @REUSE_ID_String_VAL `.lastIndexOf(` @int_EXPRESSION `,` @int_EXPRESSION `)`
+    #END_RULE
+   #APPEND_RULE:StringValDeclared*StringVarWeight
+         @REUSE_ID_String_VAL `.indexOf(` @String_EXPRESSION `,` @int_EXPRESSION `)`
+    #END_RULE
+    #APPEND_RULE:StringValDeclared*StringVarWeight
+         @REUSE_ID_String_VAL `.lastIndexOf(` @String_EXPRESSION `,` @int_EXPRESSION `)`
+    #END_RULE
+    #APPEND_RULE
+         @String_CONSTANT `.length()`
+    #END_RULE
+
+    @int_String_EXPRESSION_NOT_RECURSIVE 
+    #APPEND_RULE:StringVarDeclared*(1-lambdaVal)
          @REUSE_ID_String_VAR `.length()`
     #END_RULE
     #APPEND_RULE:StringValDeclared
          @REUSE_ID_String_VAL `.length()`
     #END_RULE
-    #APPEND_RULE:StringVarDeclared*StringVarWeight
-         @REUSE_ID_String_VAR `.indexOf(` @int_EXPRESSION   `)`
+    #APPEND_RULE
+         @String_CONSTANT `.length()`
     #END_RULE
-    #APPEND_RULE:StringValDeclared*StringVarWeight
-         @REUSE_ID_String_VAL `.indexOf(` @int_EXPRESSION `,` @int_EXPRESSION `)`
-    #END_RULE
-    #APPEND_RULE:StringVarDeclared*StringVarWeight
-         @REUSE_ID_String_VAR `.lastIndexOf(` @int_EXPRESSION `)`
-    #END_RULE
-    #APPEND_RULE:StringValDeclared*StringVarWeight
-         @REUSE_ID_String_VAL `.lastIndexOf(` @int_EXPRESSION `,` @int_EXPRESSION `)`
-    #END_RULE
-    #APPEND_RULE:StringVarDeclared*StringVarWeight
+ #APPEND_RULE:StringVarDeclared*StringVarWeight*(1-lambdaVal)
          @REUSE_ID_String_VAR `.indexOf(` @String_EXPRESSION `)`
     #END_RULE
-    #APPEND_RULE:StringValDeclared*StringVarWeight
-         @REUSE_ID_String_VAL `.indexOf(` @String_EXPRESSION `,` @int_EXPRESSION `)`
-    #END_RULE
-     #APPEND_RULE:StringVarDeclared*StringVarWeight
+     #APPEND_RULE:StringVarDeclared*StringVarWeight*(1-lambdaVal)
          @REUSE_ID_String_VAR `.lastIndexOf(` @String_EXPRESSION `)`
     #END_RULE
-    #APPEND_RULE:StringValDeclared*StringVarWeight
-         @REUSE_ID_String_VAL `.lastIndexOf(` @String_EXPRESSION `,` @int_EXPRESSION `)`
+
+
+ @int_String_EXPRESSION
+    #BEGIN_RULE:1*(intStringExprMaxDepth+-1*intStringExprDepth)*(StringVarDeclared+StringValDeclared)
+      #SET intStringExprDepth=intStringExprDepth+1
+      @int_String_EXPRESSION_RECURSIVE
+      #SET intStringExprDepth=intStringExprDepth+-1
     #END_RULE
-    
+    #BEGIN_RULE:5
+      @int_String_EXPRESSION_NOT_RECURSIVE
+    #END_RULE
+
+
+
+
+
 
 @Integer_EXPRESSION_SPECIFIC
     #APPEND_RULE
@@ -194,96 +214,103 @@
     #END_RULE
 
 
-@boolean_EXPRESSION
-    #BEGIN_RULE
+@boolean_EXPRESSION_NOT_RECURSIVE
+    #APPEND_RULE
         @boolean_CONSTANT
     #END_RULE
-    #BEGIN_RULE
-        @boolean_CONSTANT
-    #END_RULE
-    #BEGIN_RULE:2*booleanValDeclared
+    #APPEND_RULE:2*booleanValDeclared
         @REUSE_ID_boolean_VAL
     #END_RULE
-    #BEGIN_RULE:5*booleanVarDeclared
+    #APPEND_RULE:5*booleanVarDeclared
         @REUSE_ID_boolean_VAR
     #END_RULE
-    #BEGIN_RULE:1*BooleanValDeclared
+    #APPEND_RULE:1*BooleanValDeclared
         @REUSE_ID_Boolean_VAL
     #END_RULE
-    #BEGIN_RULE:1*BooleanVarDeclared
+    #APPEND_RULE:1*BooleanVarDeclared
         @REUSE_ID_Boolean_VAR
     #END_RULE
-    #BEGIN_RULE:20
-        @BIN_EXPR_IntegerInteger_Boolean
-    #END_RULE
-    #BEGIN_RULE:20
-        @BIN_EXPR_ByteByte_Boolean
-    #END_RULE
-    #BEGIN_RULE:20
-        @BIN_EXPR_ShortShort_Boolean
-    #END_RULE
-    #BEGIN_RULE:20
-        @BIN_EXPR_LongLong_Boolean
-    #END_RULE
-     #BEGIN_RULE:20
-        @BIN_EXPR_FloatFloat_Boolean
-    #END_RULE
-    #BEGIN_RULE:20
-        @BIN_EXPR_DoubleDouble_Boolean
-    #END_RULE
-    #BEGIN_RULE:40
-        @BIN_EXPR_intint_boolean
-    #END_RULE
-    #BEGIN_RULE:20
-        @BIN_EXPR_longlong_boolean
-    #END_RULE
-     #BEGIN_RULE:20
-        @BIN_EXPR_floatfloat_boolean
-    #END_RULE
-    #BEGIN_RULE:20
-        @BIN_EXPR_doubledouble_boolean
-    #END_RULE
-    #BEGIN_RULE:10
-        `(` @boolean_EXPRESSION `) ? ` @boolean_EXPRESSION ` : ` @boolean_EXPRESSION
-    #END_RULE
-    #BEGIN_RULE:10
-        `(` @boolean_EXPRESSION @OP_booleanboolean_boolean  @boolean_EXPRESSION `)`
-    #END_RULE
-    #BEGIN_RULE:10
-        `(` @OP_boolean_boolean  @boolean_EXPRESSION  `)`
-    #END_RULE
-    #BEGIN_RULE:10
+    #APPEND_RULE:10
         @ARRAYEQUALS
     #END_RULE
-    #BEGIN_RULE:10*StringVarDeclared
+    #APPEND_RULE:10*StringVarDeclared*(1-lambdaVal)
         `(` @REUSE_ID_String_VAR `.equals( ` @String_EXPRESSION ` ))`
     #END_RULE
-    #BEGIN_RULE:10*StringValDeclared
+    #APPEND_RULE:10*StringValDeclared
         `(` @REUSE_ID_String_VAL `.equals( ` @String_EXPRESSION ` ))`
     #END_RULE
 
+
+@boolean_EXPRESSION_RECURSIVE
+   #APPEND_RULE:10
+       `(` @boolean_EXPRESSION `) ? ` @boolean_EXPRESSION ` : ` @boolean_EXPRESSION
+   #END_RULE
+   #APPEND_RULE:10
+       `(` @boolean_EXPRESSION @OP_booleanboolean_boolean  @boolean_EXPRESSION `)`
+   #END_RULE
+   #APPEND_RULE:10
+       `(` @OP_boolean_boolean  @boolean_EXPRESSION  `)`
+   #END_RULE
+
+
+
+@boolean_EXPRESSION
+   #BEGIN_RULE:1*(booleanExprMaxDepth+-1*booleanExprDepth)
+   #SET booleanExprDepth=booleanExprDepth+1
+   @boolean_EXPRESSION_RECURSIVE
+       #SET booleanExprDepth=booleanExprDepth+-1
+       #END_RULE
+        #BEGIN_RULE:3
+        @boolean_EXPRESSION_NOT_RECURSIVE
+            #END_RULE
+
+
+
 @Boolean_EXPRESSION
-    #BEGIN_RULE
+    #APPEND_RULE
         @boolean_EXPRESSION
     #END_RULE
 
-@String_EXPRESSION
+@String_EXPRESSION_NOT_RECURSIVE
     #BEGIN_RULE
         @String_CONSTANT
-    #END_RULE
-    #BEGIN_RULE:2-LoopNest
-        `(` @String_EXPRESSION @OP_StringString_String  @String_EXPRESSION `)`
     #END_RULE
     #BEGIN_RULE:8*StringValDeclared
         @REUSE_ID_String_VAL
     #END_RULE
-    #BEGIN_RULE:5*StringVarDeclared
+    #BEGIN_RULE:5*StringVarDeclared*(1-lambdaVal)
         @REUSE_ID_String_VAR
     #END_RULE
-    #BEGIN_RULE:2*(2-LoopNest)
+
+    @String_EXPRESSION_RECURSIVE
+    #BEGIN_RULE:2*method_String_StringDeclared*MethodOneArgWeight
+        @REUSE_ID_METHOD_String_String `(` @String_EXPRESSION `)`
+    #END_RULE
+    #BEGIN_RULE:5*(1-LoopNest)
+        `(` @String_EXPRESSION @OP_StringString_String  @String_EXPRESSION `)`
+    #END_RULE
+    #BEGIN_RULE:2*(1-LoopNest)
         `( ` @String_EXPRESSION ` .concat(` @String_EXPRESSION ` ))`
     #END_RULE
-    #BEGIN_RULE:1
+    #BEGIN_RULE:20*TryCatchDepth
+         @String_EXPRESSION `.substring(` @int_EXPRESSION `,` @int_EXPRESSION `)`
+    #END_RULE
+    #BEGIN_RULE:20*TryCatchDepth
+         @String_EXPRESSION `.substring(` @int_EXPRESSION `,` @int_EXPRESSION `)`
+    #END_RULE
+    #BEGIN_RULE:20*TryCatchDepth
+         @String_EXPRESSION `.substring(` @int_EXPRESSION `)`
+    #END_RULE
+    #BEGIN_RULE:20*TryCatchDepth
+         @String_EXPRESSION `.substring(` @int_EXPRESSION `)`
+    #END_RULE
+#BEGIN_RULE:5
+        @String_EXPRESSION `.toLowerCase()`
+    #END_RULE
+    #BEGIN_RULE:5
+        @String_EXPRESSION `.toUpperCase()`
+    #END_RULE
+     #BEGIN_RULE:1
         `String.valueOf( ` @int_EXPRESSION ` )`
     #END_RULE
     #BEGIN_RULE:1
@@ -304,15 +331,17 @@
     #BEGIN_RULE:1
         `String.valueOf( ` @boolean_EXPRESSION ` )`
     #END_RULE
-    #BEGIN_RULE:2*method_String_StringDeclared*MethodOneArgWeight
-        @REUSE_ID_METHOD_String_String `(` @String_EXPRESSION `)`
-    #END_RULE
-    #BEGIN_RULE
-        @String_EXPRESSION `.toLowerCase()`
-    #END_RULE
-    #BEGIN_RULE
-        @String_EXPRESSION `.toUpperCase()`
-    #END_RULE
+   
+
+@String_EXPRESSION
+   #BEGIN_RULE:1*(StringExprMaxDepth+-1*StringExprDepth)
+   #SET StringExprDepth=StringExprDepth+1
+   @String_EXPRESSION_RECURSIVE
+       #SET StringExprDepth=StringExprDepth+-1
+       #END_RULE
+        #BEGIN_RULE:3
+        @String_EXPRESSION_NOT_RECURSIVE
+            #END_RULE
 
 
 

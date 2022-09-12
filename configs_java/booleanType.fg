@@ -1,6 +1,8 @@
 #INCLUDE "configs_java/parametersBasic.fg"
 #INCLUDE "configs_java/parametersByType.fg" ($1) (Var Val)
 
+@BIN_EXPR_$2$2_$1
+
 @DECLARE_$1_VAR
     #BEGIN_RULE
         #SET $1VarDeclared=$1VarDeclared+1
@@ -88,3 +90,9 @@
     #BEGIN_RULE
         `!`
     #END_RULE
+
+@$1_EXPRESSION_NOT_RECURSIVE
+    #APPEND_RULE:1+5*($2VarDeclared+$2ValDeclared+$2IndVarDeclared+$2IndArraySafeVarDeclared)
+        @BIN_EXPR_$2$2_$1
+    #END_RULE
+

@@ -126,7 +126,7 @@
 
 
 @$1_EXPRESSION_NOT_RECURSIVE
-    #APPEND_RULE:50
+    #APPEND_RULE:5
         @$1_LITERAL
     #END_RULE
     #APPEND_RULE:($1ArrayVarDeclared+$1ArrayValDeclared)/2
@@ -144,12 +144,12 @@
 
 @$1_EXPRESSION_COMMON
     #BEGIN_RULE:1*(ExprMaxDepth+-1*ExprDepth)
-    #SET ExprDepth=ExprDepth+1
-    @$1_EXPRESSION_RECURSIVE
-    #SET ExprDepth=ExprDepth+-1
+        #SET ExprDepth=ExprDepth+1
+        @$1_EXPRESSION_RECURSIVE
+        #SET ExprDepth=ExprDepth+-1
     #END_RULE
     #BEGIN_RULE:3
-    @$1_EXPRESSION_NOT_RECURSIVE
+        @$1_EXPRESSION_NOT_RECURSIVE
     #END_RULE
 
 @UNARY_EXPR_$1_$1
@@ -174,7 +174,7 @@
         #SET BinExprDepth=BinExprDepth+-1
     #END_RULE
     #BEGIN_RULE:1+-1*(BinExprMaxDepth+-1*BinExprDepth)
-        `( `@$1_CONSTANT @$1_CONSTANT_SUFFIX @OP_$1$1_$1 @$1_CONSTANT @$1_CONSTANT_SUFFIX ` )`
+        `( ` @$1_EXPRESSION_NOT_RECURSIVE @OP_$1$1_$1 @$1_EXPRESSION_NOT_RECURSIVE ` )`
     #END_RULE
 
 @$1_EXPRESSION_BLOCK
@@ -193,19 +193,19 @@
     #END_RULE
     #BEGIN_RULE:1
     ` { ` #BEGIN_SCOPE \n
-        @$1_CONSTANT  @$1_CONSTANT_SUFFIX 
+        @$1_EXPRESSION_NOT_RECURSIVE
     	#END_SCOPE ` } ` \n
         #END_RULE
 
 
 @BIN_EXPR_$1$1_boolean
-    #BEGIN_RULE:100*(BinExprMaxDepth+-1*BinExprDepth)
-        #SET BinExprDepth=BinExprDepth+1
+    #BEGIN_RULE:1*(booleanExprMaxDepth+-1*booleanExprDepth)
+        #SET booleanExprDepth=booleanExprDepth+1
         `( ` @$1_EXPRESSION ` ` @OP_$1$1_bool ` ` @$1_EXPRESSION ` )`
-    #SET BinExprDepth=BinExprDepth+-1
+    #SET booleanExprDepth=booleanExprDepth+-1
     #END_RULE
     #BEGIN_RULE:1
-        `( `@$1_CONSTANT @$1_CONSTANT_SUFFIX @OP_$1$1_bool @$1_CONSTANT @$1_CONSTANT_SUFFIX ` )`
+        `( ` @$1_EXPRESSION_NOT_RECURSIVE @OP_$1$1_bool @$1_EXPRESSION_NOT_RECURSIVE ` )`
     #END_RULE
 
 

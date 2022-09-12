@@ -121,6 +121,19 @@
 
 //#SET MaxLoopNestForMethodCall=2
 
+
+#SET ExprDepth=0
+#SET BinExprDepth=0
+#SET ExprBlockDepth=0
+
+#SET intStringExprDepth=0
+#SET StringExprDepth=0
+
+#SET booleanExprDepth=0
+#SET BooleanExprDepth=0
+
+
+
 @SET_FLAGS_BEFORE_METHOD_
 #BEGIN_RULE
 #SET LoopCount=0
