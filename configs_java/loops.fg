@@ -1,4 +1,4 @@
-#INCLUDE "configs_java/loopsByType.fg" (int short byte long float double Integer Short Byte Long Float Double) ($1)
+#INCLUDE "configs_java/loopsByType.fg" (int short byte long float double Integer Short Byte Long Float Double String) ($1)
 #INCLUDE "configs_java/loopsIndVar.fg" ($1) (ARRAY_SAFE_VAR) (ArraySafeVar)
 #INCLUDE "configs_java/loopsIndVar.fg" ($1) (VAR) (Var)
 
@@ -278,12 +278,6 @@
     #END_RULE
     #BEGIN_RULE:3
         @LOOP_CNT_UPPER_LIMIT_$1 @TO_OR_UNTIL @LOOP_CNT_LOWER_LIMIT ` by ` @LOOP_RANGE_STEP_NEG_
-    #END_RULE
-    #BEGIN_RULE:intListVarDeclared*10
-       @REUSE_ID_int_LIST_VAR `.filter(_ ` @OP_intint_Boolean ` ` @int_EXPRESSION ` ) `
-    #END_RULE
-    #BEGIN_RULE:intListVarDeclared*10
-        @REUSE_ID_int_LIST_VAR 
     #END_RULE
     #BEGIN_RULE:intImmutableSetVarDeclared*10
         @REUSE_ID_int_IMMUTABLE_SET_VAR 

@@ -3,7 +3,7 @@
 #INCLUDE "configs_java/methods.fg"
 #INCLUDE "configs_java/mainPrintByType.fg" (int short byte long float double Integer Short Byte Long Float Double String)
 #INCLUDE "configs_java/utils.fg"
-#INCLUDE "configs_java/lambdaByType.fg" (int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/lambdaByType.fg" (int short byte long float double Integer Short Byte Long Float Double String)
 
 
 @MAIN
@@ -169,7 +169,7 @@
 
 //@TEST_CLASS_FIELDS[0]
 @TEST_CLASS_FIELDS
-#BEGIN_RULE:5
+#BEGIN_RULE:FieldVarWeight
 @DECLARE_FIELD_VAR_OF_TYPE @TEST_CLASS_FIELDS
 #END_RULE
 #BEGIN_RULE
@@ -218,6 +218,8 @@
         @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Long
         @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Float
         @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Double
+
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_String
     #END_RULE
 
 @DECLARE_PRINT_VARS_METHOD
@@ -254,6 +256,8 @@
         @DECLARE_PRINT_COLLECTION_VARS_METHOD_Long
         @DECLARE_PRINT_COLLECTION_VARS_METHOD_Float
         @DECLARE_PRINT_COLLECTION_VARS_METHOD_Double
+
+        @DECLARE_PRINT_COLLECTION_VARS_METHOD_String
     #END_RULE
 
 

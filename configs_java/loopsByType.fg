@@ -1,6 +1,6 @@
 #INCLUDE "configs_java/expressions.fg" 
 //#INCLUDE "configs_java/list.fg" $1
-#INCLUDE "configs_java/numericTypesCommon.fg" $1 int
+//#INCLUDE "configs_java/numericTypesCommon.fg" $1 int
 #INCLUDE "configs_java/arrayTypes.fg" $1  
 
 

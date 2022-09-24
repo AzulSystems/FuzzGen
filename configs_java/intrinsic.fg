@@ -58,43 +58,43 @@
     #END_RULE
 
 @MATHPOW
-    #APPEND_RULE
+    #APPEND_RULE:$1IsNumericType
         `Math.pow(` @$1_EXPRESSION `, ` @$1_EXPRESSION `)`
     #END_RULE
 
 @MATHEXP
-    #APPEND_RULE
+    #APPEND_RULE:$1IsNumericType
         `Math.exp(` @$1_EXPRESSION `)`
     #END_RULE
 
 @MATHLOG
-    #APPEND_RULE
+    #APPEND_RULE:$1IsNumericType
         `Math.log(` @$1_EXPRESSION `)`
     #END_RULE
 
 
 @MATHLOG10
-    #APPEND_RULE
+    #APPEND_RULE:$1IsNumericType
         `Math.log10(` @$1_EXPRESSION `)`
     #END_RULE
 
 @SQRT
-    #APPEND_RULE
+    #APPEND_RULE:$1IsNumericType
         `Math.sqrt(` @$1_EXPRESSION `)`
     #END_RULE
 
 @MATHMIN_$1
-    #BEGIN_RULE
+    #BEGIN_RULE:$1IsNumericType
         `Math.min(` @$1_EXPRESSION `, ` @$1_EXPRESSION `)`
     #END_RULE
 
 @MATHMAX_$1
-    #BEGIN_RULE
+    #BEGIN_RULE:$1IsNumericType
         `Math.max(` @$1_EXPRESSION `, ` @$1_EXPRESSION `)`
     #END_RULE
 
 @MATHABS_$1
-    #BEGIN_RULE
+    #BEGIN_RULE:$1IsNumericType
         `Math.abs(` @$1_EXPRESSION `)`
     #END_RULE
 

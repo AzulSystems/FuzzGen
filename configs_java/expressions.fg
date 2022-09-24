@@ -1,4 +1,4 @@
-#INCLUDE "configs_java/expressionsCommon.fg"  (int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/expressionsCommon.fg"  (int short byte long float double Integer Short Byte Long Float Double String)
 #INCLUDE "configs_java/expressionsPrimitives.fg"  (int short byte long float double)
 #INCLUDE "configs_java/expressionsReferences.fg"  (Integer Short Byte Long Float Double)
 #INCLUDE "configs_java/parametersByType.fg" (boolean Boolean) (Val Var)
@@ -272,63 +272,69 @@
     #END_RULE
 
 @String_EXPRESSION_NOT_RECURSIVE
-    #BEGIN_RULE
+    #APPEND_RULE
         @String_CONSTANT
     #END_RULE
-    #BEGIN_RULE:8*StringValDeclared
+    #APPEND_RULE:8*StringValDeclared
         @REUSE_ID_String_VAL
     #END_RULE
-    #BEGIN_RULE:5*StringVarDeclared*(1-lambdaVal)
+    #APPEND_RULE:5*StringVarDeclared*(1-lambdaVal)
         @REUSE_ID_String_VAR
+    #END_RULE
+     #APPEND_RULE:10*StringArrayVarDeclared*StringVarWeight*(1-lambdaVal)
+         @REUSE_ID_String_ARRAY_VAR `[0]` 
+    #END_RULE
+    #APPEND_RULE:20*StringVarDeclared*(1-lambdaVal)
+        #REUSE_ID StringVar_`.substring(` #GET_LAST_ID StringVar_ `.length()/` @[1:10] `)`
+    #END_RULE
+    #APPEND_RULE:20*StringValDeclared
+        #REUSE_ID StringVal_`.substring(` #GET_LAST_ID StringVal_ `.length()/` @[1:10] `)`
     #END_RULE
 
     @String_EXPRESSION_RECURSIVE
-    #BEGIN_RULE:2*method_String_StringDeclared*MethodOneArgWeight
+    #APPEND_RULE:20*method_String_StringDeclared*MethodOneArgWeight
         @REUSE_ID_METHOD_String_String `(` @String_EXPRESSION `)`
     #END_RULE
-    #BEGIN_RULE:5*(1-LoopNest)
-        `(` @String_EXPRESSION @OP_StringString_String  @String_EXPRESSION `)`
-    #END_RULE
-    #BEGIN_RULE:2*(1-LoopNest)
+//    #APPEND_RULE:1*(1-LoopNest)
+//        `(` @String_EXPRESSION @OP_StringString_String  @String_EXPRESSION `)`
+//    #END_RULE
+    #APPEND_RULE:2*(1-LoopNest)
         `( ` @String_EXPRESSION ` .concat(` @String_EXPRESSION ` ))`
     #END_RULE
-    #BEGIN_RULE:20*TryCatchDepth
+    #APPEND_RULE:20*TryCatchDepth
          @String_EXPRESSION `.substring(` @int_EXPRESSION `,` @int_EXPRESSION `)`
     #END_RULE
-    #BEGIN_RULE:20*TryCatchDepth
-         @String_EXPRESSION `.substring(` @int_EXPRESSION `,` @int_EXPRESSION `)`
-    #END_RULE
-    #BEGIN_RULE:20*TryCatchDepth
+    #APPEND_RULE:20*TryCatchDepth
          @String_EXPRESSION `.substring(` @int_EXPRESSION `)`
     #END_RULE
-    #BEGIN_RULE:20*TryCatchDepth
+    #APPEND_RULE:20*TryCatchDepth
          @String_EXPRESSION `.substring(` @int_EXPRESSION `)`
     #END_RULE
-#BEGIN_RULE:5
+#APPEND_RULE:20
         @String_EXPRESSION `.toLowerCase()`
     #END_RULE
-    #BEGIN_RULE:5
+    #APPEND_RULE:20
         @String_EXPRESSION `.toUpperCase()`
     #END_RULE
-     #BEGIN_RULE:1
+     #APPEND_RULE:10
         `String.valueOf( ` @int_EXPRESSION ` )`
     #END_RULE
-    #BEGIN_RULE:1
+    #APPEND_RULE:10
         `String.valueOf( ` @long_EXPRESSION ` )`
     #END_RULE
-    #BEGIN_RULE:1
+    #APPEND_RULE:10
         `String.valueOf( ` @byte_EXPRESSION ` )`
     #END_RULE
-    #BEGIN_RULE:1
+    #APPEND_RULE:10
         `String.valueOf( ` @short_EXPRESSION ` )`
     #END_RULE
-    #BEGIN_RULE:1
+    #APPEND_RULE:10
         `String.valueOf( ` @float_EXPRESSION ` )`
     #END_RULE
-    #BEGIN_RULE:1
+    #APPEND_RULE:10
         `String.valueOf( ` @double_EXPRESSION ` )`
     #END_RULE
-    #BEGIN_RULE:1
+    #APPEND_RULE:10
         `String.valueOf( ` @boolean_EXPRESSION ` )`
     #END_RULE
    
@@ -339,7 +345,7 @@
    @String_EXPRESSION_RECURSIVE
        #SET StringExprDepth=StringExprDepth+-1
        #END_RULE
-        #BEGIN_RULE:3
+        #BEGIN_RULE:2
         @String_EXPRESSION_NOT_RECURSIVE
             #END_RULE
 

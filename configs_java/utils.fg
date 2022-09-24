@@ -1,9 +1,12 @@
-#INCLUDE "configs_java/utilsByType.fg" (int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/utilsByType.fg" (int short byte long float double Integer Short Byte Long Float Double String)
+
+@long_CONSTANT
+@long_CONSTANT_SUFFIX
 
 @UTILS_FIELDS
     #BEGIN_RULE
         ` public static Random random = new Random(1);` \n
-        ` public static long seed = 1L;` \n
+        ` public static long seed = ` @long_CONSTANT @long_CONSTANT_SUFFIX `;` \n
         ` public static int UnknownZero = 0;` \n 
 
     #END_RULE
@@ -52,4 +55,5 @@
     @UTILS_INIT_ARRAY_Long
     @UTILS_INIT_ARRAY_Float
     @UTILS_INIT_ARRAY_Double
+    @UTILS_INIT_ARRAY_String
     #END_RULE

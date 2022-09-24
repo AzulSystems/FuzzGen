@@ -19,7 +19,7 @@
     #BEGIN_RULE:(StatementProb+-1*LoopNest)*(MaxStatementsInMethodCount+-1*StatementsInMethodCount)
         @STATEMENT @STATEMENTS
     #END_RULE
-    #BEGIN_RULE:2*StatementProb*(1+LoopNest)
+    #BEGIN_RULE:2*StatementProb*(1+LoopNest)*(StatementsInMethodCount-MinStatementsInMethodCount)
     #END_RULE
 
 @STATEMENTS_SHORT

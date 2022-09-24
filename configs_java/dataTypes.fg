@@ -1,14 +1,16 @@
 #INCLUDE "configs_java/booleanType.fg" (boolean Boolean)  (int short byte long float double Integer Short Byte Long Float Double)
 #INCLUDE "configs_java/numericTypesCommon.fg" (int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/typesCommon.fg" (int short byte long float double Integer Short Byte Long Float Double String)
 #INCLUDE "configs_java/objectType.fg" (int short byte long float double Integer Short Byte Long Float Double)
 #INCLUDE "configs_java/list.fg" int short byte long float double Integer Short Byte Long Float Double
 #INCLUDE "configs_java/set.fg" int short byte long float double Integer Short Byte Long Float Double
+#INCLUDE "configs_java/arrayTypes.fg" String
 
 #INCLUDE "configs_java/string.fg" (String) (boolean Boolean)  ( int short byte long float double Integer Short Byte Long Float Double  )
-#INCLUDE "configs_java/lambdaByType.fg" (int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/lambdaByType.fg" (int short byte long float double Integer Short Byte Long Float Double String)
 
 @DECLARE_VARS
-    #BEGIN_RULE:20
+    #BEGIN_RULE:DeclareVarsWeight
         @DECLARE_VAR \n @DECLARE_VARS
     #END_RULE
     #BEGIN_RULE

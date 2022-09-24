@@ -74,53 +74,47 @@
 
 
 @$1_EXPRESSION_RECURSIVE
-    #BEGIN_RULE:1*(1-lambdaVal)*($1ArrayVarDeclared+$1ArrayValDeclared)/2
+    #APPEND_RULE:1*(1-lambdaVal)*($1ArrayVarDeclared+$1ArrayValDeclared)/2
         @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[ Math.min( Math.abs(( ` @int_EXPRESSION ` ) / 2 ), ( ` @[MaxArrayCount/2:3*MaxArrayCount/4] `  )) ]`
     #END_RULE
-    #BEGIN_RULE:1*($1ArrayVarDeclared+$1ArrayValDeclared)
+    #APPEND_RULE:1*($1ArrayVarDeclared+$1ArrayValDeclared)
         @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[(` @int_EXPRESSION ` >>> 1) % ` @[MaxArrayCount/2:3*MaxArrayCount/4] `]`
     #END_RULE
-    #BEGIN_RULE:1*($1ArrayVarDeclared+$1ArrayFieldVarDeclared+$1ArrayValDeclared+$1ArrayFieldValDeclared)*TryCatchDepth*300
+    #APPEND_RULE:1*($1ArrayVarDeclared+$1ArrayFieldVarDeclared+$1ArrayValDeclared+$1ArrayFieldValDeclared)*TryCatchDepth*300
         @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[` @int_EXPRESSION `]`
     #END_RULE
-    #BEGIN_RULE:5*($1ArrayVarDeclared+$1ArrayValDeclared+$1VarDeclared)*(1-lambdaVal)
+    #APPEND_RULE:5*($1ArrayVarDeclared+$1ArrayValDeclared+$1VarDeclared)*(1-lambdaVal)
         @UNARY_EXPR_$1_$1
     #END_RULE
-    #BEGIN_RULE:100
+    #APPEND_RULE:100
        @BIN_EXPR_$1$1_$1
    #END_RULE
-   #BEGIN_RULE:5
+   #APPEND_RULE:5
         `((` @bool_EXPRESSION `) ? ` @$1_EXPRESSION ` : ` @$1_EXPRESSION ` )`
     #END_RULE
-   //#BEGIN_RULE:3*(MethodCallInExprWeight+-2*MethodCallCount)*method_$1_$1Declared*(MaxLoopNest+-1*LoopNest)
-   #BEGIN_RULE:10*(MethodCallInExprWeight+-1*MethodCallCount)*(MaxLoopNestForMethodCall+-1*LoopNest)*(method_$1_$1Declared+global_method_$1_$1Declared)*(1+-1*$1RecursiveFunction)*(1-LongLoop)
+   //#APPEND_RULE:3*(MethodCallInExprWeight+-2*MethodCallCount)*method_$1_$1Declared*(MaxLoopNest+-1*LoopNest)
+   #APPEND_RULE:10*(MethodCallInExprWeight+-1*MethodCallCount)*(MaxLoopNestForMethodCall+-1*LoopNest)*(method_$1_$1Declared+global_method_$1_$1Declared)*(1+-1*$1RecursiveFunction)*(1-LongLoop)
     #SET MethodCallCount=MethodCallCount+1
         @REUSE_ID_METHOD_$1_$1 ` ( ` @$1_CAST_OPEN  @$1_EXPRESSION @$1_CAST_CLOSE ` )`
     #END_RULE
-   #BEGIN_RULE:2*(MethodCallInExprWeight+-1*MethodCallCount)*(MaxLoopNestForMethodCall+-1*LoopNest)*(recursive_function_$1_$1Declared+global_recursive_function_$1_$1Declared)*(1+-1*$1RecursiveFunction)*(1-LongLoop)
+   #APPEND_RULE:2*(MethodCallInExprWeight+-1*MethodCallCount)*(MaxLoopNestForMethodCall+-1*LoopNest)*(recursive_function_$1_$1Declared+global_recursive_function_$1_$1Declared)*(1+-1*$1RecursiveFunction)*(1-LongLoop)
     #SET MethodCallCount=MethodCallCount+1
         @REUSE_ID_RECURSIVE_FUNCTION_$1_$1 ` ( ` @$1_CAST_OPEN  `(` @$1_EXPRESSION ` % ` @RECURSIVE_FUNCTION_ARG_LIMITATION  `)` @$1_CAST_CLOSE  ` )`
     #END_RULE
-   #BEGIN_RULE:100*(MethodCallInExprWeight+-1*MethodCallCount)*(MaxLoopNestForMethodCall+-1*LoopNest)*(recursive_function_$1_$1Declared+global_recursive_function_$1_$1Declared)*$1RecursiveFunction*(1-LongLoop)
+   #APPEND_RULE:100*(MethodCallInExprWeight+-1*MethodCallCount)*(MaxLoopNestForMethodCall+-1*LoopNest)*(recursive_function_$1_$1Declared+global_recursive_function_$1_$1Declared)*$1RecursiveFunction*(1-LongLoop)
     #SET MethodCallCount=MethodCallCount+1
         #GET_LAST_ID recursive_function_$1_$1_ ` ( ` @$1_CAST_OPEN `(` #GET_LAST_ID $1RecursiveFlagVar_  ` - 1) ` @$1_CAST_CLOSE `) `
     #END_RULE
-    #BEGIN_RULE:1
+    #APPEND_RULE:$1IsNumericType
         @MATHMIN_$1
     #END_RULE
-    #BEGIN_RULE:1
+    #APPEND_RULE:$1IsNumericType
         @MATHMAX_$1
     #END_RULE
-    #BEGIN_RULE:1
+    #APPEND_RULE:$1IsNumericType
         @MATHABS_$1
     #END_RULE
-    #BEGIN_RULE:4*0
-    	@$1_EXPRESSION_BLOCK
-    #END_RULE
-    #BEGIN_RULE:4*$1ListVarDeclared*0
-        @REUSE_ID_$1_LIST_VAR `.filter(_ ` @OP_$1$1_bool ` ` @$1_EXPRESSION ` ).sum` 
-    #END_RULE
-    #BEGIN_RULE:200*(lambdaFunctionOneArg$1+lambdaFunctionTwoArgs$1)
+    #APPEND_RULE:200*(lambdaFunctionOneArg$1+lambdaFunctionTwoArgs$1)
         @$1_LAMBDA_EXPRESSION
     #END_RULE
 

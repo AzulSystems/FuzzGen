@@ -43,9 +43,21 @@
         #SET $1VarDeclared=$1VarDeclared+1
         `$1 ` @DECLARE_ID_$1_VAR ` = new String(` #REUSE_ID byteArrayVar_ ` , ` @[0:MaxArrayCount/4] `, ` @[0:MaxArrayCount/4] `,  Charset.forName("` @CHARSET `"));  ` \n
     #END_RULE
+    #APPEND_RULE:byteArrayValDeclared*100
+        #SET $1VarDeclared=$1VarDeclared+1
+        `$1 ` @DECLARE_ID_$1_VAR ` = new String(` #REUSE_ID byteArrayVal_ ` , ` @[0:MaxArrayCount/4] `, ` @[0:MaxArrayCount/4] `,  Charset.forName("` @CHARSET `"));  ` \n
+    #END_RULE
+    #APPEND_RULE:byteArrayFieldVarDeclared*100
+        #SET $1VarDeclared=$1VarDeclared+1
+        `$1 ` @DECLARE_ID_$1_VAR ` = new String(` #REUSE_ID byteArrayFieldVar_ ` , ` @[0:MaxArrayCount/4] `, ` @[0:MaxArrayCount/4] `,  Charset.forName("` @CHARSET `"));  ` \n
+    #END_RULE
+    #APPEND_RULE:byteArrayValDeclared*100
+        #SET $1VarDeclared=$1VarDeclared+1
+        `$1 ` @DECLARE_ID_$1_VAR ` = new String(` #REUSE_ID byteArrayFieldVal_ ` , ` @[0:MaxArrayCount/4] `, ` @[0:MaxArrayCount/4] `,  Charset.forName("` @CHARSET `"));  ` \n
+    #END_RULE
     #APPEND_RULE:10
         @DECLARE_$1_$3_NUMERIC_VAR
-        #SET $1VarDeclared=$1VarDeclared+1
+//        #SET $1VarDeclared=$1VarDeclared+1
     #END_RULE
 
 @DECLARE_$1_$3_NUMERIC_VAR
@@ -68,7 +80,7 @@
     #END_RULE
     #APPEND_RULE:10
         @DECLARE_$1_$3_NUMERIC_VAL
-        #SET $1ValDeclared=$1ValDeclared+1
+  //      #SET $1ValDeclared=$1ValDeclared+1
     #END_RULE
 
 @DECLARE_ID_$1_VAR
@@ -100,18 +112,24 @@
     #APPEND_RULE
         #CREATE_ID $1$3NumericVal_
         #SET $1$3NumericValDeclared=$1$3NumericValDeclared+1
-        #SET $1ValDeclared=$1ValDeclared+1
+//        #SET $1ValDeclared=$1ValDeclared+1
     #END_RULE
 
 
 @REUSE_ID_$1_VAR
-    #BEGIN_RULE
-        #REUSE_ID $1%Var_
+    #APPEND_RULE:$1VarDeclared
+        #REUSE_ID $1Var_
+    #END_RULE
+    #APPEND_RULE:($1IntegerNumericVarDeclared+$1LongNumericVarDeclared+$1ByteNumericVarDeclared+$1ShortNumericVarDeclared+$1DoubleNumericVarDeclared+$1FloatNumericVarDeclared)+($1intNumericVarDeclared+$1longNumericVarDeclared+$1byteNumericVarDeclared+$1shortNumericVarDeclared+$1doubleNumericVarDeclared+$1floatNumericVarDeclared)
+        #REUSE_ID $1%NumericVar_
     #END_RULE
 
 @REUSE_ID_$1_VAL
-    #BEGIN_RULE
-        #REUSE_ID $1%Val_
+    #APPEND_RULE:$1ValDeclared
+        #REUSE_ID $1Val_
+    #END_RULE
+    #APPEND_RULE:($1IntegerNumericValDeclared+$1LongNumericValDeclared+$1ByteNumericValDeclared+$1ShortNumericValDeclared+$1DoubleNumericValDeclared+$1FloatNumericValDeclared)+($1intNumericVarDeclared+$1longNumericVarDeclared+$1byteNumericVarDeclared+$1shortNumericVarDeclared+$1doubleNumericVarDeclared+$1floatNumericVarDeclared)
+        #REUSE_ID $1%NumericVal_
     #END_RULE
 
 @REUSE_ID_$1_$3_NUMERIC_VAR
@@ -135,6 +153,13 @@
                 ` != `
     #END_RULE
 
+@OP_$1$1_$2
+    #BEGIN_RULE:2
+        ` == `
+    #END_RULE
+    #BEGIN_RULE:3
+                ` != `
+    #END_RULE
 
 
   @$1_$3_NUMERIC_CONSTANT
@@ -179,16 +204,16 @@
 #BEGIN_RULE
 #END_RULE
 
-                @$1_LITERAL
-#BEGIN_RULE:5
-                @$1_CONSTANT @$1_CONSTANT_SUFFIX
-#END_RULE
-#BEGIN_RULE:60*$1ValDeclared
-                @REUSE_ID_$1_VAL
-#END_RULE
-#BEGIN_RULE:60*$1VarDeclared
-                @REUSE_ID_$1_VAR
-#END_RULE
+@$1_LITERAL
+//#BEGIN_RULE:5
+//                @$1_CONSTANT @$1_CONSTANT_SUFFIX
+//#END_RULE
+//#BEGIN_RULE:60*$1ValDeclared
+//                @REUSE_ID_$1_VAL
+//#END_RULE
+//#BEGIN_RULE:60*$1VarDeclared*(1-lambdaVal)
+//                @REUSE_ID_$1_VAR
+//#END_RULE
 
                 @OP_$1$1_$1
 #BEGIN_RULE
@@ -231,26 +256,39 @@
 
 
 
-@REUSE_ID_METHOD_$1_$1
-    #APPEND_RULE:1+25*method_$1_$1Declared
-        #REUSE_ID method_$1_$1_
-    #END_RULE
+//@REUSE_ID_METHOD_$1_$1
+//    #APPEND_RULE:1+25*method_$1_$1Declared
+//        #REUSE_ID method_$1_$1_
+//    #END_RULE
 
-@CREATE_ID_RECURSIVE_FUNCTION_$1_$1
-    #BEGIN_RULE
-        #CREATE_ID recursive_function_$1_$1_
-    #END_RULE
-             @REUSE_ID_RECURSIVE_FUNCTION_$1_$1
-                 #BEGIN_RULE:1+25*recursive_function_$1_$1Declared
-                     #REUSE_ID recursive_function_$1_$1_
-                 #END_RULE
+//@CREATE_ID_RECURSIVE_FUNCTION_$1_$1
+//    #BEGIN_RULE
+//        #CREATE_ID recursive_function_$1_$1_
+//    #END_RULE
+//             @REUSE_ID_RECURSIVE_FUNCTION_$1_$1
+//                 #BEGIN_RULE:1+25*recursive_function_$1_$1Declared
+//                     #REUSE_ID recursive_function_$1_$1_
+//                 #END_RULE
 
 
 @$3_EXPRESSION_SPECIFIC
-  #APPEND_RULE:5*$1$3NumericVarDeclared*$3IsPrimitiveType*(1-lambdaVal)
+  #APPEND_RULE:1*$1$3NumericVarDeclared*$3IsPrimitiveType*(1-lambdaVal)
      @$3ToReferenceType `.parse` @$3ToParseNumericType `(` @REUSE_ID_String_$3_NUMERIC_VAR `)`
          #END_RULE
-  #APPEND_RULE:200*$1$3NumericValDeclared*$3IsPrimitiveType
+  #APPEND_RULE:100*$1$3NumericValDeclared*$3IsPrimitiveType
      @$3ToReferenceType `.parse` @$3ToParseNumericType `(` @REUSE_ID_String_$3_NUMERIC_VAL `)`
          #END_RULE
 
+//@DECLARE_BASIC_VAR
+//    #APPEND_RULE:Enable$1
+//        @DECLARE_$1_VAR
+//     #END_RULE
+
+
+@PREFIX_OP_$1_$1
+#BEGIN_RULE
+#END_RULE
+
+@POSTFIX_OP_$1_$1
+#BEGIN_RULE
+#END_RULE

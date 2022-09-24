@@ -75,7 +75,8 @@
 
 #SET MethodCallInExprWeight=3
 
-#SET MaxStatementsInMethodCount=30
+#SET MaxStatementsInMethodCount=25
+#SET MinStatementsInMethodCount=10
 
 #SET SwitchMatch=-10
 
@@ -106,6 +107,25 @@
 #SET OtherMethodArgsWeight=0
 #SET MethodEmptyArgWeight=0
 
+#SET Enableint=10
+#SET Enableshort=2
+#SET Enablebyte=5
+#SET Enablelong=5
+#SET Enablefloat=5
+#SET Enabledouble=5
+#SET EnableInteger=1
+#SET EnableShort=1
+#SET EnableByte=1
+#SET EnableLong=1
+#SET EnableFloat=1
+#SET EnableDouble=1
+
+#SET EnableString=2
+
+
+
+
+
 #SET AllowReturnExpression=0
 
 @ADDITIONAL_TEST_CLASS_FIELDS
@@ -122,3 +142,8 @@
     #BEGIN_RULE
     #END_RULE
 
+#SET DeclareVarsWeight=20
+
+#SET localArrayVarWeight=1
+#SET fieldArrayVarWeight=1
+#SET FieldVarWeight=5

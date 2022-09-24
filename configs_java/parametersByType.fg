@@ -32,6 +32,11 @@
 
 #SET StringVarDeclared=0
 #SET StringValDeclared=0
+#SET global_StringFieldVar=0
+#SET global_StringFieldVal=0
+#SET global_StringArrayFieldVar=0
+#SET global_StringArrayFieldVal=0
+
 
 #SET lambdaVal$1=0
 #SET lambdaVal=0
@@ -46,6 +51,10 @@
 #SET global_recursive_function_$1_$1Declared=0
 #SET global_$1Field$2Declared=0
 #SET global_$1ArrayField$2Declared=0
+#SET global_StringFieldVar=0
+#SET global_StringFieldVal=0
+#SET global_StringArrayFieldVar=0
+#SET global_StringArrayFieldVal=0
 //Fake
 #SET global_$1Array$2Declared=0
 #SET global_$1MethodObjVarDeclared=0
@@ -69,6 +78,10 @@
     #BEGIN_RULE
         #SET $1Field$2Declared=0
         #SET $1ArrayField$2Declared=0
+#SET StringFieldVar=0
+#SET StringFieldVal=0
+#SET StringArrayFieldVar=0
+#SET StringArrayFieldVal=0
     #END_RULE
 
 @SET_DECLARED_METHOD_FLAG_TO_ZERO_$1_$1

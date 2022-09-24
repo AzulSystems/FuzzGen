@@ -19,19 +19,13 @@
 @LIST_TO_INT_FUNC
 
 @ASSIGN
-    #APPEND_RULE:100*$1VarDeclared*Enable$1
+    #APPEND_RULE:100*($1VarDeclared+$1FieldVarDeclared+1*global_$1FieldVarDeclared)*Enable$1
         @ASSIGN_$1_VAR
     #END_RULE
-    #APPEND_RULE:10*$1ListVarDeclared*Enable$1
-        @ASSIGN_$1_LIST_VAR
-    #END_RULE
-    #APPEND_RULE:10*$1ImmutableSetVarDeclared*Enable$1
-        @ASSIGN_$1_IMMUTABLE_SET_VAR
-    #END_RULE
-    #APPEND_RULE:10*$1ArrayVarDeclared*Enable$1
+    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared+1*global_$1ArrayFieldVarDeclared)*Enable$1
         @ASSIGN_$1_ARRAY_VAR
     #END_RULE
-    #APPEND_RULE:2*($1ArrayVarDeclared+$1ArrayValDeclared)*Enable$1
+    #APPEND_RULE:2*($1ArrayVarDeclared+$1ArrayFieldVarDeclared+1*global_$1ArrayFieldVarDeclared)*Enable$1
         @ASSIGN_TO_$1_ARRAY_VAR_OR_VAL_ELEMENT
     #END_RULE
 
@@ -53,15 +47,10 @@
     #END_RULE
 
 @ASSIGN_$1_VAR
-    #BEGIN_RULE:20*$1VarDeclared
+    #BEGIN_RULE//:20*$1VarDeclared
         @REUSE_ID_$1_VAR @SET_OR_SET_OP_$1 @$1_CAST_OPEN @$1_EXPRESSION @$1_CAST_CLOSE `; ` \n
     #END_RULE
    
-@ASSIGN_$1_LIST_VAR
-    #BEGIN_RULE
-    @REUSE_ID_$1_LIST_VAR ` = ` @FOR_LOOP_YIELD_LIST_$1 `; ` \n
-    #END_RULE
-
 @ASSIGN_$1_IMMUTABLE_SET_VAR
     #BEGIN_RULE:5
     @REUSE_ID_$1_IMMUTABLE_SET_VAR ` = ` @FOR_LOOP_YIELD_SET_$1 `; ` \n

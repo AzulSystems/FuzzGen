@@ -1,3 +1,6 @@
+@String_CAST_OPEN
+@String_CAST_CLOSE
+
 @FIELD_VAR_STATIC_MODIFIER
     #BEGIN_RULE
         ` static `
@@ -19,13 +22,17 @@
 
 
 @FIELD_VAR_STATIC_BLOCK_OPEN
-    #BEGIN_RULE
+    #BEGIN_RULE:IsARegularConfiguration
         `static { ` \n
+    #END_RULE
+    #BEGIN_RULE:1-IsARegularConfiguration
     #END_RULE
 
 @FIELD_VAR_STATIC_BLOCK_CLOSE
-    #BEGIN_RULE
+    #BEGIN_RULE:IsARegularConfiguration
         ` } ` \n
+    #END_RULE
+    #BEGIN_RULE:1-IsARegularConfiguration
     #END_RULE
 
         
@@ -85,8 +92,15 @@
         #SET global_$1Array$3Declared=global_$1Array$3Declared+1*(1+-1*TestClass)
         @$2_STATIC_MODIFIER @$2_ACCESS_SPECIFIER ` $1 ` @DECLARE_ID_$1_ARRAY_$2 `[]  = new $1 [` @ARRAY_MAX_LENGTH `];` \n
         @$2_STATIC_BLOCK_OPEN 
-            @INIT_ARRAY_METHOD_ID `(` #GET_LAST_ID $1Array$3_ `, ` @$1_CAST_OPEN @$1_LITERAL @$1_CAST_CLOSE `);` \n 
+            @$2_STATIC_INIT_$1Array$3 
         @$2_STATIC_BLOCK_CLOSE
+    #END_RULE
+
+@$2_STATIC_INIT_$1Array$3 
+    #BEGIN_RULE:IsARegularConfiguration
+            @INIT_ARRAY_METHOD_ID `(` #GET_LAST_ID $1Array$3_ `, ` @$1_CAST_OPEN @$1_LITERAL @$1_CAST_CLOSE `);` \n 
+    #END_RULE
+    #BEGIN_RULE:1-IsARegularConfiguration
     #END_RULE
 
 @DECLARE_$1_ARRAY_$2_DECLARED_FLAG

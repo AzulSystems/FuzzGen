@@ -1,7 +1,7 @@
 #INCLUDE "configs_java/statements.fg"
 
 //#INCLUDE "configs_java/printMethods.fg"
-#INCLUDE "configs_java/printArrayMethods.fg" (int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/printArrayMethods.fg" (int short byte long float double Integer Short Byte Long Float Double String)
 
 #INCLUDE "configs_java/checksumArrayMethods.fg" int short byte long float double Integer Short Byte Long Float Double
 
@@ -23,4 +23,30 @@
     #BEGIN_RULE:3
     #END_RULE
 
+@CHECKSUM_COLLECTION_VARS_METHOD_BODY_String
+        #BEGIN_RULE
+            @RETURN_TYPE_String ` sum = 0`  `; ` \n
+            ` for (int i = 0; i < valuesList.length; i++) { ` \n
+            ` for (int j = 0; j < valuesList[i].length; j++)  { ` \n
+            @CHECKSUM_COLLECTION_VARS_METHOD_SUM_String
+             `    } ` \n
+            ` } ` \n
+            ` return sum; ` \n
+         #END_RULE
+
+@DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_String
+        #BEGIN_RULE
+            `public static ` @RETURN_TYPE_String ` checksumCollectionVarsMethodString( ` #BEGIN_SCOPE ` String[][] valuesList) { ` \n @CHECKSUM_COLLECTION_VARS_METHOD_BODY_String \n ` } ` 
+            #END_SCOPE \n
+        #END_RULE
+
+@CHECKSUM_COLLECTION_VARS_METHOD_SUM_String
+#BEGIN_RULE
+    ` sum +=  valuesList[i][j].length(); ` \n
+#END_RULE
+
+    @RETURN_TYPE_String
+#BEGIN_RULE
+        `long`
+#END_RULE
 

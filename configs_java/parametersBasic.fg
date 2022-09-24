@@ -1,20 +1,4 @@
 
-//Keep EnableInt always equal to 1! Other types should be set to 1 or 0 only.
-#SET Enableint=10
-#SET Enableshort=2
-#SET Enablebyte=5
-#SET Enablelong=5
-#SET Enablefloat=5
-#SET Enabledouble=5
-#SET EnableInteger=1
-#SET EnableShort=1
-#SET EnableByte=1
-#SET EnableLong=1
-#SET EnableFloat=1
-#SET EnableDouble=1
-
-#SET EnableString=2
-
 #SET intIsPrimitiveType=1
 #SET shortIsPrimitiveType=1
 #SET byteIsPrimitiveType=1
@@ -55,6 +39,23 @@
 #SET FloatIsStringType=0
 #SET DoubleIsStringType=0
 #SET StringIsStringType=1
+
+#SET intIsNumericType=1
+#SET shortIsNumericType=1
+#SET byteIsNumericType=1
+#SET longIsNumericType=1
+#SET floatIsNumericType=1
+#SET doubleIsNumericType=1
+#SET IntegerIsNumericType=1
+#SET ShortIsNumericType=1
+#SET ByteIsNumericType=1
+#SET LongIsNumericType=1
+#SET FloatIsNumericType=1
+#SET DoubleIsNumericType=1
+#SET StringIsNumericType=0
+#SET booleanIsNumericType=0
+#SET BooleanIsNumericType=0
+
 
 
 #SET TestClass=0
