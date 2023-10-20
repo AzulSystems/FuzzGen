@@ -1,4 +1,4 @@
-#INCLUDE "configs_java/loopsByType.fg" (int short byte long float double Integer Short Byte Long Float Double String) ($1)
+#INCLUDE "configs_java/loopsByType.fg" (char int short byte long float double Integer Short Byte Long Float Double String) ($1)
 #INCLUDE "configs_java/loopsIndVar.fg" ($1) (ARRAY_SAFE_VAR) (ArraySafeVar)
 #INCLUDE "configs_java/loopsIndVar.fg" ($1) (VAR) (Var)
 
@@ -34,10 +34,32 @@
     @TRY_BREAKABLE_BLOCK
     #END_RULE
      #BEGIN_RULE:10
+    #SET WhileLoop=WhileLoop+1
     @WHILE_LOOP
+    #SET WhileLoop=WhileLoop-1
     #END_RULE
     #BEGIN_RULE:10
+    #SET DoWhileLoop=DoWhileLoop+1
     @DO_WHILE_LOOP
+    #SET DoWhileLoop=DoWhileLoop-1
+    #END_RULE
+    #BEGIN_RULE:10
+    @FOR_ArrayList
+    #END_RULE
+    #BEGIN_RULE:10
+    @FOREACH_ArrayList
+    #END_RULE
+    #BEGIN_RULE:10
+    @FOR_LinkedList
+    #END_RULE
+    #BEGIN_RULE:10
+    @FOREACH_LinkedList
+    #END_RULE
+    #BEGIN_RULE:10
+    @ITERATOR_LOOP_LinkedList
+    #END_RULE
+    #BEGIN_RULE:10
+    @HASHMAP_ITERATE_FOR
     #END_RULE
 
    
@@ -132,11 +154,12 @@
         @[101:MaxArrayCount/4]
     #END_RULE
 
-@LOOP_CNT_LOWER_LIMIT
+@LOOP_CNT_LOWER_LIMIT_$1
     #BEGIN_RULE:10
         @LOOP_CNT_LOWER_LIMIT_ARRAY_SAFE
     #END_RULE
-    #BEGIN_RULE:5
+    #BEGIN_RULE:5*(1-$1IscharType)
+        `// $1 is not char type: ` @[$1IscharType:$1IscharType+1] \n
         @LOOP_CNT_LOWER_LIMIT_NOT_ARRAY_SAFE
     #END_RULE
 
@@ -252,7 +275,7 @@
     #END_RULE
 
 @LOOP_RANGE_$1
-    #BEGIN_RULE:1*intVarDeclared
+    #BEGIN_RULE:1*&IDsCount(intVar_)
         ` Range ( ` @LOOP_CNT_LOWER_LIMIT ` ,   Math.min( Math.abs(( ` @REUSE_ID_int_VAR ` ) / 2 ), ( ` @LOOP_CNT_UPPER_LIMIT_$1 ` ))` @LOOP_RANGE_STEP `)`
     #END_RULE
     #BEGIN_RULE:10
@@ -278,9 +301,6 @@
     #END_RULE
     #BEGIN_RULE:3
         @LOOP_CNT_UPPER_LIMIT_$1 @TO_OR_UNTIL @LOOP_CNT_LOWER_LIMIT ` by ` @LOOP_RANGE_STEP_NEG_
-    #END_RULE
-    #BEGIN_RULE:intImmutableSetVarDeclared*10
-        @REUSE_ID_int_IMMUTABLE_SET_VAR 
     #END_RULE
 
 

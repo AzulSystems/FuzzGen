@@ -6,7 +6,7 @@
 
 @MAIN_TEST_ITERATIONS
     #BEGIN_RULE
-        `400`
+        `120`
     #END_RULE
 
 @PACKAGE_DECLARATION
@@ -53,7 +53,6 @@
         ` // Test method ` \n
     #END_RULE
 
-
 @OPENING_STATEMENT
     #BEGIN_RULE
     #END_RULE
@@ -61,6 +60,7 @@
 @CLOSING_STATEMENT
     #BEGIN_RULE
     #END_RULE
+
 
 // Main test parameters 
 
@@ -71,7 +71,7 @@
 
 #SET StatementProb=7
 #SET MaxLoopNest=3
-#SET MaxLoopCount=10
+#SET MaxLoopCount=8
 
 #SET lambdaCount=0
 #SET MaxLambdaCount=3
@@ -106,36 +106,36 @@
 #SET MaxLongLoop=1
 #SET MaxLongLoopDepth=2
 #SET MaxLongLoopLength=2000
-#SET LoopWeight=5
+#SET LoopWeight=2
 #SET LongLoopWeight=1
-#SET ConditionalWeight=6
+#SET ConditionalWeight=12
 
 #SET MaxTryCatchDepth=1
 
 #SET MaxMethodsInClass=4
-#SET MaxClasses=3
-#SET MaxCollectionsFieldsInClassCount=10
-#SET MaxStringFieldsInClassCount=8
-#SET CollectionStatementWeight=4
+#SET MaxClasses=2
+#SET MaxCollectionsFieldsInClassCount=8
+#SET MaxStringFieldsInClassCount=10
+#SET CollectionStatementWeight=0
 
-#SET MaxExplicitCallsInMain=4
+#SET MaxExplicitCallsInMain=3
 
 #SET MaxLoopNestForMethodCall=1
 
 #SET NumericVarWeight=100
 #SET BooleanVarWeight=10
 #SET BooleanValWeight=3
-#SET StringVarWeight=30
-#SET StringValWeight=5
-#SET ObjVarWeight=2
-#SET LambdaVarWeight=20
+#SET StringVarWeight=150
+#SET StringValWeight=60
+#SET ObjVarWeight=0
+#SET LambdaVarWeight=5
 #SET MethodNonEmptyArgWeight=20
 #SET MethodOneArgWeight=1
 #SET OtherMethodArgsWeight=0
 #SET MethodEmptyArgWeight=0
 
 #SET Enableint=10
-#SET Enablechar=2
+#SET Enablechar=8
 #SET Enableshort=2
 #SET Enablebyte=5
 #SET Enablelong=5
@@ -148,17 +148,19 @@
 #SET EnableFloat=1
 #SET EnableDouble=1
 
-#SET EnableString=2
+#SET EnableString=8
+
 
 
 #SET MaxFuncWithCondListGeneric=1
-
 
 #SET AllowReturnExpression=0
 #SET AllowException=0
 
 #SET MaxFieldsInClass=10
 #SET FieldsInClassCount=0
+
+
 
 @ADDITIONAL_TEST_CLASS_FIELDS
     #BEGIN_RULE
@@ -178,34 +180,21 @@
     #BEGIN_RULE
     #END_RULE
 
-@OPENING_STATEMENT
-    #BEGIN_RULE
-    #END_RULE
-
-@CLOSING_STATEMENT
-    #BEGIN_RULE
-    #END_RULE
-
-
-
-
-
-
 #SET DeclareVarsWeight=20
 
 #SET localArrayVarWeight=1
-#SET localArrayListVarWeight=1
-#SET localLinkedListVarWeight=1
-#SET localHashMapVarWeight=1
-#SET localHashSetVarWeight=1
+#SET localArrayListVarWeight=0
+#SET localLinkedListVarWeight=0
+#SET localHashMapVarWeight=0
+#SET localHashSetVarWeight=0
 #SET fieldArrayVarWeight=1
-#SET fieldArrayListVarWeight=1
-#SET fieldLinkedListVarWeight=1
-#SET fieldHashMapVarWeight=1
-#SET fieldHashSetVarWeight=1
-#SET FieldVarWeight=5
-#SET ArrayListWeight=5
-#SET LinkedListWeight=5
-#SET HashSetWeight=5
-#SET HashMapWeight=5
-#SET localStringVarWeight=10
+#SET fieldArrayListVarWeight=0
+#SET fieldLinkedListVarWeight=0
+#SET fieldHashMapVarWeight=0
+#SET fieldHashSetVarWeight=0
+#SET FieldVarWeight=50
+#SET ArrayListWeight=0
+#SET LinkedListWeight=0
+#SET HashMapWeight=0
+#SET HashSetWeight=0
+#SET localStringVarWeight=15

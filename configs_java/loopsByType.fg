@@ -30,13 +30,13 @@
 @FOR_WITH_BREAK
 
 @ACCESS_$1_ARRAY_BY_LOOP_$2_INDUCTION_VAR
-    #BEGIN_RULE:100*$2VarDeclared
+    #BEGIN_RULE:100*&IDsCount($2Var_)
         @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[ ` @$2TointType #REUSE_LOCAL_ID $2Var_ ` + ` @[0:5]  ` ] `
     #END_RULE
-    #BEGIN_RULE:10*$2ValDeclared
+    #BEGIN_RULE:10*&IDsCount($2Val_)
         @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[ ` @$2TointType #REUSE_LOCAL_ID $2Val_ ` + ` @[0:5]  ` ] `
     #END_RULE
-    #BEGIN_RULE:100*$2IndVarDeclared
+    #BEGIN_RULE:100*&IDsCount($2IndVar_)
         @REUSE_ID_$1_ARRAY_VAR_OR_VAL `[ ` @$2TointType #REUSE_ID $2IndVar_ ` + ` @[0:5]  ` ] `
     #END_RULE
     #BEGIN_RULE:2
@@ -49,10 +49,10 @@
     #BEGIN_RULE:5
         @STATEMENT
     #END_RULE 
-    #BEGIN_RULE:5*($1ArrayVarDeclared+$1ArrayValDeclared)
+    #BEGIN_RULE:5*(&IDsCount($1ArrayVar_)+&IDsCount($1ArrayVal_))
         @ACCESS_$1_ARRAY_BY_LOOP_$2_INDUCTION_VAR ` = ` @$1_CAST_OPEN @$1_EXPRESSION @$1_CAST_CLOSE `; `
     #END_RULE 
-    #BEGIN_RULE:5*($1ArrayVarDeclared+$1ArrayValDeclared)*$1VarDeclared
+    #BEGIN_RULE:5*(&IDsCount($1ArrayVar_)+&IDsCount($1ArrayVal_))*&IDsCount($1Var_)
         @REUSE_ID_$1_VAR ` = ` @$1_CAST_OPEN @ACCESS_$1_ARRAY_BY_LOOP_$2_INDUCTION_VAR @$1_CAST_CLOSE `; `
     #END_RULE 
 
@@ -112,7 +112,7 @@
         #END_SCOPE
     \n `} `\n
 #END_RULE
- #APPEND_RULE:1*$1ArrayVarDeclared
+ #APPEND_RULE:1*&IDsCount($1ArrayVar_)
         ` for ( ` 
         #BEGIN_SCOPE 
         @DECLARE_LAZY_ID_int_VAL ` <- ` @LOOP_RANGE_ARRAY_SAFE
@@ -123,55 +123,55 @@
         \n `} `\n
 #END_RULE
 
-@FOR_LOOP_YIELD_LIST_$1
-#APPEND_RULE:1
-        ` for ( ` 
-        #BEGIN_SCOPE 
-        @DECLARE_LAZY_ID_int_VAL ` <- ` @LOOP_RANGE_ARRAY_SAFE_LIST 
-        #REGISTER_LAZY_IDS  
-        #SET intValDeclared=intValDeclared+1
-        @LOOP_CONDITION ` ) yield { ` \n @$1_EXPRESSION 
-        #SET intValDeclared=intValDeclared+-1
-        #END_SCOPE 
-        \n `} `\n
-#END_RULE
-#APPEND_RULE:1*$1ArrayVarDeclared
-        ` for ( ` 
-        #BEGIN_SCOPE 
-        @DECLARE_LAZY_ID_int_VAL ` <- ` @LOOP_RANGE_ARRAY_SAFE_LIST
-        #SET intValDeclared=intValDeclared+1
-        #REGISTER_LAZY_IDS @LOOP_CONDITION ` ) yield { ` \n  @ACCESS_$1_ARRAY_BY_LOOP_$2_INDUCTION_VAR \n 
-        #SET intValDeclared=intValDeclared+-1
-        #END_SCOPE 
-        \n `} `\n
-#END_RULE
-
-
-@FOR_LOOP_YIELD_SET_$1
-#APPEND_RULE:1
-        ` for ( ` 
-        #BEGIN_SCOPE 
-        @DECLARE_LAZY_ID_int_VAL ` <- ` @LOOP_RANGE_ARRAY_SAFE_SET 
-        #REGISTER_LAZY_IDS  
-        #SET intValDeclared=intValDeclared+1
-        @LOOP_CONDITION ` ) yield { ` \n @$1_EXPRESSION 
-        #SET intValDeclared=intValDeclared+-1
-        #END_SCOPE 
-        \n `} `\n
-#END_RULE
-#APPEND_RULE:1*$1ArrayVarDeclared
-        ` for ( ` 
-        #BEGIN_SCOPE 
-        @DECLARE_LAZY_ID_int_VAL ` <- ` @LOOP_RANGE_ARRAY_SAFE_SET
-        #SET intValDeclared=intValDeclared+1
-        #REGISTER_LAZY_IDS @LOOP_CONDITION ` ) yield { ` \n  @ACCESS_$1_ARRAY_BY_LOOP_$2_INDUCTION_VAR \n 
-        #SET intValDeclared=intValDeclared+-1
-        #END_SCOPE 
-       \n `} `\n
-#END_RULE
+//@FOR_LOOP_YIELD_LIST_$1
+//#APPEND_RULE:1
+//        ` for ( ` 
+//        #BEGIN_SCOPE 
+//        @DECLARE_LAZY_ID_int_VAL ` <- ` @LOOP_RANGE_ARRAY_SAFE_LIST 
+//        #REGISTER_LAZY_IDS  
+//        #SET intValDeclared=intValDeclared+1
+//        @LOOP_CONDITION ` ) yield { ` \n @$1_EXPRESSION 
+//        #SET intValDeclared=intValDeclared+-1
+//        #END_SCOPE 
+//        \n `} `\n
+//#END_RULE
+//#APPEND_RULE:1*&IDsCount($1ArrayVar_)
+//        ` for ( ` 
+//        #BEGIN_SCOPE 
+//        @DECLARE_LAZY_ID_int_VAL ` <- ` @LOOP_RANGE_ARRAY_SAFE_LIST
+//        #SET intValDeclared=intValDeclared+1
+//        #REGISTER_LAZY_IDS @LOOP_CONDITION ` ) yield { ` \n  @ACCESS_$1_ARRAY_BY_LOOP_$2_INDUCTION_VAR \n 
+//        #SET intValDeclared=intValDeclared+-1
+//        #END_SCOPE 
+//        \n `} `\n
+//#END_RULE
+//
+//
+//@FOR_LOOP_YIELD_SET_$1
+//#APPEND_RULE:1
+//        ` for ( ` 
+//        #BEGIN_SCOPE 
+//        @DECLARE_LAZY_ID_int_VAL ` <- ` @LOOP_RANGE_ARRAY_SAFE_SET 
+//        #REGISTER_LAZY_IDS  
+//        #SET intValDeclared=intValDeclared+1
+//        @LOOP_CONDITION ` ) yield { ` \n @$1_EXPRESSION 
+//        #SET intValDeclared=intValDeclared+-1
+//        #END_SCOPE 
+//        \n `} `\n
+//#END_RULE
+//#APPEND_RULE:1*&IDsCount($1ArrayVar_)
+//        ` for ( ` 
+//        #BEGIN_SCOPE 
+//        @DECLARE_LAZY_ID_int_VAL ` <- ` @LOOP_RANGE_ARRAY_SAFE_SET
+//        #SET intValDeclared=intValDeclared+1
+//        #REGISTER_LAZY_IDS @LOOP_CONDITION ` ) yield { ` \n  @ACCESS_$1_ARRAY_BY_LOOP_$2_INDUCTION_VAR \n 
+//        #SET intValDeclared=intValDeclared+-1
+//        #END_SCOPE 
+//       \n `} `\n
+//#END_RULE
 
 @TRY_CATCH_LOOP_WITH_ARRAY
-#APPEND_RULE:$1VarDeclared
+#APPEND_RULE:&IDsCount($1Var_)
         //@REUSE_ID_$1_VAR 
         //` = ` 
         `try { ` \n
@@ -184,7 +184,7 @@
 
 
 @TRY_BREAKABLE_BLOCK
-#APPEND_RULE:$1VarDeclared
+#APPEND_RULE:&IDsCount($1Var_)
             @REUSE_ID_$1_VAR `= scala.util.control.Breaks.tryBreakable { ` \n
             #SET intValDeclared=intValDeclared+1
                 @FOR_WITH_BREAK \n

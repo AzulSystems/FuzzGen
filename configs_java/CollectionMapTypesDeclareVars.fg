@@ -1,0 +1,67 @@
+// $1 - type of value
+// $2 - var type: local var or val (final or effectively final), field var or val: VAR
+// $3 - same but for env var names: var
+// $4 - collection type
+// $5 - type of key
+// (String) (VAR) (Var) (ArrayList) (Integer)
+
+@DECLARE_$5_$1_$4_$2
+// @DECALRE_Integer_String_ArrayList_FIELD_VAR
+    #BEGIN_RULE:4
+        @$1_$2_EXPR_FOR_HASHMAP
+        @$2_STATIC_MODIFIER @$2_ACCESS_SPECIFIER ` $4<$5, $1> ` @DECLARE_ID_$5_$1_$4_$2 `  = new $4<$5, $1>();` \n
+        #REGISTER_LAZY_IDS
+        @DECLARE_$5_$1_$4_$2_DECLARED_FLAG
+        #SET global_$5$1$4$3Declared=global_$5$1$4$3Declared+1*(1+-1*TestClass)
+            @$2_STATIC_INIT_$5$1$4$3 
+    #END_RULE
+    #BEGIN_RULE:(&IDsCount($5$1$4Var_)+&IDsCount($5$1$4Val_)+&IDsCount($5$1$4FieldVar_)+&IDsCount($5$1$4FieldVal_))
+        @$2_STATIC_MODIFIER @$2_ACCESS_SPECIFIER ` $4<$5, $1> ` @DECLARE_ID_$5_$1_$4_$2 `  = new $4<$5, $1>(` #REUSE_ID $5$1$4%_ `);` \n
+        #REGISTER_LAZY_IDS
+        @DECLARE_$5_$1_$4_$2_DECLARED_FLAG
+        #SET global_$5$1$4$3Declared=global_$5$1$4$3Declared+1*(1+-1*TestClass)
+    #END_RULE
+    #BEGIN_RULE:(&IDsCount($5$1$4Var_)+&IDsCount($5$1$4Val_)+&IDsCount($5$1$4FieldVar_)+&IDsCount($5$1$4FieldVal_))
+        @$2_STATIC_MODIFIER @$2_ACCESS_SPECIFIER ` $4<$5, $1> ` @DECLARE_ID_$5_$1_$4_$2 `  = ($4<$5, $1>)` #REUSE_ID $5$1$4%_ `.clone();` \n
+        #REGISTER_LAZY_IDS
+        @DECLARE_$5_$1_$4_$2_DECLARED_FLAG
+        #SET global_$5$1$4$3Declared=global_$5$1$4$3Declared+1*(1+-1*TestClass)
+    #END_RULE
+
+
+
+@$1_$2_EXPR_FOR_HASHMAP
+    #BEGIN_RULE:(IsARegularConfiguration+$3IsLocal)
+        @$2_STATIC_MODIFIER @$2_ACCESS_SPECIFIER ` $1 ` #CREATE_ID exprForHashMap_ ` = ` @$1_CAST_OPEN   @$1_EXPRESSION @$1_CAST_CLOSE `; ` \n
+    #END_RULE
+    #BEGIN_RULE:(1-IsARegularConfiguration)*(1-$3IsLocal)
+    #END_RULE
+
+@$2_STATIC_INIT_$5$1$4$3 
+    #BEGIN_RULE:(IsARegularConfiguration+$3IsLocal)*(1-InSprClsA)*(1-InSprClsB)
+        @$2_STATIC_BLOCK_OPEN 
+            ` for ($5 it : Test.get$5Array()) { ` \n
+            #GET_LAST_ID $5$1$4$3_ `.put(it, ` #GET_LAST_ID exprForHashMap_ `); ` \n 
+                `}` \n
+        @$2_STATIC_BLOCK_CLOSE
+    #END_RULE
+    #BEGIN_RULE:(1-IsARegularConfiguration)*(1-$3IsLocal)+(InSprClsA+InSprClsB)
+    #END_RULE
+
+@DECLARE_$5_$1_$4_$2_DECLARED_FLAG
+    #BEGIN_RULE
+        #SET $5$1$4$3Declared=$5$1$4$3Declared+1
+    #END_RULE
+
+@DECLARE_ID_$5_$1_$4_$2
+    #BEGIN_RULE
+        #CREATE_LAZY_ID $5$1$4$3_
+    #END_RULE
+
+@$4_SIZE
+
+@int_EXPRESSION_NOT_RECURSIVE
+    #APPEND_RULE:(&IDsCount($5$1$4Var_)+&IDsCount($5$1$4Val_)+&IDsCount($5$1$4FieldVar_)+&IDsCount($5$1$4FieldVal_))*($1IsStringType)*($5IsStringType)
+        #REUSE_ID $5$1$4%_ `.hashCode()`
+#END_RULE
+

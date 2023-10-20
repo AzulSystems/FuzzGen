@@ -2,18 +2,18 @@
 @UTILS_CLASS_NAME
 
 @PRINT_$2_$1
-    #BEGIN_RULE:100000*$1$3Declared
+    #BEGIN_RULE:100000*&IDsCount($1$3_)
 		@UTILS_CLASS_NAME `.printVarsMethod(" ` #GET_ALL_IDS $1$3_ `", new $1[]{ ` #GET_ALL_IDS $1$3_ ` }); ` \n
     #END_RULE
-    #BEGIN_RULE:1+-1*$1$3Declared
+    #BEGIN_RULE:1-&IDsCount($1$3_)
     #END_RULE    
 
 
 @PRINT_ARRAY_$2_$1
-    #BEGIN_RULE:100000*$1Array$3Declared
+    #BEGIN_RULE:100000*&IDsCount($1Array$3_)
         @UTILS_CLASS_NAME `.printCollectionVarsMethod_$1(" ` #GET_ALL_IDS $1Array$3_ `", new $1[][]{ ` #GET_ALL_IDS $1Array$3_ `  }); ` \n
     #END_RULE    
-    #BEGIN_RULE:1+-1*$1Array$3Declared
+    #BEGIN_RULE:1-&IDsCount($1Array$3_)
     #END_RULE    
 
 

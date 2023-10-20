@@ -1,8 +1,9 @@
 #INCLUDE "configs_java/parametersBasic.fg"
-#INCLUDE "configs_java/parametersByType.fg" ( $1 ) (Var)
+#INCLUDE "configs_java/parametersByType.fg" ( $1 ) (Var) (Integer Short Byte Long Float Double String)  (static Instance)
 
 @OP_$1$1_$1
 
+@char_EXPRESSION
 @int_EXPRESSION
 @short_EXPRESSION
 @byte_EXPRESSION

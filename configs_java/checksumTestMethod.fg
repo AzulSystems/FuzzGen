@@ -1,5 +1,5 @@
 #INCLUDE "configs_java/parametersBasic.fg"
-#INCLUDE "configs_java/parametersByType.fg" ( $2 ) (Val Var)
+#INCLUDE "configs_java/parametersByType.fg" ( $2 ) (Val Var) (Integer Short Byte Long Float Double String) (Static Instance)
 #INCLUDE "configs_java/constants.fg"
 
 @UTILS_CLASS_NAME
@@ -7,36 +7,28 @@
 @PRINT_GLOBALS_0
 @PRINT_GLOBALS_1
 
-@$1_CHECKSUM_$2_IMMUTABLE_SET_VAR
-  #BEGIN_RULE:1000*$2ImmutableSetVarDeclared*Enable$2
-  `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( List( ` #GET_LOCAL_IDS_OR_EMPTY $2ImmutableSetVar_ ` )) `
-#END_RULE
-#BEGIN_RULE
- ` 0 `
-#END_RULE
-
 @$1_RETURN_STATEMENT_$2_VAR
-#BEGIN_RULE:100000*$2VarDeclared
+#BEGIN_RULE:100000*&IDsCount($2Var_)
  `  ( ` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $2Var_ " + " ` ) + `
 #END_RULE
 #BEGIN_RULE:1
-//` 0 `
+` 0 + `
 #END_RULE
 
 @$1_RETURN_STATEMENT_String_VAR_
-#BEGIN_RULE:100000*StringVarDeclared
+#BEGIN_RULE:100000*&IDsCount(StringVar_)
  `  ( ` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR StringVar_ " + " ` ).length() + `
 #END_RULE
 #BEGIN_RULE:1
-
+` 0 + ` 
 #END_RULE
 
 @$1_RETURN_STATEMENT_String_NUMERIC_VAR_
-#BEGIN_RULE:100000*((StringIntegerNumericVarDeclared+StringLongNumericVarDeclared+StringByteNumericVarDeclared+StringShortNumericVarDeclared+StringDoubleNumericVarDeclared+StringFloatNumericVarDeclared)+(StringintNumericVarDeclared+StringlongNumericVarDeclared+StringbyteNumericVarDeclared+StringshortNumericVarDeclared+StringdoubleNumericVarDeclared+StringfloatNumericVarDeclared))
+#BEGIN_RULE:100000*(&IDsCount(StringIntegerNumericVar_)+&IDsCount(StringLongNumericVar_)+&IDsCount(StringByteNumericVar_)+&IDsCount(StringShortNumericVar_)+&IDsCount(StringDoubleNumericVar_)+&IDsCount(StringFloatNumericVar_)+(&IDsCount(StringintNumericVar_)+&IDsCount(StringlongNumericVar_)+&IDsCount(StringbyteNumericVar_)+&IDsCount(StringshortNumericVar_)+&IDsCount(StringdoubleNumericVar_)+&IDsCount(StringfloatNumericVar_)+&IDsCount(StringcharNumericVar_)))
  `  ( ` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR String%NumericVar_ " + " ` ).length() + `
 #END_RULE
 #BEGIN_RULE:1
-
+` 0 + `
 #END_RULE
 
 
@@ -50,11 +42,11 @@
 
 
 @$1_RETURN_STATEMENT_$2_VAL
-#BEGIN_RULE:100000*$2ValDeclared
+#BEGIN_RULE:100000*&IDsCount($2Val_)
  `  ( ` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $2Val_ " + " ` ) + `
 #END_RULE
 #BEGIN_RULE:1
-//` 0 `
+` 0 + `
 #END_RULE
 
 //@$1_RETURN_STATEMENT_String_VAL
@@ -67,7 +59,7 @@
 
 
 @$1_RETURN_STATEMENT_String_VAL_
-#BEGIN_RULE:100000*StringValDeclared
+#BEGIN_RULE:100000*&IDsCount(StringVal_)
  `  ( /* StringVal_ */ ` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR StringVal_ " + " ` ).length() + `
 #END_RULE
 #BEGIN_RULE:1
@@ -75,11 +67,11 @@
 #END_RULE
 
 @$1_RETURN_STATEMENT_String_NUMERIC_VAL_
-#BEGIN_RULE:100000*((StringIntegerNumericValDeclared+StringLongNumericValDeclared+StringByteNumericValDeclared+StringShortNumericValDeclared+StringDoubleNumericValDeclared+StringFloatNumericValDeclared)+(StringintNumericValDeclared+StringlongNumericValDeclared+StringbyteNumericValDeclared+StringshortNumericValDeclared+StringdoubleNumericValDeclared+StringfloatNumericValDeclared))
+#BEGIN_RULE:100000*(&IDsCount(StringIntegerNumericVal_)+&IDsCount(StringLongNumericVal_)+&IDsCount(StringByteNumericVal_)+&IDsCount(StringShortNumericVal_)+&IDsCount(StringDoubleNumericVal_)+&IDsCount(StringFloatNumericVal_)+(&IDsCount(StringintNumericVal_)+&IDsCount(StringlongNumericVal_)+&IDsCount(StringbyteNumericVal_)+&IDsCount(StringshortNumericVal_)+&IDsCount(StringdoubleNumericVal_)+&IDsCount(StringfloatNumericVal_)+&IDsCount(StringcharNumericVal_)))
  `  ( ` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR String%NumericVal_ " + " ` ).length() + `
 #END_RULE
 #BEGIN_RULE:1
-
+` 0 + `
 #END_RULE
 
 
@@ -94,7 +86,7 @@
 
 
 @$1_RETURN_STATEMENT_$2_ARRAY_VAR
-#BEGIN_RULE:100000*$2ArrayVarDeclared
+#BEGIN_RULE:100000*&IDsCount($2ArrayVar_)
     `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( new $2[][]{` #GET_LOCAL_IDS_OR_EMPTY $2ArrayVar_ `}) + `
 #END_RULE
 #BEGIN_RULE:1
@@ -102,8 +94,16 @@
 #END_RULE
 
 @$1_RETURN_STATEMENT_$2_ARRAY_VAL
-#BEGIN_RULE:100000*$2ArrayValDeclared
+#BEGIN_RULE:100000*&IDsCount($2ArrayVal_)
     `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( new $2[][]{` #GET_LOCAL_IDS_OR_EMPTY $2ArrayVal_ `}) + `
+#END_RULE
+#BEGIN_RULE:1
+//` 0 `
+#END_RULE
+
+@$1_RETURN_STATEMENT_$2_LIST_VAR
+#BEGIN_RULE:100000*(&IDsCount($2ArrayListVar_)+&IDsCount($2ArrayListVal_)+&IDsCount($2LinkedListVar_)+&IDsCount($2LinkedListVal_))
+    `    ` @UTILS_CLASS_NAME `.checksumListVarsMethod$2( new ArrayList(Arrays.asList(` #GET_LOCAL_IDS_OR_EMPTY $2%ListVa%_ `))) + `
 #END_RULE
 #BEGIN_RULE:1
 //` 0 `
@@ -113,14 +113,12 @@
 
 @$1_RETURN_STATEMENT_$2
 #BEGIN_RULE:100000*Enable$2
+    @$1_RETURN_STATEMENT_$2_LIST_VAR
     @$1_RETURN_STATEMENT_$2_VAR 
     @$1_RETURN_STATEMENT_$2_VAL 
     @$1_RETURN_STATEMENT_$2_ARRAY_VAR 
     @$1_RETURN_STATEMENT_$2_ARRAY_VAL ` 0` \n
 
-//         `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( new $2[][]{` #GET_LOCAL_IDS_OR_EMPTY $2ArrayVar_ `})` ` + ` \n
-  //       `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( new $2[][]{` #GET_LOCAL_IDS_OR_EMPTY $2ArrayVal_ `})` \n
-         //@$1_CHECKSUM_$2_IMMUTABLE_SET_VAR  `  ` 
 #END_RULE
 #BEGIN_RULE:1
  ` 0 `
@@ -131,9 +129,6 @@
     @$1_RETURN_STATEMENT_String_VAR
     @$1_RETURN_STATEMENT_String_VAL ` 0` \n
 
-//         `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( new $2[][]{` #GET_LOCAL_IDS_OR_EMPTY $2ArrayVar_ `})` ` + ` \n
-  //       `    ` @UTILS_CLASS_NAME `.checksumCollectionVarsMethod$2( new $2[][]{` #GET_LOCAL_IDS_OR_EMPTY $2ArrayVal_ `})` \n
-         //@$1_CHECKSUM_$2_IMMUTABLE_SET_VAR  `  ` 
 #END_RULE
 #BEGIN_RULE:1
  ` 0 `

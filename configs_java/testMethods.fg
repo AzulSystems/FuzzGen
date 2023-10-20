@@ -1,14 +1,24 @@
-#INCLUDE "configs_java/checksumTestMethod.fg" ($1) (int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/checksumTestMethod.fg" ($1) (char int short byte long float double Integer Short Byte Long Float Double)
 #INCLUDE "configs_java/parametersBasic.fg"
 
 
-@CREATE_ID_METHOD_$1_$1
+@CREATE_ID_METHOD_$1_$1_$2
 @SET_DECLARED_FLAG_TO_ZERO
 @STATEMENTS
 @$1_EXPRESSION
 @DECLARE_ID_$1_VAL
 @DECLARE_VARS
+@TEST_METHOD_COMMENTS
+@OTHER_METHOD_ARGS_$1
 
+
+@MAYBE_SYNCHRONIZED
+    #BEGIN_RULE:10
+    #END_RULE
+    #BEGIN_RULE:1*IsARegularConfiguration
+        ` synchronized ` 
+    #END_RULE
+        
 
 @METHOD_ARG_$1
     #BEGIN_RULE:MethodOneArgWeight
@@ -18,33 +28,128 @@
         @OTHER_METHOD_ARGS_$1
     #END_RULE
 
+
+
+
+
+
+@STATIC_OR_INSTANCE_Static
+    #BEGIN_RULE
+        #SET MethodIsStatic=1
+        #SET MethodIsInstance=0
+        ` static ` 
+    #END_RULE
+@STATIC_OR_INSTANCE_Instance
+    #BEGIN_RULE
+    //:$2IsInstance
+        #SET MethodIsStatic=0
+        #SET MethodIsInstance=1
+        `  ` 
+    #END_RULE
+
+
 @DECLARE_METHOD
-    #APPEND_RULE:Enable$1
+    #APPEND_RULE:Enable$1*(IsARegularConfiguration+$2IsStatic)
     \n \n 
     @TEST_METHOD_COMMENTS
-    ` public static $1 ` @CREATE_ID_METHOD_$1_$1 ` ( `
+    ` public ` @MAYBE_SYNCHRONIZED @STATIC_OR_INSTANCE_$2 ` $1 ` @CREATE_ID_METHOD_$1_$1_$2 ` ( `
     #BEGIN_SCOPE 
+        @SET_METHOD_RETURN_TYPE_TO_ZERO
+        #SET MethodReturnTypeIs$1=1
         @SET_FLAGS_BEFORE_METHOD_
         @SET_DECLARED_FLAG_TO_ZERO
         @METHOD_ARG_$1
         ` ) { ` \n
+        `// MethodIsInstance: ` @[MethodIsInstance:MethodIsInstance+1] \n
+        `// MethodIsStatic: ` @[MethodIsStatic:MethodIsStatic+1] \n
     #SET global_method_$1_$1Declared=global_method_$1_$1Declared+1*(1-TestClass)
             @$1_METHOD_BODY \n ` } ` 
 
         #END_SCOPE
             @MAKE_METHOD_CALLABLE_$1 \n
     #SET method_$1_$1Declared=method_$1_$1Declared+1
+        #SET MethodIsStatic=0
+        #SET MethodIsInstance=0
+        @SET_METHOD_RETURN_TYPE_TO_ZERO
     #END_RULE
 
 @DECLARE_RECURSIVE_FUNCTION
     #APPEND_RULE:Enable$1*(1-$1IsStringType)
-    \n \n ` public static $1 ` @CREATE_ID_RECURSIVE_FUNCTION_$1_$1 ` ( `
+    \n \n ` public ` @STATIC_OR_INSTANCE_$2 ` $1 ` @CREATE_ID_RECURSIVE_FUNCTION_$1_$1_$2 ` ( `
     #BEGIN_SCOPE ` $1 ` @DECLARE_ID_$1_VAL_ARG ` ) { ` \n
+        @SET_METHOD_RETURN_TYPE_TO_ZERO
+        #SET MethodReturnTypeIs$1=1
     #SET global_recursive_function_$1_$1Declared=global_recursive_function_$1_$1Declared+1*(1-TestClass)
     #SET recursive_function_$1_$1Declared=recursive_function_$1_$1Declared+1
+        #SET $1RecursiveFunction$2=$1RecursiveFunction$2+1
             @$1_RECURSIVE_FUNCTION_BODY \n ` } ` 
+        #SET $1RecursiveFunction$2=$1RecursiveFunction$2+-1
         #END_SCOPE
+        #SET MethodIsStatic=0
+        #SET MethodIsInstance=0
+        @SET_METHOD_RETURN_TYPE_TO_ZERO
     #END_RULE
+
+
+
+@DECLARE_METHOD_OBJ
+    #APPEND_RULE:100*&IDsCount(SprClsB_, $1$2FieldVar_)*TestClass*extendsSprClsB
+        #SET MethodIsStatic=1
+        #SET IsMethodObjArg=1
+        @SET_METHOD_RETURN_TYPE_TO_ZERO
+        #SET MethodReturnTypeIs$1=1
+        \n
+        @MAYBE_SYNCHRONIZED @STATIC_OR_INSTANCE_$2 ` $1 ` #CREATE_LAZY_ID method_$1_$2_OBJ_ `(Test obj) {` \n
+        #LEND_SCOPE_WITH_ID SprClsB_ $1$2FieldVar_
+            `obj.` #REUSE_LOCAL_ID $1$2FieldVar_ `= ` 
+        #RETURN_SCOPE
+        #BEGIN_SCOPE 
+        @SET_FLAGS_BEFORE_METHOD_
+        @SET_DECLARED_FLAG_TO_ZERO
+        @$1_CAST_OPEN @$1_EXPRESSION @$1_CAST_CLOSE  `;`\n
+        
+        @DECLARE_VARS
+            @STATEMENTS
+        ` return ($1)(`
+            @$1_CAST_OPEN @$1_EXPRESSION ` + ` 
+        #LEND_SCOPE_WITH_ID SprClsB_ $1$2FieldVar_
+            `obj.` #REUSE_LOCAL_ID $1$2FieldVar_ @$1_CAST_CLOSE `);` \n 
+        #RETURN_SCOPE
+        #END_SCOPE
+            @MAKE_METHOD_CALLABLE_$1 \n
+                                `}` \n
+        #SET MethodIsStatic=0
+        #SET MethodIsInstance=0
+        #SET IsMethodObjArg=0
+        @SET_METHOD_RETURN_TYPE_TO_ZERO
+#END_RULE
+    #APPEND_RULE:100*&IDsCount(SprClsB_, $1$2FieldVal_)*TestClass*extendsSprClsB
+        #SET MethodIsStatic=1
+        #SET IsMethodObjArg=1
+        \n
+        @MAYBE_SYNCHRONIZED @STATIC_OR_INSTANCE_$2 ` $1 ` #CREATE_LAZY_ID method_$1_$2_OBJ_ `(Test obj) {` \n
+        #BEGIN_SCOPE 
+        @SET_FLAGS_BEFORE_METHOD_
+        @SET_DECLARED_FLAG_TO_ZERO
+        
+        @DECLARE_VARS
+            @STATEMENTS
+        ` return ($1)(`
+            @$1_CAST_OPEN @$1_EXPRESSION  ` + ` 
+        #LEND_SCOPE_WITH_ID SprClsB_ $1$2FieldVal_
+            `obj.` #REUSE_LOCAL_ID $1$2FieldVal_ @$1_CAST_CLOSE `);` \n 
+        #RETURN_SCOPE
+        #END_SCOPE
+            @MAKE_METHOD_CALLABLE_$1 \n
+                                `}` \n
+        #SET MethodIsStatic=0
+        #SET MethodIsInstance=0
+        #SET IsMethodObjArg=0
+#END_RULE
+
+    #APPEND_RULE
+    #END_RULE
+
 
 
 
@@ -54,10 +159,12 @@
     #BEGIN_RULE
         //#SET $1ValDeclared=$1ValDeclared+1
         @DECLARE_VARS
-
+        
+        @OPENING_STATEMENT
         @STATEMENTS
-        @$1_RETURN_STATEMENT
+        @CLOSING_STATEMENT
 
+        @$1_RETURN_STATEMENT
 
         #END_RULE
 
@@ -106,6 +213,7 @@
         `return `@$1_RETURN_CAST_PREFIX  ` (0 + ` \n
         @$1_RETURN_STATEMENT_int ` + ` \n
         @$1_RETURN_STATEMENT_short ` + ` \n
+        @$1_RETURN_STATEMENT_char ` + ` \n
         @$1_RETURN_STATEMENT_byte ` + ` \n
         @$1_RETURN_STATEMENT_long ` + ` \n
         @$1_RETURN_STATEMENT_float ` + ` \n

@@ -1,18 +1,20 @@
 #INCLUDE "configs_java/statements.fg"
 
 //#INCLUDE "configs_java/printMethods.fg"
-#INCLUDE "configs_java/printArrayMethods.fg" (int short byte long float double Integer Short Byte Long Float Double String)
+#INCLUDE "configs_java/printArrayMethods.fg" (int char short byte long float double Integer Short Byte Long Float Double String)
 
-#INCLUDE "configs_java/checksumArrayMethods.fg" int short byte long float double Integer Short Byte Long Float Double
+#INCLUDE "configs_java/checksumArrayMethods.fg" (int char short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/checksumListMethods.fg" (Integer Short Byte Long Float Double String) 
+//(ArrayList LinkedList)
 
-#INCLUDE "configs_java/testMethods.fg" int short byte long float double Integer Short Byte Long Float Double String
+#INCLUDE "configs_java/testMethods.fg" (int short byte long float double Integer Short Byte Long Float Double String) (Static Instance)
 
 
 @DECLARE_METHOD
 
 #SET MethodCount=0
 @DECLARE_METHODS
-    #BEGIN_RULE:6*(MaxMethodsInClass+-1*MethodCount)
+    #BEGIN_RULE:4*(MaxMethodsInClass+-1*MethodCount)
 		#SET MethodCount=MethodCount+1
         @DECLARE_METHOD \n @DECLARE_METHODS
     #END_RULE
@@ -20,7 +22,11 @@
 		#SET MethodCount=MethodCount+1
         @DECLARE_RECURSIVE_FUNCTION \n @DECLARE_METHODS
     #END_RULE
-    #BEGIN_RULE:3
+    #BEGIN_RULE:3*(MaxMethodsInClass+-1*MethodCount)
+        @DECLARE_METHOD \n 
+		#SET MethodCount=MethodCount+1
+    #END_RULE
+    #BEGIN_RULE:(1-MaxMethodsInClass+MethodCount)
     #END_RULE
 
 @CHECKSUM_COLLECTION_VARS_METHOD_BODY_String
@@ -34,8 +40,8 @@
             ` return sum; ` \n
          #END_RULE
 
-@DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_String
-        #BEGIN_RULE
+@DECLARE_CHECKSUM_COLLECTION_VARS_METHOD
+        #CONCAT_RULE
             `public static ` @RETURN_TYPE_String ` checksumCollectionVarsMethodString( ` #BEGIN_SCOPE ` String[][] valuesList) { ` \n @CHECKSUM_COLLECTION_VARS_METHOD_BODY_String \n ` } ` 
             #END_SCOPE \n
         #END_RULE

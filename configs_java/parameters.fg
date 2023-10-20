@@ -1,4 +1,4 @@
-#INCLUDE "configs_java/parametersByType.fg" (boolean int short byte long float double Boolean Integer Short Byte Long Float Double String) (Var Val)
+#INCLUDE "configs_java/parametersByType.fg" (char boolean int short byte long float double Boolean Integer Short Byte Long Float Double String) (Var Val) (Integer Short Byte Long Float Double String) (Static Instance)
 #INCLUDE "configs_java/parametersBasic.fg"
 
 
@@ -93,6 +93,10 @@
 
 @SET_DECLARED_FIELDS_FLAG_TO_ZERO
 #BEGIN_RULE
+
+#SET CollectionsFieldsInClassCount=0
+#SET StringFieldsInClassCount=0
+
 @SET_DECLARED_FIELDS_FLAG_TO_ZERO_boolean_Var
 @SET_DECLARED_FIELDS_FLAG_TO_ZERO_int_Var
 @SET_DECLARED_FIELDS_FLAG_TO_ZERO_short_Var

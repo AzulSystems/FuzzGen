@@ -1,5 +1,11 @@
+#INCLUDE "configs_java/parametersBasic.fg"
+
 @String_CAST_OPEN
 @String_CAST_CLOSE
+@String_CONSTANT
+@String_CONSTANT_SUFFIX
+@$1_EXPRESSION
+@INIT_ARRAY_METHOD_ID
 
 @UTILS_INIT_ARRAY_$1
     #BEGIN_RULE
@@ -10,3 +16,121 @@
     ` }` \n
 
     #END_RULE
+
+@UTILS_INIT_ARRAY
+    #CONCAT_RULE
+        @UTILS_INIT_ARRAY_$1
+    #END_RULE
+
+
+@UTILS_INIT_ArrayList_$1
+    #BEGIN_RULE:1-$1IsPrimitiveType
+    ` public static void init(ArrayList<$1> arrlist, $1 seed) { ` \n
+    `   $1[] arr = new $1[` @[1:MaxArrayListCount] `];` \n
+    `   ` @INIT_ARRAY_METHOD_ID `(arr, seed); ` \n
+    `   for (int j = 0; j < arr.length; j++) { ` \n
+    `      arrlist.add(arr[j]) ; ` \n
+    `   }` \n
+    ` }` \n
+
+    #END_RULE
+    #BEGIN_RULE:$1IsPrimitiveType
+    #END_RULE
+
+
+@UTILS_INIT_ArrayList
+    #CONCAT_RULE
+        @UTILS_INIT_ArrayList_$1
+    #END_RULE
+
+
+
+@UTILS_INIT_LinkedList_$1
+    #BEGIN_RULE
+    ` public static void init(LinkedList<$1> linkedlist, $1 seed) { ` \n
+    `   $1[] arr = new $1[` @[1:MaxArrayListCount] `];` \n
+    `   ` @INIT_ARRAY_METHOD_ID `(arr, seed); ` \n
+    `   for (int j = 0; j < arr.length; j++) { ` \n
+    `      linkedlist.add(arr[j]) ; ` \n
+    `   }` \n
+    ` }` \n
+
+    #END_RULE
+
+@UTILS_INIT_HashSet_$1
+    #BEGIN_RULE
+    ` public static void init(HashSet<$1> hashset, $1 seed) { ` \n
+    `   $1[] arr = new $1[` @[1:MaxArrayListCount] `];` \n
+    `   ` @INIT_ARRAY_METHOD_ID `(arr, seed); ` \n
+    `   for (int j = 0; j < arr.length; j++) { ` \n
+    `      hashset.add(arr[j]) ; ` \n
+    `   }` \n
+    ` }` \n
+
+    #END_RULE
+
+
+
+@UTILS_GET_ARRAY_FOR_ArrayList_$1
+    #BEGIN_RULE:(1-$1IsPrimitiveType)*(1-$1IsStringType)
+    ` public static $1[] get$1Array() { ` \n
+    `   $1[] arr = new $1[` @[1:MaxArrayListCount] `];` \n
+//   ` System.arraycopy(random$1Array, 0, arr, 0, arr.length); ` \n
+    `   ` @INIT_ARRAY_METHOD_ID `(arr, new $1((` @$1ToPrimitiveType `)( ` @$1_CONSTANT @$1_CONSTANT_SUFFIX `+ randomintArray[` @[randomArrayIterator:randomArrayIterator+1]  ` % ` @[MaxArrayCount:MaxArrayCount+1]  `]))); ` \n
+    //`   ` @INIT_ARRAY_METHOD_ID `(arr, new $1((` @$1ToPrimitiveType `)(FuzzUtils.counter++ + ` @$1_CONSTANT @$1_CONSTANT_SUFFIX `+ randomintArray[` @[randomArrayIterator:randomArrayIterator+1]  ` % ` @[MaxArrayCount:MaxArrayCount+1]  `]))); ` \n
+    #SET randomArrayIterator=randomArrayIterator+1
+    `   return arr;` \n
+    ` }` \n
+
+    #END_RULE
+    #BEGIN_RULE:$1IsPrimitiveType
+    ` public static $1[] get$1Array() { ` \n
+    `   $1[] arr = new $1[` @[1:MaxArrayCount] `];` \n
+    //` System.arraycopy(random$1Array, 0, arr, 0, arr.length); ` \n
+   `   ` @INIT_ARRAY_METHOD_ID `(arr, ($1)(` @$1_CONSTANT @$1_CONSTANT_SUFFIX `+ randomintArray[` @[randomArrayIterator:randomArrayIterator+1]  ` % ` @[MaxArrayCount:MaxArrayCount+1]  `])); ` \n
+   //`   ` @INIT_ARRAY_METHOD_ID `(arr, ($1)(FuzzUtils.counter++ +` @$1_CONSTANT @$1_CONSTANT_SUFFIX `+ randomintArray[` @[randomArrayIterator:randomArrayIterator+1]  ` % ` @[MaxArrayCount:MaxArrayCount+1]  `])); ` \n
+    #SET randomArrayIterator=randomArrayIterator+1
+    `   return arr;` \n
+    ` }` \n
+    #END_RULE
+  #BEGIN_RULE:$1IsStringType
+    ` public static $1[] get$1Array() { ` \n
+    `   $1[] arr = new $1[` @[1:MaxArrayCount] `];` \n
+    //` System.arraycopy(random$1Array, 0, arr, 0, arr.length); ` \n
+   `   ` @INIT_ARRAY_METHOD_ID `(arr, ($1)(` @$1_CONSTANT @$1_CONSTANT_SUFFIX `+ randomStringArray[` @[randomArrayIterator:randomArrayIterator+1]  ` % ` @[MaxArrayCount:MaxArrayCount+1]  `])); ` \n
+   //`   ` @INIT_ARRAY_METHOD_ID `(arr, ($1)(FuzzUtils.counter++ +` @$1_CONSTANT @$1_CONSTANT_SUFFIX `+ randomStringArray[` @[randomArrayIterator:randomArrayIterator+1]  ` % ` @[MaxArrayCount:MaxArrayCount+1]  `])); ` \n
+    #SET randomArrayIterator=randomArrayIterator+1
+    `   return arr;` \n
+    ` }` \n
+    #END_RULE
+
+
+    @RANDOM_$1_ARRAY_BODY
+#BEGIN_RULE:MaxArrayCount-random$1ArrayCount
+#SET random$1ArrayCount=random$1ArrayCount+1
+    @RANDOM_$1_ARRAY_BODY @RANDOM_$1_ARRAY_BODY_
+#END_RULE
+#BEGIN_RULE:random$1ArrayCount-MaxArrayCount+1
+#END_RULE
+
+    @RANDOM_$1_ARRAY_BODY_
+#BEGIN_RULE
+    @$1_CONSTANT @$1_CONSTANT_SUFFIX `, `
+#END_RULE
+
+    @RANDOM_$1_ARRAY
+#BEGIN_RULE
+    ` public static $1[] random$1Array = new $1[] {`
+        @RANDOM_$1_ARRAY_BODY
+            `}; ` \n
+#END_RULE
+
+@UTILS_GET_EXPRESSION_$1
+    #BEGIN_RULE
+    ` public static $1 get$1Expression() { ` \n
+    ` return ` @$1_CAST_OPEN @$1_EXPRESSION     @$1_CAST_CLOSE `; ` \n
+    ` }` \n
+
+    #END_RULE
+
+

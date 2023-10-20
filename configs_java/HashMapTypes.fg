@@ -1,0 +1,190 @@
+// $1 = value type, $2 =  key type
+#INCLUDE "configs_java/utils.fg"
+#INCLUDE "configs_java/CollectionMapTypesDeclareVars.fg" ($1) (VAR) (Var) (HashMap) ($2)
+#INCLUDE "configs_java/CollectionMapTypesDeclareVars.fg" ($1) (VAL) (Val) (HashMap) ($2)
+#INCLUDE "configs_java/CollectionMapTypesDeclareVars.fg" ($1) (FIELD_VAR) (FieldVar) (HashMap) ($2)
+#INCLUDE "configs_java/CollectionMapTypesDeclareVars.fg" ($1) (FIELD_VAL) (FieldVal) (HashMap) ($2)
+
+
+@ARRAY_MAX_LENGTH
+@$1_LITERAL
+@TEST_CLASS_NAME
+@FOR_LOOP
+@SET_OR_SET_OP_String
+@String_EXPRESSION
+
+
+@REUSE_ID_$2_$1_HashMap_FIELD_VAR
+    #BEGIN_RULE:5*&IDsCount($2$1HashMapFieldVar_)
+         #LEND_SCOPE_WITH_ID Cls_ $2$1HashMapFieldVar_
+            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_ID $2$1HashMapFieldVar_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:TestClass*0
+         #LEND_SCOPE Test_
+            `Test.`  #REUSE_LOCAL_ID $2$1HashMapFieldVar_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:20*&IDsCount($2$1HashMapFieldVar_)
+            #REUSE_ID $2$1HashMapFieldVar_
+    #END_RULE
+
+@REUSE_ID_$2_$1_HashMap_FIELD_VAL
+    #BEGIN_RULE:5*&IDsCount(Cls_, $2$1HashMapFieldVal_)
+        #LEND_SCOPE_WITH_ID Cls_ $2$1HashMapFieldVal_
+            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID $2$1HashMapFieldVal_
+        #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:TestClass*0
+         #LEND_SCOPE Test_
+            `Test.`  #REUSE_LOCAL_ID $2$1HashMapFieldVal_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:20*&IDsCount($2$1HashMapFieldVal_)
+        #REUSE_ID $2$1HashMapFieldVal_
+    #END_RULE
+
+
+
+@REUSE_ID_$2_$1_HashMap_VAR
+    #BEGIN_RULE:3*&IDsCount($2$1HashMapVar_)
+        #REUSE_ID $2$1HashMapVar_  
+    #END_RULE
+    #BEGIN_RULE:1*&IDsCount($2$1HashMapFieldVar_)+1*&IDsCount(Cls_, $2$1HashMapFieldVar_)
+        @REUSE_ID_$2_$1_HashMap_FIELD_VAR
+    #END_RULE
+
+@REUSE_ID_$2_$1_HashMap_VAL
+    #BEGIN_RULE:3*&IDsCount($2$1HashMapVal_)
+        #REUSE_ID $2$1HashMapVal_  
+    #END_RULE
+    #BEGIN_RULE:1*&IDsCount($2$1HashMapFieldVal_)+1*&IDsCount(Cls_, $2$1HashMapFieldVal_)
+        @REUSE_ID_$2_$1_HashMap_FIELD_VAL
+    #END_RULE
+
+@REUSE_ID_$2_$1_HashMap_VAR_OR_VAL
+    #BEGIN_RULE:((&IDsCount($2$1HashMapVar_)+&IDsCount($2$1HashMapFieldVar_))*10+&IDsCount(Cls_, $2$1HashMapFieldVar_))*(1-lambdaVal)
+        @REUSE_ID_$2_$1_HashMap_VAR
+    #END_RULE
+    #BEGIN_RULE:(&IDsCount($2$1HashMapVal_)+&IDsCount($2$1HashMapFieldVal_))+&IDsCount(Cls_, $2$1HashMapFieldVal_)
+        @REUSE_ID_$2_$1_HashMap_VAL
+    #END_RULE
+    #BEGIN_RULE:lambdaVal*(1-&IDsCount($2$1HashMapVal_)+&IDsCount($2$1HashMapFieldVal_)-&IDsCount(Cls_, $2$1HashMapFieldVal_))
+        `(new HashMap<$2, $1>())`
+    #END_RULE
+
+@DECLARE_VAR_OF_TYPE
+#APPEND_RULE:Enable$1*Enable$2*localHashMapVarWeight
+@DECLARE_$2_$1_HashMap_VAR
+#END_RULE
+#APPEND_RULE:Enable$1*Enable$2*localHashMapVarWeight
+@DECLARE_$2_$1_HashMap_VAL
+#END_RULE
+
+@DECLARE_FIELD_VAR_OF_TYPE
+#APPEND_RULE:Enable$1*Enable$2*fieldHashMapVarWeight*(MaxCollectionsFieldsInClassCount-CollectionsFieldsInClassCount)
+    @DECLARE_$2_$1_HashMap_FIELD_VAR
+    #SET CollectionsFieldsInClassCount=CollectionsFieldsInClassCount+1
+#END_RULE
+#APPEND_RULE:1*Enable$1*Enable$2*fieldHashMapVarWeight*(MaxCollectionsFieldsInClassCount-CollectionsFieldsInClassCount)
+    @DECLARE_$2_$1_HashMap_FIELD_VAL
+    #SET CollectionsFieldsInClassCount=CollectionsFieldsInClassCount+1
+#END_RULE
+
+
+
+
+
+
+//@FOR_HashMap
+//    #APPEND_RULE:100*(($1HashMapVarDeclared+$1HashMapFieldVarDeclared+$1HashMapValDeclared+$1HashMapFieldValDeclared)*10+global_$1HashMapFieldVarDeclared+global_$1HashMapFieldValDeclared)*(1-LongLoop)
+//        ` /* iterate over ArayList */ for ($1 `
+//            #SET LongLoop=LongLoop+1
+//            #BEGIN_SCOPE 
+//            #CREATE_ID $1Val_ `: ` #REUSE_ID $1HashMap%_ `) { ` \n
+//            #SET $1ValDeclared=$1ValDeclared+1
+//            @STATEMENTS_SHORT
+//            @STATEMENTS_SHORT
+//            #SET $1ValDeclared=$1ValDeclared-1
+//            #SET LongLoop=LongLoop-1
+//            #END_SCOPE 
+//        `}` \n
+//    #END_RULE
+//    #APPEND_RULE
+//        @FOR_LOOP
+//    #END_RULE
+//@FOREACH_HashMap
+//    #APPEND_RULE:100*(($1HashMapVarDeclared+$1HashMapFieldVarDeclared+$1HashMapValDeclared+$1HashMapFieldValDeclared)*10+global_$1HashMapFieldVarDeclared+global_$1HashMapFieldValDeclared)*(1-LongLoop)*lambdaFunctionOneArg$1
+//            #REUSE_ID $1HashMap%_ `.forEach(` #BEGIN_SCOPE #CREATE_ID $1IteratorVar_ #END_SCOPE ` -> `  #REUSE_ID lambdaFunctionOneArg$1_  `.lambdaFunctionOneArg$1(` #GET_LAST_ID $1IteratorVar_  `)); ` \n
+//    #END_RULE
+//    #APPEND_RULE
+//        @FOR_LOOP
+//    #END_RULE
+
+
+@boolean_EXPRESSION_RECURSIVE
+    #APPEND_RULE:&IDsCount($2$1HashMapVar_)+&IDsCount($2$1HashMapFieldVar_)+&IDsCount($2$1HashMapVal_)+&IDsCount($2$1HashMapFieldVal_)
+        #REUSE_ID $2$1HashMap%_ `.containsValue(` @$1_CAST_OPEN @$1_EXPRESSION     @$1_CAST_CLOSE `)`
+    #END_RULE
+    #APPEND_RULE:&IDsCount($2$1HashMapVar_)+&IDsCount($2$1HashMapFieldVar_)+&IDsCount($2$1HashMapVal_)+&IDsCount($2$1HashMapFieldVal_)
+        #REUSE_ID $2$1HashMap%_ `.containsKey(` @$2_CAST_OPEN @$2_EXPRESSION     @$2_CAST_CLOSE `)`
+    #END_RULE
+    #APPEND_RULE:&IDsCount($2$1HashMapVar_)+&IDsCount($2$1HashMapFieldVar_)+&IDsCount($2$1HashMapVal_)+&IDsCount($2$1HashMapFieldVal_)
+        #REUSE_ID $2$1HashMap%_ `.isEmpty()`
+    #END_RULE
+    #APPEND_RULE:(&IDsCount($2$1HashMapVar_)+&IDsCount($2$1HashMapFieldVar_)+&IDsCount($2$1HashMapVal_)+&IDsCount($2$1HashMapFieldVal_))*0
+        #REUSE_ID $2$1HashMap%_ `.remove(` @$2_CAST_OPEN @$2_EXPRESSION @$2_CAST_CLOSE `, ` @$1_CAST_OPEN @$1_EXPRESSION     @$1_CAST_CLOSE `)` \n
+    #END_RULE
+    #APPEND_RULE:&IDsCount($2$1HashMapVar_)+&IDsCount($2$1HashMapFieldVar_)+&IDsCount($2$1HashMapVal_)+&IDsCount($2$1HashMapFieldVal_)
+        #REUSE_ID $2$1HashMap%_ `.replace(` @$2_CAST_OPEN @$2_EXPRESSION @$2_CAST_CLOSE `, ` @$1_CAST_OPEN @$1_EXPRESSION     @$1_CAST_CLOSE `, ` @$1_CAST_OPEN @$1_EXPRESSION     @$1_CAST_CLOSE `)` 
+    #END_RULE
+
+@$1_EXPRESSION_RECURSIVE
+    #APPEND_RULE:(&IDsCount($2$1HashMapVar_)+&IDsCount($2$1HashMapFieldVar_)+&IDsCount($2$1HashMapVal_)+&IDsCount($2$1HashMapFieldVal_))*TryCatchDepth
+        #REUSE_ID $2$1HashMap%_ `.get(` @$2_CAST_OPEN @$2_EXPRESSION @$2_CAST_CLOSE `)`
+    #END_RULE
+    #APPEND_RULE:(&IDsCount($2$1HashMapVar_)+&IDsCount($2$1HashMapFieldVar_)+&IDsCount($2$1HashMapVal_)+&IDsCount($2$1HashMapFieldVal_))
+        #REUSE_ID $2$1HashMap%_ `.getOrDefault(` @$2_CAST_OPEN @$2_EXPRESSION @$2_CAST_CLOSE `, `  @$1_CAST_OPEN @$1_EXPRESSION     @$1_CAST_CLOSE  `)`
+    #END_RULE
+        
+@int_EXPRESSION_NOT_RECURSIVE
+    #APPEND_RULE:(&IDsCount($2$1HashMapVar_)+&IDsCount($2$1HashMapFieldVar_)+&IDsCount($2$1HashMapVal_)+&IDsCount($2$1HashMapFieldVal_))
+        #REUSE_ID $2$1HashMap%_ `.size()`
+    #END_RULE
+
+@HASHMAP_PUT_AND_REMOVE
+    #APPEND_RULE:8*(&IDsCount($2$1HashMapVar_)+&IDsCount($2$1HashMapFieldVar_)+&IDsCount($2$1HashMapVal_)+&IDsCount($2$1HashMapFieldVal_))
+            `int ` #CREATE_ID indexHashMap_ ` = 0; ` \n
+    
+        ` if (` #REUSE_ID $2$1HashMap%_ `.put(` @$2_CAST_OPEN @$2_EXPRESSION @$2_CAST_CLOSE `, ` @$1_CAST_OPEN @$1_EXPRESSION     @$1_CAST_CLOSE `) == null ) {` 
+        `     while (` #GET_LAST_ID $2$1HashMap%_ `.remove(Test.get$2Array()[` #GET_LAST_ID indexHashMap_ `]) == null && ` #GET_LAST_ID indexHashMap_  `< Test.get$2Array().length - 1) { `   #GET_LAST_ID indexHashMap_ `++; }` 
+   ` } ` \n 
+    #END_RULE
+    #APPEND_RULE:1-(&IDsCount($2$1HashMapVar_)+&IDsCount($2$1HashMapFieldVar_)+&IDsCount($2$1HashMapVal_)+&IDsCount($2$1HashMapFieldVal_))
+    #END_RULE
+
+@HASHMAP_REMOVE_AND_PUT
+    #APPEND_RULE:8*(&IDsCount($2$1HashMapVar_)+&IDsCount($2$1HashMapFieldVar_)+&IDsCount($2$1HashMapVal_)+&IDsCount($2$1HashMapFieldVal_))
+            `int ` #CREATE_ID indexHashMap_ ` = 0; ` \n
+        `     while (` #REUSE_ID $2$1HashMap%_ `.remove(Test.get$2Array()[` #GET_LAST_ID indexHashMap_ `]) == null && ` #GET_LAST_ID indexHashMap_  `< Test.get$2Array().length -1) { `   #GET_LAST_ID indexHashMap_ `++; }` 
+        `if ( ` #GET_LAST_ID indexHashMap_ ` <  Test.get$2Array().length - 1) { ` 
+        `     while (` #GET_LAST_ID $2$1HashMap%_ `.put(` @$2_CAST_OPEN @$2_EXPRESSION @$2_CAST_CLOSE `, ` @$1_CAST_OPEN @$1_EXPRESSION     @$1_CAST_CLOSE `) != null && ` #GET_LAST_ID indexHashMap_  `< Test.get$2Array().length - 1) { `   #GET_LAST_ID indexHashMap_ `++; }` 
+   ` } ` \n 
+    #END_RULE
+    #APPEND_RULE:1-(&IDsCount($2$1HashMapVar_)+&IDsCount($2$1HashMapFieldVar_)+&IDsCount($2$1HashMapVal_)+&IDsCount($2$1HashMapFieldVal_))
+    #END_RULE
+
+
+@HASHMAP_ITERATE_FOR
+    #APPEND_RULE:8*(&IDsCount($2$1HashMapVar_)+&IDsCount($2$1HashMapFieldVar_)+&IDsCount($2$1HashMapVal_)+&IDsCount($2$1HashMapFieldVal_))
+        #BEGIN_SCOPE
+        `for ($1 ` #CREATE_ID $1Val_  `: ` #REUSE_ID $2$1HashMap%_ `.values()) { ` \n
+            #SET $1ValDeclared=$1ValDeclared+1
+            @STATEMENTS_SHORT
+            #SET $1ValDeclared=$1ValDeclared-1
+        #END_SCOPE
+        `}` \n
+    #END_RULE
+    #APPEND_RULE:1-(&IDsCount($2$1HashMapVar_)+&IDsCount($2$1HashMapFieldVar_)+&IDsCount($2$1HashMapVal_)+&IDsCount($2$1HashMapFieldVal_))
+    #END_RULE
+    

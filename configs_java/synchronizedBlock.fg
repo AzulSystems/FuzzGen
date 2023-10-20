@@ -30,7 +30,7 @@
     #END_RULE
 
 @SYNCHRONIZED_BLOCK
-    #BEGIN_RULE:AnotherClassObjVarDeclared
+    #BEGIN_RULE:&IDsCount(AnotherClassObjVar_)
         #SET SynchronizedBlockNestDepth=SynchronizedBlockNestDepth+1
         `synchronized(` @REUSE_ANOTHER_CLASS_OBJ_ID `) {` \n
             @STATEMENTS_SHORT

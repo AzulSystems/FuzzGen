@@ -1,4 +1,4 @@
-#INCLUDE "configs_java/utilsByType.fg" (int short byte long float double Integer Short Byte Long Float Double String)
+#INCLUDE "configs_java/utilsByType.fg" (int char short byte long float double Integer Short Byte Long Float Double String)
 
 @long_CONSTANT
 @long_CONSTANT_SUFFIX
@@ -8,12 +8,22 @@
         ` public static Random random = new Random(1);` \n
         ` public static long seed = ` @long_CONSTANT @long_CONSTANT_SUFFIX `;` \n
         ` public static int UnknownZero = 0;` \n 
+        `  public static long counter = 0L; ` \n
+    //    @RANDOM_ARRAY
 
     #END_RULE
 
-@UTILS_METHODS
+@UTILS_METHODS_COMMON
     #APPEND_RULE
         @UTILS_INIT_ARRAY
+    #END_RULE
+
+@UTILS_METHODS_TEST_SPECIFIC
+    #APPEND_RULE
+        @UTILS_GET_ARRAY_FOR_ArrayList
+        @UTILS_INIT_ArrayList
+        @UTILS_INIT_LinkedList
+        @UTILS_INIT_HashSet
     #END_RULE
 
 
@@ -31,6 +41,11 @@
         `FuzzUtils.init`
     #END_RULE
 
+@INIT_ArrayList_METHOD_ID
+    #BEGIN_RULE
+        `Test.init`
+    #END_RULE
+
 @SEED_METHOD_ID
     #BEGIN_RULE
         `FuzzUtils.seed`
@@ -41,19 +56,119 @@
         `FuzzUtils.UnknownZero`
     #END_RULE
 
-@UTILS_INIT_ARRAY
+//@UTILS_INIT_ARRAY
+//    #BEGIN_RULE
+//    @UTILS_INIT_ARRAY_int
+//    @UTILS_INIT_ARRAY_char
+//    @UTILS_INIT_ARRAY_short
+//    @UTILS_INIT_ARRAY_byte
+//    @UTILS_INIT_ARRAY_long
+//    @UTILS_INIT_ARRAY_float
+//    @UTILS_INIT_ARRAY_double
+//    @UTILS_INIT_ARRAY_Integer
+//    @UTILS_INIT_ARRAY_Short
+//    @UTILS_INIT_ARRAY_Byte
+//    @UTILS_INIT_ARRAY_Long
+//    @UTILS_INIT_ARRAY_Float
+//    @UTILS_INIT_ARRAY_Double
+//    @UTILS_INIT_ARRAY_String
+//    #END_RULE
+//
+//@UTILS_INIT_ArrayList
+//    #BEGIN_RULE
+//    @UTILS_INIT_ArrayList_Integer
+//    @UTILS_INIT_ArrayList_Short
+//    @UTILS_INIT_ArrayList_Byte
+//    @UTILS_INIT_ArrayList_Long
+//    @UTILS_INIT_ArrayList_Float
+//    @UTILS_INIT_ArrayList_Double
+//    @UTILS_INIT_ArrayList_String
+//    #END_RULE
+//
+@UTILS_INIT_LinkedList
     #BEGIN_RULE
-    @UTILS_INIT_ARRAY_int
-    @UTILS_INIT_ARRAY_short
-    @UTILS_INIT_ARRAY_byte
-    @UTILS_INIT_ARRAY_long
-    @UTILS_INIT_ARRAY_float
-    @UTILS_INIT_ARRAY_double
-    @UTILS_INIT_ARRAY_Integer
-    @UTILS_INIT_ARRAY_Short
-    @UTILS_INIT_ARRAY_Byte
-    @UTILS_INIT_ARRAY_Long
-    @UTILS_INIT_ARRAY_Float
-    @UTILS_INIT_ARRAY_Double
-    @UTILS_INIT_ARRAY_String
+    @UTILS_INIT_LinkedList_Integer
+    @UTILS_INIT_LinkedList_Short
+    @UTILS_INIT_LinkedList_Byte
+    @UTILS_INIT_LinkedList_Long
+    @UTILS_INIT_LinkedList_Float
+    @UTILS_INIT_LinkedList_Double
+    @UTILS_INIT_LinkedList_String
+    #END_RULE
+
+
+@UTILS_INIT_HashSet
+    #BEGIN_RULE
+    @UTILS_INIT_HashSet_Integer
+    @UTILS_INIT_HashSet_Short
+    @UTILS_INIT_HashSet_Byte
+    @UTILS_INIT_HashSet_Long
+    @UTILS_INIT_HashSet_Float
+    @UTILS_INIT_HashSet_Double
+    @UTILS_INIT_HashSet_String
+    #END_RULE
+
+
+
+
+
+@UTILS_GET_ARRAY_FOR_ArrayList
+    #BEGIN_RULE
+    @UTILS_GET_ARRAY_FOR_ArrayList_int
+    @UTILS_GET_ARRAY_FOR_ArrayList_char
+    @UTILS_GET_ARRAY_FOR_ArrayList_short
+    @UTILS_GET_ARRAY_FOR_ArrayList_byte
+    @UTILS_GET_ARRAY_FOR_ArrayList_long
+    @UTILS_GET_ARRAY_FOR_ArrayList_float
+    @UTILS_GET_ARRAY_FOR_ArrayList_double
+    
+    @UTILS_GET_ARRAY_FOR_ArrayList_Integer
+    @UTILS_GET_ARRAY_FOR_ArrayList_Short
+    @UTILS_GET_ARRAY_FOR_ArrayList_Byte
+    @UTILS_GET_ARRAY_FOR_ArrayList_Long
+    @UTILS_GET_ARRAY_FOR_ArrayList_Float
+    @UTILS_GET_ARRAY_FOR_ArrayList_Double
+    @UTILS_GET_ARRAY_FOR_ArrayList_String
+    #END_RULE
+
+@UTILS_GET_EXPRESSION
+    #BEGIN_RULE:1-IsARegularConfiguration
+    @UTILS_GET_EXPRESSION_int
+    @UTILS_GET_EXPRESSION_char
+    @UTILS_GET_EXPRESSION_short
+    @UTILS_GET_EXPRESSION_byte
+    @UTILS_GET_EXPRESSION_long
+    @UTILS_GET_EXPRESSION_float
+    @UTILS_GET_EXPRESSION_double
+    
+    @UTILS_GET_EXPRESSION_Integer
+    @UTILS_GET_EXPRESSION_Short
+    @UTILS_GET_EXPRESSION_Byte
+    @UTILS_GET_EXPRESSION_Long
+    @UTILS_GET_EXPRESSION_Float
+    @UTILS_GET_EXPRESSION_Double
+    @UTILS_GET_EXPRESSION_String
+    #END_RULE
+    #BEGIN_RULE:IsARegularConfiguration
+    #END_RULE
+
+
+
+
+
+   @RANDOM_ARRAY
+    #BEGIN_RULE
+        @RANDOM_int_ARRAY
+        @RANDOM_byte_ARRAY
+        //@RANDOM_short_ARRAY
+        //@RANDOM_long_ARRAY
+        //@RANDOM_float_ARRAY
+        //@RANDOM_double_ARRAY
+        //@RANDOM_Integer_ARRAY
+        //@RANDOM_Byte_ARRAY
+        //@RANDOM_Short_ARRAY
+        //@RANDOM_Long_ARRAY
+        //@RANDOM_Float_ARRAY
+        //@RANDOM_Double_ARRAY
+        @RANDOM_String_ARRAY
     #END_RULE

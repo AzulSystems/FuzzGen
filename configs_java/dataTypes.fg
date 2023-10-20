@@ -1,13 +1,17 @@
-#INCLUDE "configs_java/booleanType.fg" (boolean Boolean)  (int short byte long float double Integer Short Byte Long Float Double)
-#INCLUDE "configs_java/numericTypesCommon.fg" (int short byte long float double Integer Short Byte Long Float Double)
-#INCLUDE "configs_java/typesCommon.fg" (int short byte long float double Integer Short Byte Long Float Double String)
-#INCLUDE "configs_java/objectType.fg" (int short byte long float double Integer Short Byte Long Float Double)
-#INCLUDE "configs_java/list.fg" int short byte long float double Integer Short Byte Long Float Double
-#INCLUDE "configs_java/set.fg" int short byte long float double Integer Short Byte Long Float Double
+#INCLUDE "configs_java/booleanType.fg" (boolean Boolean)  (char int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/numericTypesCommon.fg" (int char short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/typesCommon.fg" (int char short byte long float double Integer Short Byte Long Float Double String) (Static Instance)
+#INCLUDE "configs_java/objectType.fg" (int char short byte long float double Integer Short Byte Long Float Double) (Static Instance)
+//#INCLUDE "configs_java/list.fg" int short byte long float double Integer Short Byte Long Float Double
+//#INCLUDE "configs_java/set.fg" int short byte long float double Integer Short Byte Long Float Double
 #INCLUDE "configs_java/arrayTypes.fg" String
+#INCLUDE "configs_java/ArrayListTypes.fg" (String Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/LinkedListTypes.fg" (String Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/HashMapTypes.fg" (String Integer Short Byte Long Float Double) (String Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/HashSetTypes.fg" (String Integer Short Byte Long Float Double) 
 
-#INCLUDE "configs_java/string.fg" (String) (boolean Boolean)  ( int short byte long float double Integer Short Byte Long Float Double  )
-#INCLUDE "configs_java/lambdaByType.fg" (int short byte long float double Integer Short Byte Long Float Double String)
+#INCLUDE "configs_java/string.fg" (String) (boolean Boolean)  ( int char short byte long float double Integer Short Byte Long Float Double  )
+#INCLUDE "configs_java/lambdaByType.fg" (int char short byte long float double Integer Short Byte Long Float Double String)
 
 @DECLARE_VARS
     #BEGIN_RULE:DeclareVarsWeight
@@ -33,10 +37,10 @@
     #BEGIN_RULE:BooleanValWeight/2
         @DECLARE_Boolean_VAL
     #END_RULE
-    #BEGIN_RULE:StringVarWeight
+    #BEGIN_RULE:localStringVarWeight
         @DECLARE_String_VAR
     #END_RULE
-    #BEGIN_RULE:StringValWeight
+    #BEGIN_RULE:localStringVarWeight
         @DECLARE_String_VAL
     #END_RULE
     #BEGIN_RULE:ObjVarWeight

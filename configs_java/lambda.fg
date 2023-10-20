@@ -1,5 +1,5 @@
 #INCLUDE "configs_java/parametersBasic.fg"
-#INCLUDE "configs_java/lambdaByType.fg" (int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/lambdaByType.fg" (int char short byte long float double Integer Short Byte Long Float Double)
 
 
 @LAMBDA_INTERFACES

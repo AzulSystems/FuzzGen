@@ -1,6 +1,6 @@
 #INCLUDE "configs_java/constants.fg"
 #INCLUDE "configs_java/parametersBasic.fg"
-#INCLUDE "configs_java/parametersByType.fg" ( $1 ) (Var Val)
+#INCLUDE "configs_java/parametersByType.fg" ( $1 ) (Var Val) (Integer Short Byte Long Float Double String) (Static Instance)
 #INCLUDE "configs_java/arrayTypes.fg" $1
 #INCLUDE "configs_java/numericFloat.fg" (float double Float Double)
 #INCLUDE "configs_java/numericInteger.fg" (int short byte long Integer Short Byte Long)
@@ -8,20 +8,35 @@
 @TEST_CLASS_NAME
 
 
+//@DECLARE_$1_OBJ_$2_Method
+//    #BEGIN_RULE
+//        `static ` #CREATE_LAZY_ID method_$1_$2_OBJ_ `(` 
+//        #LEND_SCOPE_WITH_ID Cls_ $1$2FieldVar_
+//            #REUSE_ID Cls_ `obj) {` \n
+//        `$1 $1tmpVar = ` @REUSE_ID_$1_Static_FIELD_VAR `;`\n
+//        #RETURN_SCOPE
+//        #CREATE_ID $Var_ ` = $1tmpVar;` \n
+//        
+//
+//        `}` \n
+//#END_RULE
+//
 
 
 @DECLARE_$1_METHOD_OBJ_VAR
-     #BEGIN_RULE
+     #APPEND_RULE:&IDsCount(Cls_, method_$1_$1_$2_)
         #SET $1MethodObjVarDeclared=$1MethodObjVarDeclared+1
+        #SET $1$2MethodObjVarDeclared=$1$2MethodObjVarDeclared+1
         #SET global_$1MethodObjVarDeclared=global_$1MethodObjVarDeclared+1
+        #SET global_$1$2MethodObjVarDeclared=global_$1$2MethodObjVarDeclared+1
 
-        #LEND_SCOPE_WITH_ID Cls_ method_$1_$1_ 
+        #LEND_SCOPE_WITH_ID Cls_ method_$1_$1_$2_
 			#REUSE_ID Cls_
 	    #RETURN_SCOPE
 	    ` ` #CREATE_ID_FROM_LAST_ID ( Cls_ _mObjVar_ ) ` = new ` #GET_LAST_ID Cls_ `();` \n
         #REGISTER_LAZY_IDS
      #END_RULE
-     #BEGIN_RULE:4*$1MethodObjVarDeclared
+     #APPEND_RULE:4*$1$2MethodObjVarDeclared
 		#LEND_SCOPE_WITH_ID_BY_PREFIX ( Cls_ _mObjVar_ Cls_ )
 		 `  /* DEBUG 1 */ `   #GET_LAST_ID Cls_ ` `
 		#RETURN_SCOPE
@@ -29,19 +44,30 @@
          ` = ` 
         #GET_LAST_ID Cls_%_mObjVar_ `; ` \n
         #REGISTER_LAZY_IDS
+
         #SET $1MethodObjVarDeclared=$1MethodObjVarDeclared+1
+        #SET $1$2MethodObjVarDeclared=$1$2MethodObjVarDeclared+1
         #SET global_$1MethodObjVarDeclared=global_$1MethodObjVarDeclared+1
+        #SET global_$1$2MethodObjVarDeclared=global_$1$2MethodObjVarDeclared+1
      #END_RULE
 
 @REUSE_ID_METHOD_$1_$1
-    #APPEND_RULE:5*global_method_$1_$1Declared*0
-         #LEND_SCOPE_WITH_ID Cls_ method_$1_$1_
-           `(new ` #REUSE_LOCAL_ID Cls_ `()).` #REUSE_LOCAL_ID method_$1_$1_
+    //#APPEND_RULE:5*global_method_$1_$1Declared*0
+    #APPEND_RULE:&IDsCount(Cls_, method_$1_$1_Instance_)*MethodIsInstance
+         #LEND_SCOPE_WITH_ID Cls_ method_$1_$1_Instance_
+           `(new ` #REUSE_LOCAL_ID Cls_ `()).` #REUSE_LOCAL_ID method_$1_$1_Instance_
          #RETURN_SCOPE
     #END_RULE
-    #APPEND_RULE:500*$1MethodObjVarDeclared
-		#LEND_SCOPE_WITH_ID_BY_PREFIX ( Cls_ _mObjVar_ method_$1_$1_ )
-		#GET_LAST_ID Cls_%_mObjVar_	 `.` #REUSE_LOCAL_ID method_$1_$1_ 	
+
+    #APPEND_RULE:&IDsCount(Cls_, method_$1_$1_Static_)
+         #LEND_SCOPE_WITH_ID Cls_ method_$1_$1_Static_
+            #REUSE_LOCAL_ID Cls_ `.` #REUSE_LOCAL_ID method_$1_$1_Static_
+         #RETURN_SCOPE
+    #END_RULE
+
+    #APPEND_RULE:500*$1$2MethodObjVarDeclared
+		#LEND_SCOPE_WITH_ID_BY_PREFIX ( Cls_ _mObjVar_ method_$1_$1_$2_ )
+		#GET_LAST_ID Cls_%_mObjVar_	 `.` #REUSE_LOCAL_ID method_$1_$1_$2_ 	
 		#RETURN_SCOPE
     #END_RULE
 
@@ -72,9 +98,14 @@
 
 
 @REUSE_ID_$1_FIELD_VAR
-    #APPEND_RULE:30*$1FieldObjVarDeclared
+    #APPEND_RULE:30*$1FieldObjVarDeclared*MethodIsStatic
 	    #LEND_SCOPE_WITH_ID_BY_PREFIX ( Cls_ _$1fObjVar_ $1FieldVar_ )
-		    `/* FieldObjVar */` #GET_LAST_ID Cls_%_$1fObjVar_	 `.` #REUSE_LOCAL_ID  $1FieldVar_
+		    `/* FieldObjVar */` #GET_LAST_ID Cls_%_$1fObjVar_	 `.` #REUSE_LOCAL_ID  $1StaticFieldVar_
+		#RETURN_SCOPE
+#END_RULE
+    #APPEND_RULE:30*$1FieldObjVarDeclared*(MethodIsStatic+MethodIsInstance)
+	    #LEND_SCOPE_WITH_ID_BY_PREFIX ( Cls_ _$1fObjVar_ $1FieldVar_ )
+		    `/* FieldObjVar */` #GET_LAST_ID Cls_%_$1fObjVar_	 `.` #REUSE_LOCAL_ID  $1InstanceFieldVar_
 		#RETURN_SCOPE
 #END_RULE
 // TODO: Sometimes (rarely) try to access field of another type
@@ -85,7 +116,7 @@
 #END_RULE
 
 @DECLARE_VAR_OF_TYPE
-    #APPEND_RULE:20*global_method_$1_$1Declared
+    #APPEND_RULE:20*&IDsCount(Cls_, method_$1_$1_$2_)
         @DECLARE_$1_METHOD_OBJ_VAR
     #END_RULE
     #APPEND_RULE:20*global_$1FieldVarDeclared

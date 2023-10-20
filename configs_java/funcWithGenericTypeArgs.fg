@@ -1,0 +1,23 @@
+@funcWithCondListGeneric
+    #BEGIN_RULE
+        `funcWithCondListGeneric`
+    #END_RULE
+
+@funcWithCondListGeneric_DECLARE
+    #BEGIN_RULE
+        \n `public static <T> T ` @funcWithCondListGeneric `(List<T> a, T compareValue, T anotherValue)` \n
+    #END_RULE
+
+@funcWithCondListGeneric_BODY
+    #BEGIN_RULE
+        ` { ` \n
+        `    T sum = anotherValue; ` \n
+        ` ListIterator listIter = a.listIterator();` \n
+        ` while (listIter.hasNext()) {` \n
+        `       T tmp = (T)listIter.next();` \n
+        `       if (tmp == compareValue ) sum = tmp;` \n
+        `}` \n
+        ` return sum ; ` \n
+        `}` \n \n
+    #END_RULE
+

@@ -1,7 +1,7 @@
-#INCLUDE "configs_java/expressionsCommon.fg"  (int short byte long float double Integer Short Byte Long Float Double String)
-#INCLUDE "configs_java/expressionsPrimitives.fg"  (int short byte long float double)
+#INCLUDE "configs_java/expressionsCommon.fg"  (char int short byte long float double Integer Short Byte Long Float Double String) (Static Instance)
+#INCLUDE "configs_java/expressionsPrimitives.fg"  (char int short byte long float double)
 #INCLUDE "configs_java/expressionsReferences.fg"  (Integer Short Byte Long Float Double)
-#INCLUDE "configs_java/parametersByType.fg" (boolean Boolean) (Val Var)
+#INCLUDE "configs_java/parametersByType.fg" (boolean Boolean) (Val Var) (Integer Short Byte Long Float Double String) (Static Instance)
 
 @Boolean_CONSTANT
 @boolean_CONSTANT
@@ -17,6 +17,7 @@
 @BIN_EXPR_longlong_boolean
 @BIN_EXPR_floatfloat_boolean
 @BIN_EXPR_doubledouble_boolean
+@char_EXPRESSION
 
 
 @byte_EXPRESSION_SPECIFIC
@@ -37,6 +38,15 @@
     #APPEND_RULE:1
         @byte_EXPRESSION
     #END_RULE
+
+@char_EXPRESSION_SPECIFIC
+    #APPEND_RULE:1
+        @char_CONSTANT @char_CONSTANT_SUFFIX
+    #END_RULE
+    #APPEND_RULE:1
+        `(char)(` @byte_EXPRESSION `)`
+    #END_RULE
+
 
 
 @short_EXPRESSION_SPECIFIC
@@ -67,68 +77,121 @@
          @short_EXPRESSION
     #END_RULE
     #APPEND_RULE
+         @char_EXPRESSION
+    #END_RULE
+    #APPEND_RULE
+        `(int)(` @char_EXPRESSION `)`
+    #END_RULE
+    #APPEND_RULE
          @byte_EXPRESSION
     #END_RULE
-    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)*(1-lambdaVal)
+    #APPEND_RULE:(&IDsCount(intVar_)+&IDsCount(intFieldVar_))*(1-lambdaVal)
          @REUSE_ID_int_VAR `++`
     #END_RULE
-    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)*(1-lambdaVal)
+    #APPEND_RULE:(&IDsCount(intVar_)+&IDsCount(intFieldVar_))*(1-lambdaVal)
         `++` @REUSE_ID_int_VAR 
     #END_RULE
-    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)*(1-lambdaVal)
+    #APPEND_RULE:(&IDsCount(intVar_)+&IDsCount(intFieldVar_))*(1-lambdaVal)
          @REUSE_ID_int_VAR `--`
     #END_RULE
-    #APPEND_RULE:(intVarDeclared+intFieldVarDeclared)*(1-lambdaVal)
+    #APPEND_RULE:(&IDsCount(intVar_)+&IDsCount(intFieldVar_))*(1-lambdaVal)
         `--` @REUSE_ID_int_VAR 
     #END_RULE
-    #APPEND_RULE:StringVarWeight*(StringVarDeclared+StringValDeclared)
+    #APPEND_RULE:5*StringVarWeight*(&IDsCount(StringVar_)+&IDsCount(StringVal_))
         @int_String_EXPRESSION 
     #END_RULE
   
 
 @int_String_EXPRESSION_RECURSIVE 
-    #APPEND_RULE:StringVarDeclared*StringVarWeight*(1-lambdaVal)
+    #APPEND_RULE:&IDsCount(StringVar_)*StringVarWeight*(1-lambdaVal)
          @REUSE_ID_String_VAR `.indexOf(` @int_EXPRESSION   `)`
     #END_RULE
-    #APPEND_RULE:StringVarDeclared*StringVarWeight*(1-lambdaVal)
+    #APPEND_RULE:&IDsCount(StringVar_)*StringVarWeight*(1-lambdaVal)
          @REUSE_ID_String_VAR `.indexOf(` @int_EXPRESSION `,` @int_EXPRESSION `)`
     #END_RULE
-    #APPEND_RULE:StringValDeclared*StringVarWeight*(1-lambdaVal)
+    #APPEND_RULE:&IDsCount(StringVal_)*StringVarWeight*(1-lambdaVal)
          @REUSE_ID_String_VAL `.lastIndexOf(` @int_EXPRESSION `)`
     #END_RULE
-    #APPEND_RULE:StringValDeclared*StringVarWeight
+    #APPEND_RULE:&IDsCount(StringVal_)*StringVarWeight
          @REUSE_ID_String_VAL `.lastIndexOf(` @int_EXPRESSION `,` @int_EXPRESSION `)`
     #END_RULE
-   #APPEND_RULE:StringValDeclared*StringVarWeight
+   #APPEND_RULE:&IDsCount(StringVal_)*StringVarWeight*StringVarWeight
          @REUSE_ID_String_VAL `.indexOf(` @String_EXPRESSION `,` @int_EXPRESSION `)`
     #END_RULE
-    #APPEND_RULE:StringValDeclared*StringVarWeight
+   #APPEND_RULE:&IDsCount(StringVar_)*StringVarWeight*StringVarWeight
+         @REUSE_ID_String_VAR `.indexOf(` @String_EXPRESSION `,` @int_EXPRESSION `)`
+    #END_RULE
+    #APPEND_RULE:&IDsCount(StringVal_)*StringVarWeight*StringVarWeight
          @REUSE_ID_String_VAL `.lastIndexOf(` @String_EXPRESSION `,` @int_EXPRESSION `)`
     #END_RULE
     #APPEND_RULE
          @String_CONSTANT `.length()`
     #END_RULE
+     #APPEND_RULE:&IDsCount(StringVar_)*StringVarWeight*(1-lambdaVal)*StringVarWeight
+         @REUSE_ID_String_VAR 
+        #SET PreferConstant=20
+         `.indexOf(` @String_EXPRESSION `)`
+
+        #SET PreferConstant=1
+    #END_RULE
+     #APPEND_RULE:&IDsCount(StringVar_)*StringVarWeight*(1-lambdaVal)*StringVarWeight
+         @REUSE_ID_String_VAR 
+        #SET PreferConstant=20
+         `.lastIndexOf(` @String_EXPRESSION `)`
+        #SET PreferConstant=1
+    #END_RULE
+     #APPEND_RULE:&IDsCount(StringVar_)*StringVarWeight*(1-lambdaVal)*StringVarWeight
+         @REUSE_ID_String_VAR `.lastIndexOf(` 
+        #SET PreferConstant=20
+                 @String_EXPRESSION `, ` @int_CONSTANT ` )`
+        #SET PreferConstant=1
+    #END_RULE
+    #APPEND_RULE:100*&IDsCount(StringVar_)*StringVarWeight*(1-lambdaVal)*StringVarWeight
+          @REUSE_ID_String_VAR `.` @COMPARE_TO `(` @String_EXPRESSION   `)`
+   #END_RULE
+    #APPEND_RULE:100*&IDsCount(StringStaticFieldVar_)*StringVarWeight*(1-lambdaVal)*StringVarWeight
+         #REUSE_ID StringStaticFieldVar_ `.` @COMPARE_TO `(` @String_EXPRESSION   `)`
+   #END_RULE
+    #APPEND_RULE:100*MethodIsInstance*&IDsCount(StringInstanceFieldVar_)*StringVarWeight*(1-lambdaVal)*StringVarWeight
+         #REUSE_ID StringStaticFieldVar_ `.` @COMPARE_TO `(` @String_EXPRESSION   `)`
+   #END_RULE
+   #APPEND_RULE:100*&IDsCount(StringVal_)*StringValWeight*StringValWeight
+          @REUSE_ID_String_VAL `.` @COMPARE_TO `(` @String_EXPRESSION   `)`
+   #END_RULE
+    #APPEND_RULE:100*&IDsCount(StringStaticFieldVal_)*StringValWeight*(1-lambdaVal)*StringValWeight
+         #REUSE_ID StringStaticFieldVal_ `.` @COMPARE_TO `(` @String_EXPRESSION   `)`
+   #END_RULE
+    #APPEND_RULE:100*MethodIsInstance*&IDsCount(StringInstanceFieldVal_)*StringValWeight*(1-lambdaVal)*StringValWeight
+         #REUSE_ID StringStaticFieldVal_ `.` @COMPARE_TO `(` @String_EXPRESSION   `)`
+   #END_RULE
+//    #APPEND_RULE:(&IDsCount(StringVar_)+&IDsCount(StringStaticFieldVar_)+&IDsCount(StringInstanceFieldVar_)*MethodIsInstance)*StringVarWeight*(1-lambdaVal)*StringVarWeight
+//         #REUSE_ID String%Var_ `.` @COMPARE_TO `(` @String_EXPRESSION   `)`
+//   #END_RULE
+
+
+@COMPARE_TO
+    #BEGIN_RULE
+        `compareTo`
+    #END_RULE
+    #BEGIN_RULE
+        `compareToIgnoreCase`
+    #END_RULE
+
+
 
     @int_String_EXPRESSION_NOT_RECURSIVE 
-    #APPEND_RULE:StringVarDeclared*(1-lambdaVal)
+    #APPEND_RULE:&IDsCount(StringVar_)*(1-lambdaVal)
          @REUSE_ID_String_VAR `.length()`
     #END_RULE
-    #APPEND_RULE:StringValDeclared
+    #APPEND_RULE:&IDsCount(StringVal_)
          @REUSE_ID_String_VAL `.length()`
     #END_RULE
     #APPEND_RULE
          @String_CONSTANT `.length()`
     #END_RULE
- #APPEND_RULE:StringVarDeclared*StringVarWeight*(1-lambdaVal)
-         @REUSE_ID_String_VAR `.indexOf(` @String_EXPRESSION `)`
-    #END_RULE
-     #APPEND_RULE:StringVarDeclared*StringVarWeight*(1-lambdaVal)
-         @REUSE_ID_String_VAR `.lastIndexOf(` @String_EXPRESSION `)`
-    #END_RULE
-
 
  @int_String_EXPRESSION
-    #BEGIN_RULE:1*(intStringExprMaxDepth+-1*intStringExprDepth)*(StringVarDeclared+StringValDeclared)
+    #BEGIN_RULE:1*(intStringExprMaxDepth+-1*intStringExprDepth)*(&IDsCount(StringVar_)+&IDsCount(StringVal_))
       #SET intStringExprDepth=intStringExprDepth+1
       @int_String_EXPRESSION_RECURSIVE
       #SET intStringExprDepth=intStringExprDepth+-1
@@ -204,6 +267,12 @@
     #APPEND_RULE:5
         @Long_EXPRESSION
     #END_RULE
+    #APPEND_RULE
+         @char_EXPRESSION
+    #END_RULE
+    #APPEND_RULE
+        `(long)(` @char_EXPRESSION `)`
+    #END_RULE
     
 @Long_EXPRESSION_SPECIFIC
     #APPEND_RULE:5
@@ -218,25 +287,25 @@
     #APPEND_RULE
         @boolean_CONSTANT
     #END_RULE
-    #APPEND_RULE:2*booleanValDeclared
+    #APPEND_RULE:2*&IDsCount(booleanVal_)
         @REUSE_ID_boolean_VAL
     #END_RULE
-    #APPEND_RULE:5*booleanVarDeclared
+    #APPEND_RULE:5*&IDsCount(booleanVar_)
         @REUSE_ID_boolean_VAR
     #END_RULE
-    #APPEND_RULE:1*BooleanValDeclared
+    #APPEND_RULE:1*&IDsCount(BooleanVal_)
         @REUSE_ID_Boolean_VAL
     #END_RULE
-    #APPEND_RULE:1*BooleanVarDeclared
+    #APPEND_RULE:1*&IDsCount(BooleanVar_)
         @REUSE_ID_Boolean_VAR
     #END_RULE
-    #APPEND_RULE:10
+    #APPEND_RULE:1
         @ARRAYEQUALS
     #END_RULE
-    #APPEND_RULE:10*StringVarDeclared*(1-lambdaVal)
+    #APPEND_RULE:1*&IDsCount(StringVar_)*(1-lambdaVal)
         `(` @REUSE_ID_String_VAR `.equals( ` @String_EXPRESSION ` ))`
     #END_RULE
-    #APPEND_RULE:10*StringValDeclared
+    #APPEND_RULE:1*&IDsCount(StringVal_)
         `(` @REUSE_ID_String_VAL `.equals( ` @String_EXPRESSION ` ))`
     #END_RULE
 
@@ -255,12 +324,14 @@
 
 
 @boolean_EXPRESSION
-   #BEGIN_RULE:1*(booleanExprMaxDepth+-1*booleanExprDepth)
+   #BEGIN_RULE:1*(booleanExprMaxDepth+-1*booleanExprDepth)*(ExprMaxDepth-ExprDepth)
    #SET booleanExprDepth=booleanExprDepth+1
+   #SET ExprDepth=ExprDepth+1
    @boolean_EXPRESSION_RECURSIVE
        #SET booleanExprDepth=booleanExprDepth+-1
+       #SET ExprDepth=ExprDepth+-1
        #END_RULE
-        #BEGIN_RULE:3
+        #BEGIN_RULE:5
         @boolean_EXPRESSION_NOT_RECURSIVE
             #END_RULE
 
@@ -275,24 +346,24 @@
     #APPEND_RULE
         @String_CONSTANT
     #END_RULE
-    #APPEND_RULE:8*StringValDeclared
+    #APPEND_RULE:8*&IDsCount(StringVal_)
         @REUSE_ID_String_VAL
     #END_RULE
-    #APPEND_RULE:5*StringVarDeclared*(1-lambdaVal)
+    #APPEND_RULE:5*&IDsCount(StringVar_)*(1-lambdaVal)
         @REUSE_ID_String_VAR
     #END_RULE
-     #APPEND_RULE:10*StringArrayVarDeclared*StringVarWeight*(1-lambdaVal)
+     #APPEND_RULE:10*&IDsCount(StringArrayVar_)*StringVarWeight*(1-lambdaVal)
          @REUSE_ID_String_ARRAY_VAR `[0]` 
     #END_RULE
-    #APPEND_RULE:20*StringVarDeclared*(1-lambdaVal)
+    #APPEND_RULE:20*&IDsCount(StringVar_)*(1-lambdaVal)
         #REUSE_ID StringVar_`.substring(` #GET_LAST_ID StringVar_ `.length()/` @[1:10] `)`
     #END_RULE
-    #APPEND_RULE:20*StringValDeclared
+    #APPEND_RULE:20*&IDsCount(StringVal_)
         #REUSE_ID StringVal_`.substring(` #GET_LAST_ID StringVal_ `.length()/` @[1:10] `)`
     #END_RULE
 
     @String_EXPRESSION_RECURSIVE
-    #APPEND_RULE:20*method_String_StringDeclared*MethodOneArgWeight
+    #APPEND_RULE:20*&IDsCount(method_String_String_)*MethodOneArgWeight
         @REUSE_ID_METHOD_String_String `(` @String_EXPRESSION `)`
     #END_RULE
 //    #APPEND_RULE:1*(1-LoopNest)
@@ -300,6 +371,9 @@
 //    #END_RULE
     #APPEND_RULE:2*(1-LoopNest)
         `( ` @String_EXPRESSION ` .concat(` @String_EXPRESSION ` ))`
+    #END_RULE
+    #APPEND_RULE:2*(1-LoopNest)
+        `( `@String_EXPRESSION @OP_StringString_String @String_EXPRESSION ` )`
     #END_RULE
     #APPEND_RULE:20*TryCatchDepth
          @String_EXPRESSION `.substring(` @int_EXPRESSION `,` @int_EXPRESSION `)`

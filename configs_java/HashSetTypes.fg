@@ -1,0 +1,163 @@
+#INCLUDE "configs_java/utils.fg"
+
+#INCLUDE "configs_java/CollectionListTypesDeclareVars.fg" ($1) (VAR) (Var) (HashSet)
+#INCLUDE "configs_java/CollectionListTypesDeclareVars.fg" ($1) (VAL) (Val) (HashSet)
+#INCLUDE "configs_java/CollectionListTypesDeclareVars.fg" ($1) (FIELD_VAR) (FieldVar) (HashSet)
+#INCLUDE "configs_java/CollectionListTypesDeclareVars.fg" ($1) (FIELD_VAL) (FieldVal) (HashSet)
+
+@ARRAY_MAX_LENGTH
+@$1_LITERAL
+@TEST_CLASS_NAME
+@FOR_LOOP
+@SET_OR_SET_OP_String
+@String_EXPRESSION
+
+
+@REUSE_ID_$1_HashSet_FIELD_VAR
+    #BEGIN_RULE:5*&IDsCount(Cls, $1HashSetFieldVar_)
+         #LEND_SCOPE_WITH_ID Cls_ $1HashSetFieldVar_
+            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_ID $1HashSetFieldVar_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:TestClass*0
+         #LEND_SCOPE Test_
+            `Test.`  #REUSE_LOCAL_ID $1HashSetFieldVar_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:20*&IDsCount($1HashSetFieldVar_)
+            #REUSE_ID $1HashSetFieldVar_
+    #END_RULE
+
+@REUSE_ID_$1_HashSet_FIELD_VAL
+    #BEGIN_RULE:5*&IDsCount(Cls, $1HashSetFieldVal_)
+        #LEND_SCOPE_WITH_ID Cls_ $1HashSetFieldVal_
+            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID $1HashSetFieldVal_
+        #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:TestClass*0
+         #LEND_SCOPE Test_
+            `Test.`  #REUSE_LOCAL_ID $1HashSetFieldVal_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:20*&IDsCount($1HashSetFieldVal_)
+        #REUSE_ID $1HashSetFieldVal_
+    #END_RULE
+
+
+
+@REUSE_ID_$1_HashSet_VAR
+    #BEGIN_RULE:3*&IDsCount($1HashSetVar_)
+        #REUSE_ID $1HashSetVar_  
+    #END_RULE
+    #BEGIN_RULE:1*&IDsCount($1HashSetFieldVar_)+1*&IDsCount(Cls, $1HashSetFieldVar_)
+        @REUSE_ID_$1_HashSet_FIELD_VAR
+    #END_RULE
+
+@REUSE_ID_$1_HashSet_VAL
+    #BEGIN_RULE:3*&IDsCount($1HashSetVal_)
+        #REUSE_ID $1HashSetVal_  
+    #END_RULE
+    #BEGIN_RULE:1*&IDsCount($1HashSetFieldVal_)+1*&IDsCount(Cls, $1HashSetFieldVal_)
+        @REUSE_ID_$1_HashSet_FIELD_VAL
+    #END_RULE
+
+@REUSE_ID_$1_HashSet_VAR_OR_VAL
+    #BEGIN_RULE:((&IDsCount($1HashSetVar_)+&IDsCount($1HashSetFieldVar_))*10+&IDsCount(Cls, $1HashSetFieldVar_))*(1-lambdaVal)
+        @REUSE_ID_$1_HashSet_VAR
+    #END_RULE
+    #BEGIN_RULE:(&IDsCount($1HashSetVal_)+&IDsCount($1HashSetFieldVal_))+&IDsCount(Cls, $1HashSetFieldVal_)
+        @REUSE_ID_$1_HashSet_VAL
+    #END_RULE
+    #BEGIN_RULE:lambdaVal*(1-&IDsCount($1HashSetVal_)+&IDsCount($1HashSetFieldVal_)-&IDsCount(Cls, $1HashSetFieldVal_))
+        `(new HashSet<$1>())`
+    #END_RULE
+
+@DECLARE_VAR_OF_TYPE
+#APPEND_RULE:2*Enable$1*localHashSetVarWeight
+@DECLARE_$1_HashSet_VAR
+#END_RULE
+#APPEND_RULE:Enable$1*localHashSetVarWeight
+@DECLARE_$1_HashSet_VAL
+#END_RULE
+
+@DECLARE_FIELD_VAR_OF_TYPE
+#APPEND_RULE:1*Enable$1*fieldHashSetVarWeight*(MaxCollectionsFieldsInClassCount-CollectionsFieldsInClassCount)
+    @DECLARE_$1_HashSet_FIELD_VAR
+    #SET CollectionsFieldsInClassCount=CollectionsFieldsInClassCount+1
+#END_RULE
+#APPEND_RULE:1*Enable$1*fieldHashSetVarWeight*(MaxCollectionsFieldsInClassCount-CollectionsFieldsInClassCount)
+        @DECLARE_$1_HashSet_FIELD_VAL
+        #SET CollectionsFieldsInClassCount=CollectionsFieldsInClassCount+1
+#END_RULE
+
+
+@FOR_HashSet
+    #APPEND_RULE:100*(&IDsCount($1HashSetVar_)+&IDsCount($1HashSetFieldVar_)+&IDsCount($1HashSetVal_)+&IDsCount($1HashSetFieldVal_))*(1-LongLoop)
+        ` /* iterate over HashSet */ for ($1 `
+            #SET LongLoop=LongLoop+1
+            #BEGIN_SCOPE 
+            #CREATE_ID $1Val_ `: ` #REUSE_ID $1HashSet%_ `) { ` \n
+            #SET $1ValDeclared=$1ValDeclared+1
+            @STATEMENTS_SHORT
+            @STATEMENTS_SHORT
+            #SET $1ValDeclared=$1ValDeclared-1
+            #SET LongLoop=LongLoop-1
+            #END_SCOPE 
+        `}` \n
+    #END_RULE
+    #APPEND_RULE:100*(&IDsCount(Cls, $1HashSetFieldVar_)+&IDsCount(Cls, $1HashSetFieldVal_))*(1-LongLoop)
+        ` /* iterate over HashSet */ for ($1 `
+            #SET LongLoop=LongLoop+1
+            #BEGIN_SCOPE 
+            #CREATE_ID $1Val_ `: ` 
+            #LEND_SCOPE_WITH_ID Cls_ $1HashSetFieldVa%_
+                #REUSE_LOCAL_ID $1HashSetFieldVa%_ `) { ` \n
+            #END_SCOPE
+            #SET $1ValDeclared=$1ValDeclared+1
+            @STATEMENTS_SHORT
+            @STATEMENTS_SHORT
+            #SET $1ValDeclared=$1ValDeclared-1
+            #SET LongLoop=LongLoop-1
+            #END_SCOPE 
+        `}` \n
+    #END_RULE
+
+    #APPEND_RULE
+        @FOR_LOOP
+    #END_RULE
+
+@ITERATOR_LOOP_LinkedList
+    #APPEND_RULE:100*((&IDsCount($1LinkedListVar_)+&IDsCount($1LinkedListFieldVar_)+&IDsCount($1LinkedListVal_)+&IDsCount($1LinkedListFieldVal_))*10+&IDsCount(Cls, $1LinkedListFieldVar_)+&IDsCount(Cls, $1LinkedListFieldVal_))*(1-LongLoop)
+        ` /* iterate over LinkedList */ `
+            #SET LongLoop=LongLoop+1
+            #BEGIN_SCOPE 
+            `Iterator ` #CREATE_ID $1IteratorVar_ ` = ` #REUSE_ID $1LinkedList%_ `.` @LIST_ITERATOR_METHOD `; ` \n
+            `while  (` #GET_LAST_ID $1IteratorVar_ `.hasNext()) {` \n 
+            `$1 ` #CREATE_ID $1Val_ ` = ($1)` #GET_LAST_ID $1IteratorVar_ `.next(); ` \n
+            #SET $1ValDeclared=$1ValDeclared+1
+            @STATEMENTS_SHORT
+            @STATEMENTS_SHORT
+            #SET $1ValDeclared=$1ValDeclared-1
+            #SET LongLoop=LongLoop-1
+            #END_SCOPE 
+        `}` \n
+    #END_RULE
+    #APPEND_RULE
+        @FOR_LOOP
+    #END_RULE
+
+
+@LIST_ITERATOR_METHOD
+    #BEGIN_RULE
+        `descendingIterator()`
+    #END_RULE
+    #BEGIN_RULE
+        `listIterator()`
+    #END_RULE
+
+@boolean_EXPRESSION_RECURSIVE
+    #APPEND_RULE:&IDsCount($1HashSetVar_)+&IDsCount($1HashSetFieldVar_)+&IDsCount($1HashSetVal_)+&IDsCount($1HashSetFieldVal_)
+        #REUSE_ID $1HashSet%_ `.contains(` @$1_CAST_OPEN @$1_EXPRESSION     @$1_CAST_CLOSE `)`
+    #END_RULE
+
+        

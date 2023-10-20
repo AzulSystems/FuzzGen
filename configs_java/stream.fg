@@ -1,0 +1,81 @@
+
+
+@$1_STREAM_SOURCE
+    #BEGIN_RULE:&IDsCount($1ArrayListVar_)+&IDsCount($1ArrayListVal_)+&IDsCount($1ArrayListFieldVar_)+&IDsCount($1ArrayListFieldVal_)
+        #REUSE_ID $1ArrayList%_ `.stream()`
+    #END_RULE
+    #BEGIN_RULE:&IDsCount($1LinkedListVar_)+&IDsCount($1LinkedListVal_)+&IDsCount($1LinkedListFieldVar_)+&IDsCount($1LinkedListFieldVal_)
+        #REUSE_ID $1LinkedList%_ `.stream()`
+    #END_RULE
+    #BEGIN_RULE:&IDsCount($1HashSetVar_)+&IDsCount($1HashSetVal_)+&IDsCount($1HashSetFieldVar_)+&IDsCount($1HashSetFieldVal_)
+        #REUSE_ID $1HashSet%_ `.stream()`
+    #END_RULE
+    #BEGIN_RULE:&IDsCount($1ArrayVar_)+&IDsCount($1ArrayVal_)
+        `Stream.of(` #REUSE_ID $1ArrayVa%_ `)`
+    #END_RULE
+    #BEGIN_RULE:&IDsCount($1ArrayFieldVar_)+&IDsCount($1ArrayFieldVal_)
+        `Stream.of(` #REUSE_ID $1ArrayFieldVa%_ `)`
+    #END_RULE
+    #BEGIN_RULE:1-(&IDsCount($1ArrayListVar_)+&IDsCount($1ArrayListVal_)+&IDsCount($1ArrayListFieldVar_)+&IDsCount($1ArrayListFieldVal_)+&IDsCount($1LinkedListVar_)+&IDsCount($1LinkedListVal_)+&IDsCount($1LinkedListFieldVar_)+&IDsCount($1LinkedListFieldVal_)+&IDsCount($1HashSetVar_)+&IDsCount($1HashSetVal_)+&IDsCount($1HashSetFieldVar_)+&IDsCount($1HashSetFieldVal_)+&IDsCount($1ArrayVar_)+&IDsCount($1ArrayVal_)+&IDsCount($1ArrayFieldVar_)+&IDsCount($1ArrayFieldVal_))
+        `Stream.of(new $1[]{` #GET_LOCAL_IDS_OR_EMPTY_SEPARATOR $1FieldVa%_ ", "  `})`
+    #END_RULE
+
+@$1_CONSTANT_LIST
+    #BEGIN_RULE:2
+        @$1_CONSTANT @$1_CONSTANT_SUFFIX `, ` @$1_CONSTANT_LIST
+    #END_RULE
+    #BEGIN_RULE:1
+        @$1_CONSTANT @$1_CONSTANT_SUFFIX `, `
+    #END_RULE
+
+        
+@$1_STREAM_TO_STREAM_OPERATION
+    #BEGIN_RULE
+        #SET lambdaVal$1=lambdaVal$1+1
+        #SET lambdaVal=lambdaVal+1
+        #BEGIN_SCOPE
+        `.filter(` #CREATE_ID lambdaVal$1_ ` -> ` #GET_LAST_ID lambdaVal$1_  @OP_$1$1_boolean ` ` @$1_EXPRESSION `)`
+        #END_SCOPE
+        #SET lambdaVal$1=lambdaVal$1-1
+        #SET lambdaVal=lambdaVal-1
+    #END_RULE
+    #BEGIN_RULE:0
+        #SET lambdaVal$1=lambdaVal$1+1
+        #SET lambdaVal=lambdaVal+1
+        #BEGIN_SCOPE
+        `.filter(` #CREATE_ID lambdaVal$1_ `-> ($1)(` #GET_LAST_ID lambdaVal$1_  @OP_$1$1_$1 ` `  @$1_EXPRESSION `))`
+        #END_SCOPE
+        #SET lambdaVal$1=lambdaVal$1-1
+        #SET lambdaVal=lambdaVal-1
+    #END_RULE
+
+@$1_STREAM_TERMINAL_OPERATION
+    #BEGIN_RULE
+        #SET lambdaVal$1=lambdaVal$1+1
+        #SET lambdaVal=lambdaVal+1
+        #BEGIN_SCOPE
+        `.forEach(` #CREATE_ID lambdaVal$1_ ` -> {` #GET_LAST_ID lambdaVal$1_ ` = ($1)(` @$1ToPrimitiveType `)(` @$1_EXPRESSION `);})`
+        #END_SCOPE
+        #SET lambdaVal$1=lambdaVal$1-1
+        #SET lambdaVal=lambdaVal-1
+    #END_RULE
+
+
+@$1_STREAM_TO_STREAM_OPERATIONS
+    #BEGIN_RULE
+        @$1_STREAM_TO_STREAM_OPERATION @$1_STREAM_TO_STREAM_OPERATIONS
+    #END_RULE
+    #BEGIN_RULE
+        @$1_STREAM_TO_STREAM_OPERATION 
+    #END_RULE
+       
+
+@$1_STREAM_STATEMENT
+    #BEGIN_RULE
+    @$1_STREAM_SOURCE  @$1_STREAM_TO_STREAM_OPERATIONS  @$1_STREAM_TERMINAL_OPERATION `; ` \n
+    #END_RULE
+
+@STREAM_STATEMENT
+    #APPEND_RULE
+        @$1_STREAM_STATEMENT
+    #END_RULE

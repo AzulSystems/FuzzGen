@@ -1,5 +1,6 @@
 
 #SET intIsPrimitiveType=1
+#SET charIsPrimitiveType=1
 #SET shortIsPrimitiveType=1
 #SET byteIsPrimitiveType=1
 #SET longIsPrimitiveType=1
@@ -14,6 +15,7 @@
 #SET StringIsPrimitiveType=0
 
 #SET intIsFloatingPointType=0
+#SET charIsFloatingPointType=0
 #SET shortIsFloatingPointType=0
 #SET byteIsFloatingPointType=0
 #SET longIsFloatingPointType=0
@@ -25,8 +27,10 @@
 #SET LongIsFloatingPointType=0
 #SET FloatIsFloatingPointType=1
 #SET DoubleIsFloatingPointType=1
+#SET StringIsFloatingPointType=0
 
 #SET intIsStringType=0
+#SET charIsStringType=0
 #SET shortIsStringType=0
 #SET byteIsStringType=0
 #SET longIsStringType=0
@@ -40,7 +44,25 @@
 #SET DoubleIsStringType=0
 #SET StringIsStringType=1
 
+#SET intIscharType=0
+#SET charIscharType=1
+#SET shortIscharType=0
+#SET byteIscharType=0
+#SET longIscharType=0
+#SET floatIscharType=0
+#SET doubleIscharType=0
+#SET IntegerIscharType=0
+#SET ShortIscharType=0
+#SET ByteIscharType=0
+#SET LongIscharType=0
+#SET FloatIscharType=0
+#SET DoubleIscharType=0
+#SET StringIscharType=1
+#SET CharacterIscharType=1
+
+
 #SET intIsNumericType=1
+#SET charIsNumericType=1
 #SET shortIsNumericType=1
 #SET byteIsNumericType=1
 #SET longIsNumericType=1
@@ -56,11 +78,48 @@
 #SET booleanIsNumericType=0
 #SET BooleanIsNumericType=0
 
+#SET ArrayListIsArrayList=1
+#SET ArrayListIsLinkedList=0
+#SET LinkedListIsArrayList=0
+#SET LinkedListIsLinkedList=1
+#SET HashSetIsArrayList=0
+#SET HashSetIsLinkedList=0
+#SET HashSetIsHashSet=1
+#SET ArrayListIsHashSet=0
+#SET LinkedListIsHashSet=0
 
+#SET intIsIndexType=1
+#SET charIsIndexType=1
+#SET shortIsIndexType=1
+#SET byteIsIndexType=1
+#SET longIsIndexType=0
+#SET floatIsIndexType=0
+#SET doubleIsIndexType=0
+#SET IntegerIsIndexType=1
+#SET ShortIsIndexType=1
+#SET ByteIsIndexType=1
+#SET LongIsIndexType=0
+#SET FloatIsIndexType=0
+#SET DoubleIsIndexType=0
+#SET StringIsIndexType=0
+
+
+
+
+#SET VarIsLocal=1
+#SET ValIsLocal=1
+#SET FieldVarIsLocal=0
+#SET FieldValIsLocal=0
 
 #SET TestClass=0
 
 
+#SET InstanceIsInstance=1
+#SET StaticIsInstance=0
+#SET InstanceIsStatic=0
+#SET StaticIsStatic=1
+
+#SET ToExtendSpClsA=0
 
 //#SET MaxArrayCount=500
 
@@ -69,6 +128,10 @@
 #SET LoopNest=0
 //#SET MaxLoopCount=50
 #SET LoopCount=0
+
+#SET lambdaCount=0
+#SET lambdaDepth=0
+#SET MaxLambdaDepth=2
 
 
 //#SET LoopCntLimitMin=10
@@ -133,6 +196,39 @@
 #SET booleanExprDepth=0
 #SET BooleanExprDepth=0
 
+#SET randomStringArrayCount=0
+#SET randomArrayIterator=0
+
+#SET CollectionsFieldsInClassCount=0
+#SET StringFieldsInClassCount=0
+
+
+#SET funcWithCondListGenericCount=0
+
+
+#SET MethodIsStatic=0
+#SET MethodIsInstance=0
+
+
+#SET extendsSprClsA=0
+#SET extendsSprClsB=0
+
+#SET InConstructorMethod=0
+#SET IsMethodObjArg=0
+#SET ReturnOrBreakOrContinueCount=0
+
+#SET InSprClsA=0
+#SET InSprClsB=0
+
+
+#SET DontUseOtherClsMembers=0
+
+
+#SET DoWhileLoop=0
+#SET WhileLoop=0
+
+#SET PreferConstant=1
+
 
 
 @SET_FLAGS_BEFORE_METHOD_
@@ -143,6 +239,7 @@
 #SET CondNest=0
 #SET MethodCallCount=0
 #SET LambdaCount=0
+#SET lambdaCount=0
 
 #SET StatementsInMethodCount=0
 #SET SwitchMatch=-10
@@ -150,6 +247,9 @@
 #SET SynchronizedBlockNestDepth=0
 
 #SET LongLoop=0
+
+#SET funcWithCondListGenericCount=0
+
 
 #END_RULE
 
@@ -180,10 +280,16 @@
     `short`
 #END_RULE
 
+@charToPrimitiveType
+#BEGIN_RULE
+    `char`
+#END_RULE
+
 @shortToPrimitiveType
 #BEGIN_RULE
     `short`
 #END_RULE
+
 
 @LongToPrimitiveType
 #BEGIN_RULE
@@ -231,6 +337,12 @@
 #BEGIN_RULE
     `Integer`
 #END_RULE
+
+@charToReferenceType
+#BEGIN_RULE
+    `Character`
+#END_RULE
+
 
 @ByteToReferenceType
 #BEGIN_RULE
@@ -295,68 +407,74 @@
 
  @IntegerToParseNumericType
 #BEGIN_RULE
-    `Int`
+    `.parseInt`
 #END_RULE
 
 @intToParseNumericType
 #BEGIN_RULE
-    `Int`
+    `.parseInt`
 #END_RULE
+
+@charToParseNumericType
+#BEGIN_RULE
+    `.valueOf`
+#END_RULE
+
 
 @ByteToParseNumericType
 #BEGIN_RULE
-    `Byte`
+    `.parseByte`
 #END_RULE
 
 @byteToParseNumericType
 #BEGIN_RULE
-    `Byte`
+    `.parseByte`
 #END_RULE
 
 @ShortToParseNumericType
 #BEGIN_RULE
-    `Short`
+    `.parseShort`
 #END_RULE
 
 @shortToParseNumericType
 #BEGIN_RULE
-    `Short`
+    `.parseShort`
 #END_RULE
 
 @LongToParseNumericType
 #BEGIN_RULE
-    `Long`
+    `.parseLong`
 #END_RULE
 
 @longToParseNumericType
 #BEGIN_RULE
-    `Long`
+    `.parseLong`
 #END_RULE
 
 @FloatToParseNumericType
 #BEGIN_RULE
-    `Float`
+    `.parseFloat`
 #END_RULE
 
 @floatToParseNumericType
 #BEGIN_RULE
-    `Float`
+    `.parseFloat`
 #END_RULE
 
 @DoubleToParseNumericType
 #BEGIN_RULE
-    `Double`
+    `.parseDouble`
 #END_RULE
 
 
 @StringToParseNumericType
 #BEGIN_RULE
-    `String`
+    `.parseString`
 #END_RULE
 
 @doubleToParseNumericType
 #BEGIN_RULE
-    `Double`
+    `.parseDouble`
 #END_RULE
 
 
@@ -392,6 +510,10 @@
 #BEGIN_RULE
 #END_RULE
 
+@charTointType
+#BEGIN_RULE
+#END_RULE
+
 @LongTointType
 #BEGIN_RULE
     `(int)(long)`
@@ -424,6 +546,7 @@
 
 #SET LimitCheckint=257
 #SET LimitCheckshort=255
+#SET LimitCheckchar=255
 #SET LimitCheckbyte=127
 #SET LimitChecklong=257
 #SET LimitCheckfloat=259

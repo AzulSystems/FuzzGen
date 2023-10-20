@@ -12,7 +12,7 @@
 
 
 @REUSE_ID_$1_ARRAY_FIELD_VAR
-    #BEGIN_RULE:5*global_$1ArrayFieldVarDeclared
+    #BEGIN_RULE:5*&IDsCount(Cls_, $1ArrayFieldVar_)
          #LEND_SCOPE_WITH_ID Cls_ $1ArrayFieldVar_
             #REUSE_LOCAL_ID Cls_ `.`  #REUSE_ID $1ArrayFieldVar_
          #RETURN_SCOPE
@@ -22,12 +22,12 @@
             `Test.`  #REUSE_LOCAL_ID $1ArrayFieldVar_
          #RETURN_SCOPE
     #END_RULE
-    #BEGIN_RULE:20*$1ArrayFieldVarDeclared
+    #BEGIN_RULE:20*&IDsCount($1ArrayFieldVar_)
             #REUSE_ID $1ArrayFieldVar_
     #END_RULE
 
 @REUSE_ID_$1_ARRAY_FIELD_VAL
-    #BEGIN_RULE:5*global_$1ArrayFieldValDeclared
+    #BEGIN_RULE:5*&IDsCount(Cls_, $1ArrayFieldVal_)
         #LEND_SCOPE_WITH_ID Cls_ $1ArrayFieldVal_
             #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID $1ArrayFieldVal_
         #RETURN_SCOPE
@@ -37,36 +37,36 @@
             `Test.`  #REUSE_LOCAL_ID $1ArrayFieldVal_
          #RETURN_SCOPE
     #END_RULE
-    #BEGIN_RULE:20*$1ArrayFieldValDeclared
+    #BEGIN_RULE:20*&IDsCount($1ArrayFieldVal_)
         #REUSE_ID $1ArrayFieldVal_
     #END_RULE
 
 
 
 @REUSE_ID_$1_ARRAY_VAR
-    #BEGIN_RULE:3*$1ArrayVarDeclared
+    #BEGIN_RULE:3*&IDsCount($1ArrayVar_)
         #REUSE_ID $1ArrayVar_  
     #END_RULE
-    #BEGIN_RULE:1*$1ArrayFieldVarDeclared+1*global_$1ArrayFieldVarDeclared
+    #BEGIN_RULE:1*&IDsCount($1ArrayFieldVar_)+1*&IDsCount(Cls_, $1ArrayFieldVar_)
         @REUSE_ID_$1_ARRAY_FIELD_VAR
     #END_RULE
 
 @REUSE_ID_$1_ARRAY_VAL
-    #BEGIN_RULE:3*$1ArrayValDeclared
+    #BEGIN_RULE:3*&IDsCount($1ArrayVal_)
         #REUSE_ID $1ArrayVal_  
     #END_RULE
-    #BEGIN_RULE:1*$1ArrayFieldValDeclared+1*global_$1ArrayFieldValDeclared
+    #BEGIN_RULE:1*&IDsCount($1ArrayFieldVal_)+1*&IDsCount(Cls_, $1ArrayFieldVal_)
         @REUSE_ID_$1_ARRAY_FIELD_VAL
     #END_RULE
 
 @REUSE_ID_$1_ARRAY_VAR_OR_VAL
-    #BEGIN_RULE:(($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*10+global_$1ArrayFieldVarDeclared)*(1-lambdaVal)
+    #BEGIN_RULE:((&IDsCount($1ArrayVar_)+&IDsCount($1ArrayFieldVar_))*10+&IDsCount(Cls_, $1ArrayFieldVar_))*(1-lambdaVal)
         @REUSE_ID_$1_ARRAY_VAR
     #END_RULE
-    #BEGIN_RULE:($1ArrayValDeclared+$1ArrayFieldValDeclared)+global_$1ArrayFieldValDeclared
+    #BEGIN_RULE:(&IDsCount($1ArrayVal_)+&IDsCount($1ArrayFieldVal_))+&IDsCount(Cls_, $1ArrayFieldVal_)
         @REUSE_ID_$1_ARRAY_VAL
     #END_RULE
-    #BEGIN_RULE:lambdaVal*(1- $1ArrayValDeclared+$1ArrayFieldValDeclared-global_$1ArrayFieldValDeclared)
+    #BEGIN_RULE:lambdaVal*(1-&IDsCount($1ArrayVal_)+&IDsCount($1ArrayFieldVal_)-&IDsCount(Cls_, $1ArrayFieldVal_))
         `(new $1[` @ARRAY_MAX_LENGTH `])`
     #END_RULE
 
@@ -79,10 +79,12 @@
 #END_RULE
 
 @DECLARE_FIELD_VAR_OF_TYPE[0]
-#APPEND_RULE:10*Enable$1*fieldArrayVarWeight
+#APPEND_RULE:10*Enable$1*fieldArrayVarWeight*(MaxCollectionsFieldsInClassCount-CollectionsFieldsInClassCount)
     @DECLARE_$1_ARRAY_FIELD_VAR
+    #SET CollectionsFieldsInClassCount=CollectionsFieldsInClassCount+1
 #END_RULE
-#APPEND_RULE:2*Enable$1*fieldArrayVarWeight
-        @DECLARE_$1_ARRAY_FIELD_VAL
+#APPEND_RULE:2*Enable$1*fieldArrayVarWeight*(MaxCollectionsFieldsInClassCount-CollectionsFieldsInClassCount)
+    @DECLARE_$1_ARRAY_FIELD_VAL
+    #SET CollectionsFieldsInClassCount=CollectionsFieldsInClassCount+1
 #END_RULE
 

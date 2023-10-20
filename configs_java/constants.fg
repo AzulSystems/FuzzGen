@@ -1,4 +1,61 @@
 
+
+@char_CONSTANT_SUFFIX[0]
+    #BEGIN_RULE
+    #END_RULE
+@char_CONSTANT[0]
+    #BEGIN_RULE:10
+        @[0:127]
+    #END_RULE
+    #BEGIN_RULE:5
+        @[0:1024]
+    #END_RULE
+    #BEGIN_RULE:10
+        `'a'`
+    #END_RULE
+    #BEGIN_RULE:1
+        `'b'`
+    #END_RULE
+    #BEGIN_RULE:1
+        `'\u03A9'`
+    #END_RULE
+    #BEGIN_RULE:5
+        `'\u1234'`
+    #END_RULE
+    #BEGIN_RULE:1
+        `'\u1111'`
+    #END_RULE
+    #BEGIN_RULE:1
+        `'\u03A8'`
+    #END_RULE
+    #BEGIN_RULE:1
+        `'\u03B7'`
+    #END_RULE
+    #BEGIN_RULE:1
+        `'\u10F0'`
+    #END_RULE
+    #BEGIN_RULE:1
+        `'\u1FF2'`
+    #END_RULE
+    #BEGIN_RULE:1
+        `'\u0401'`
+    #END_RULE
+    #BEGIN_RULE:1
+        `'\u05D0'`
+    #END_RULE
+
+@char_CAST_OPEN[0]
+    #BEGIN_RULE
+        `(char)(`
+    #END_RULE
+
+@char_CAST_CLOSE[0]
+    #BEGIN_RULE
+        `)`
+    #END_RULE
+
+
+
 @int_CONSTANT_SUFFIX[0]
     #BEGIN_RULE
     #END_RULE
@@ -7,15 +64,18 @@
         @[-128:127]
     #END_RULE
     #BEGIN_RULE:8
+        @[-8:8]
+    #END_RULE
+    #BEGIN_RULE:8
         @[-32768:32767]
     #END_RULE
     #BEGIN_RULE:2
         @[-1073741823:1073741824]
     #END_RULE
-    #BEGIN_RULE:2
+    #BEGIN_RULE:4
         @[-2147483648:-2147483640]
     #END_RULE
-    #BEGIN_RULE:2
+    #BEGIN_RULE:4
         @[2147483639:2147483647]
     #END_RULE
 
@@ -79,12 +139,12 @@
 
 @Byte_CAST_OPEN[0]
     #BEGIN_RULE
-        `Byte.valueOf((byte)`
+        `Byte.valueOf((byte)(`
     #END_RULE
 
 @Byte_CAST_CLOSE[0]
     #BEGIN_RULE
-        `)`
+        `))`
     #END_RULE
 
 @short_CONSTANT_SUFFIX[0]
@@ -135,12 +195,12 @@
 
 @Short_CAST_OPEN[0]
     #BEGIN_RULE
-        `Short.valueOf((short)`
+        `Short.valueOf((short)(`
     #END_RULE
 
 @Short_CAST_CLOSE[0]
     #BEGIN_RULE
-        `)`
+        `))`
     #END_RULE
 
 
@@ -192,10 +252,12 @@
 
 @Long_CAST_OPEN[0]
     #BEGIN_RULE
+	`Long.valueOf((long)(`
     #END_RULE
 
 @Long_CAST_CLOSE[0]
     #BEGIN_RULE
+	`))`
     #END_RULE
 
 @float_CONSTANT_SUFFIX[0]
@@ -294,6 +356,10 @@
     #BEGIN_RULE
     #END_RULE
 
+@char_TO_ARRAY_INDEX[0]
+    #BEGIN_RULE
+    #END_RULE
+
 @byte_TO_ARRAY_INDEX[0]
     #BEGIN_RULE
     #END_RULE
@@ -301,4 +367,22 @@
 @long_TO_ARRAY_INDEX[0]
     #BEGIN_RULE
         `(int)`
+    #END_RULE
+
+@Integer_TO_ARRAY_INDEX[0]
+    #BEGIN_RULE
+    #END_RULE
+
+
+@Short_TO_ARRAY_INDEX[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@Byte_TO_ARRAY_INDEX[0]
+    #BEGIN_RULE
+    #END_RULE
+
+@Long_TO_ARRAY_INDEX[0]
+    #BEGIN_RULE
+        `(int)(long)`
     #END_RULE

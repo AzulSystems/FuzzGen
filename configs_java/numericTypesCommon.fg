@@ -1,6 +1,6 @@
 #INCLUDE "configs_java/constants.fg"
 #INCLUDE "configs_java/parametersBasic.fg"
-#INCLUDE "configs_java/parametersByType.fg" ( $1 ) (Var Val)
+#INCLUDE "configs_java/parametersByType.fg" ( $1 ) (Var Val) (Integer Short Byte Long Float Double String)  (Static Instance)
 #INCLUDE "configs_java/arrayTypes.fg" $1
 #INCLUDE "configs_java/numericFloat.fg" (float double Float Double)
 #INCLUDE "configs_java/numericInteger.fg" (int short byte long Integer Short Byte Long)
@@ -87,7 +87,7 @@
 
 @GTETNEQ
     #BEGIN_RULE:10
-        @LTET
+        @GTET
     #END_RULE
     #BEGIN_RULE:1
     #SET Neq=1
@@ -102,4 +102,9 @@
 @DECREMENT
     #BEGIN_RULE
         `--`
+    #END_RULE
+
+@int_EXPRESSION_RECURSIVE
+    #APPEND_RULE:10*(&IDsCount($1Var_)+&IDsCount($1Val_)+&IDsCount($1FieldVar_)+&IDsCount($1FieldVal_))*(1-$1IsPrimitiveType)*0
+        #REUSE_ID $1%Va%_ `.hashCode()`
     #END_RULE

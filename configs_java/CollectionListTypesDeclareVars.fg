@@ -1,0 +1,287 @@
+// $1 - type of element
+// $2 - var type: local var or val (final or effectively final), field var or val: VAR
+// $3 - same but for env var names: var
+// $4 - collection type
+// (String) (VAR) (Var) (ArrayList)
+
+@removeElementMethodLinkedList
+@STATEMENTS_VERY_SHORT
+
+@DECLARE_$1_$4_$2
+    #BEGIN_RULE:4
+        // @DECALRE_String_ArrayList_FIELD_VAR
+        @$2_STATIC_MODIFIER @$2_ACCESS_SPECIFIER ` $4<$1> ` @DECLARE_ID_$1_$4_$2 `  = new $4<$1>();` \n
+        #REGISTER_LAZY_IDS
+        @DECLARE_$1_$4_$2_DECLARED_FLAG
+        #SET global_$1$4$3Declared=global_$1$4$3Declared+1*(1+-1*TestClass)
+            @$2_STATIC_INIT_$1$4$3 
+    #END_RULE
+    //#BEGIN_RULE:$4IsArrayList*($1ArrayListVarDeclared+$1ArrayListValDeclared+$1ArrayListFieldVarDeclared+$1ArrayListFieldValDeclared)
+    #BEGIN_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))
+        @$2_STATIC_MODIFIER @$2_ACCESS_SPECIFIER ` $4<$1> ` @DECLARE_ID_$1_$4_$2 `  = new $4<$1>(` #REUSE_ID $1$4%_ `);` \n
+        #REGISTER_LAZY_IDS
+        @DECLARE_$1_$4_$2_DECLARED_FLAG
+        #SET global_$1$4$3Declared=global_$1$4$3Declared+1*(1+-1*TestClass)
+    #END_RULE
+    //#BEGIN_RULE:$4IsArrayList*($1ArrayListVarDeclared+$1ArrayListValDeclared+$1ArrayListFieldVarDeclared+$1ArrayListFieldValDeclared)
+    #BEGIN_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))
+        @$2_STATIC_MODIFIER @$2_ACCESS_SPECIFIER ` $4<$1> ` @DECLARE_ID_$1_$4_$2 `  = ($4<$1>)` #REUSE_ID $1$4%_ `.clone();` \n
+        #REGISTER_LAZY_IDS
+        @DECLARE_$1_$4_$2_DECLARED_FLAG
+        #SET global_$1$4$3Declared=global_$1$4$3Declared+1*(1+-1*TestClass)
+    #END_RULE
+
+
+@$2_STATIC_INIT_$1$4$3 
+    //#BEGIN_RULE:$4IsArrayList*(IsARegularConfiguration+$3IsLocal)
+    #BEGIN_RULE:(IsARegularConfiguration+$3IsLocal)*(1-&IDsCount(SprClsA_))*(1-InSprClsA)*(1-InSprClsB)
+            //@INIT_$4_METHOD_ID `(` #GET_LAST_ID $1$4$3_ `, ` @$1_CAST_OPEN @$1_LITERAL @$1_CAST_CLOSE `);` \n 
+            //#GET_LAST_ID $1$4$3_ ` = (ArrayList<$1>)Arrays.asList(get$1Array()); ` \n 
+        @$2_STATIC_BLOCK_OPEN 
+            #GET_LAST_ID $1$4$3_ `.addAll(Arrays.asList(Test.get$1Array())); ` \n 
+        @$2_STATIC_BLOCK_CLOSE
+    #END_RULE
+    #BEGIN_RULE:(1-IsARegularConfiguration)*(1-$3IsLocal)+(InSprClsA+InSprClsB)
+    #END_RULE
+
+@DECLARE_$1_$4_$2_DECLARED_FLAG
+    #BEGIN_RULE
+        #SET $1$4$3Declared=$1$4$3Declared+1
+    #END_RULE
+
+@DECLARE_ID_$1_$4_$2
+    #BEGIN_RULE
+        #CREATE_LAZY_ID $1$4$3_
+    #END_RULE
+
+@$4_SIZE
+
+//DEBUG 1        
+@$4_$1_add
+    #BEGIN_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))
+   `//`  #REUSE_ID $1$4%_  \n
+    @$4_$1_add_impl
+    #END_RULE
+
+@$4_$1_add_impl
+    #BEGIN_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))
+        #GET_LAST_ID $1$4%_ `.` @addElementMethod$4 `(`  @$1_CAST_OPEN   @$1_EXPRESSION @$1_CAST_CLOSE `);` \n
+    #END_RULE
+    #BEGIN_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))
+        `int ` #CREATE_ID $4Size_ ` =  ` #GET_LAST_ID $1$4%_ `.size();` \n
+        ` if (`  #GET_LAST_ID $4Size_ ` > 0) { ` 
+        #GET_LAST_ID $1$4%_ `.` @addElementByIndexMethod$4 `(` @[0:Max$4Count] ` % (` #GET_LAST_ID $4Size_ ` ),` @$1_CAST_OPEN   @$1_EXPRESSION @$1_CAST_CLOSE `);` 
+        ` } ` \n
+    #END_RULE
+    #BEGIN_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))*(&IDsCount(intIndArraySafeVar_)+&IDsCount(byteIndArraySafeVar_)+&IDsCount(shortIndArraySafeVar_)+&IDsCount(longIndArraySafeVar_))
+   `int ` #CREATE_ID $4Size_ ` =  ` #GET_LAST_ID $1$4%_ `.size();` \n
+    ` if (`  #GET_LAST_ID $4Size_ ` > 0) { ` 
+#GET_LAST_ID $1$4%_ `.` @addElementByIndexMethod$4 `((int)(` #REUSE_ID %IndArraySafeVar_ ` % (` #GET_LAST_ID $4Size_ ` )),` @$1_CAST_OPEN   @$1_EXPRESSION @$1_CAST_CLOSE `);` 
+        ` } ` \n
+#END_RULE
+#BEGIN_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))*TryCatchDepth*3
+    #REUSE_ID $1$4%_ `.` @addElementByIndexMethod$4 `(`@[0:Max$4Count] `, ` @$1_CAST_OPEN   @$1_EXPRESSION @$1_CAST_CLOSE   ` ) ; ` \n
+#END_RULE
+#BEGIN_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))*TryCatchDepth*4
+    #REUSE_ID $1$4%_ `.` @addElementMethod$4 `(` @$1_CAST_OPEN   @$1_EXPRESSION @$1_CAST_CLOSE `) ; ` \n
+#END_RULE
+
+
+//DEBUG 2
+        @$4_$1_set
+#BEGIN_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))
+        `int ` #CREATE_ID $4Size_ ` =  ` #REUSE_ID $1$4%_ `.size();` \n
+        ` if (`  #GET_LAST_ID $4Size_ ` > 0) { ` 
+#GET_LAST_ID $1$4%_ `.set(` @[0:Max$4Count] ` % (` #GET_LAST_ID $4Size_ ` ),` @$1_CAST_OPEN   @$1_EXPRESSION @$1_CAST_CLOSE `);` 
+            ` } ` \n
+#END_RULE
+#BEGIN_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))*(&IDsCount(intIndArraySafeVar_)+&IDsCount(byteIndArraySafeVar_)+&IDsCount(shortIndArraySafeVar_)+&IDsCount(longIndArraySafeVar_))
+            `int ` #CREATE_ID $4Size_ ` =  ` #REUSE_ID $1$4%_ `.size();` \n
+            ` if (`  #GET_LAST_ID $4Size_ ` > 0) { ` 
+#GET_LAST_ID $1$4%_ `.set((int)(` #REUSE_ID %IndArraySafeVar_ ` % (` #GET_LAST_ID $4Size_ ` )),` @$1_CAST_OPEN   @$1_EXPRESSION @$1_CAST_CLOSE `);` 
+                ` } ` \n
+#END_RULE
+
+
+//DEBUG 3
+@addElementMethod$4
+    #BEGIN_RULE:$4IsArrayList+$4IsLinkedList+$4IsHashSet
+        `add`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `addFirst`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `addLast`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `offer`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `offerFirst`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `offerLast`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `push`
+    #END_RULE
+
+@getElementMethod$4
+    #BEGIN_RULE:$4IsLinkedList
+        `getFirst`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `getLast`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `peek`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `peekFirst`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `peekLast`
+    #END_RULE
+    //#BEGIN_RULE:$4IsLinkedList
+    //    `pop`
+    //#END_RULE
+
+
+@addElementByIndexMethod$4
+    #BEGIN_RULE:$4IsArrayList+$4IsLinkedList
+        `add`
+    #END_RULE
+
+@removeElementMethod$4
+    #BEGIN_RULE:1-$4IsLinkedList
+        `/* ERROR */size`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `remove`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `removeFirst`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `removeLast`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `poll`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `pollFirst`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `pollLast`
+    #END_RULE
+    #BEGIN_RULE:$4IsLinkedList
+        `pop`
+    #END_RULE
+
+@removeElementByIndexMethod$4
+    #BEGIN_RULE:$4IsArrayList+$4IsLinkedList
+        `remove`
+    #END_RULE
+
+
+//DEBUG 4
+@$4_$1_remove
+    #APPEND_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))
+        `int ` #CREATE_ID $4Size_ ` =  ` #REUSE_ID $1$4%_ `.size();` \n
+        ` if (`  #GET_LAST_ID $4Size_ ` > 0) { ` #GET_LAST_ID $1$4%_ `.` @removeElementByIndexMethod$4 `(`@[0:Max$4Count] ` % (` #GET_LAST_ID $4Size_ ` )) ; }` \n
+    #END_RULE
+    #APPEND_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))*TryCatchDepth*7
+        #REUSE_ID $1$4%_ `.` @removeElementByIndexMethod$4 `(`@[0:Max$4Count] ` ) ; ` \n
+    #END_RULE
+    #APPEND_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))*(&IDsCount(intIndArraySafeVar_)+&IDsCount(byteIndArraySafeVar_)+&IDsCount(shortIndArraySafeVar_)+&IDsCount(longIndArraySafeVar_))
+        `int ` #CREATE_ID $4Size_ ` =  ` #REUSE_ID $1$4%_ `.size();` \n
+        ` if (`  #GET_LAST_ID $4Size_ ` > 0) { ` #GET_LAST_ID $1$4%_ `.` @removeElementByIndexMethod$4  `((int)(` #REUSE_ID %IndArraySafeVar_ ` % (` #GET_LAST_ID $4Size_ ` )));` 
+        `} ` \n
+    #END_RULE
+
+//DEBUG 5
+    @LinkedList_$1_remove
+        #APPEND_RULE:(&IDsCount($1LinkedListVar_)+&IDsCount($1LinkedListVal_)+&IDsCount($1LinkedListFieldVar_)+&IDsCount($1LinkedListFieldVal_))
+                `int ` #CREATE_ID LinkedListSize_ ` =  ` #REUSE_ID $1LinkedList%_ `.size();` \n
+                ` if (`  #GET_LAST_ID LinkedListSize_ ` > 0) { ` #GET_LAST_ID $1LinkedList%_ `.` @removeElementMethodLinkedList `( ) ; }` \n
+        #END_RULE
+        #APPEND_RULE:(&IDsCount($1LinkedListVar_)+&IDsCount($1LinkedListVal_)+&IDsCount($1LinkedListFieldVar_)+&IDsCount($1LinkedListFieldVal_))*TryCatchDepth*6
+            #REUSE_ID $1LinkedList%_ `.` @removeElementMethodLinkedList `( ) ; ` \n
+        #END_RULE
+        
+//DEBUG 6
+@$4_$1_add_remove
+    #BEGIN_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))
+        @$4_$1_remove
+        @$4_$1_add_impl
+    #END_RULE
+
+
+
+
+//DEBUG 7
+
+@$4_add_remove
+    #APPEND_RULE:100*(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))*(1-$1IsPrimitiveType)
+        @$4_$1_add_remove
+            #END_RULE
+            #APPEND_RULE
+            #END_RULE
+
+@$4_add
+    #APPEND_RULE:100*(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))*(1-$1IsPrimitiveType)
+        @$4_$1_add
+    #END_RULE
+    #APPEND_RULE
+    #END_RULE
+
+@$4_remove
+    #APPEND_RULE:100*(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))*(1-$1IsPrimitiveType)
+        @$4_$1_remove
+    #END_RULE
+    #APPEND_RULE
+    #END_RULE
+
+@$4_set
+    #APPEND_RULE:100*(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))*(1-$1IsPrimitiveType)
+        @$4_$1_set
+    #END_RULE
+    #APPEND_RULE
+    #END_RULE
+
+@$4_$1_addAll_removeAll
+    #APPEND_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))*(1-$1ListTmp)
+        `List<$1> ` #CREATE_ID $1ListTmp_ ` = ` #REUSE_ID $1$4%_ `;` \n
+        #SET $1ListTmp=1
+        #GET_LAST_ID $1ListTmp_ `.clear();` \n
+        @STATEMENTS_VERY_SHORT
+        #GET_LAST_ID $1ListTmp_ `.` `addAll(` #REUSE_ID $1$4%_ `);` \n
+        @STATEMENTS_VERY_SHORT
+        @$4_$1_removeAll_tmp_maybe
+        @STATEMENTS_VERY_SHORT
+        #GET_LAST_ID $1ListTmp_ `.clear();` \n
+        #SET $1ListTmp=0
+
+    #END_RULE
+
+
+
+@$4_$1_removeAll_tmp_maybe
+    #APPEND_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))
+        #GET_LAST_ID $1ListTmp_ `.` `removeAll(` #REUSE_ID $1$4%_ `);`  \n
+    #END_RULE
+    #APPEND_RULE
+    #END_RULE
+
+@$4_addAll_removeAll
+    #APPEND_RULE:100*(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))*(1-$1ListTmp)*(1-$1IsPrimitiveType)
+        @$4_$1_addAll_removeAll
+    #END_RULE
+    #APPEND_RULE
+    #END_RULE
+
+@int_EXPRESSION_NOT_RECURSIVE
+    #APPEND_RULE:(&IDsCount($1$4Var_)+&IDsCount($1$4Val_)+&IDsCount($1$4FieldVar_)+&IDsCount($1$4FieldVal_))*($1IsStringType)
+        #REUSE_ID $1$4%_ `.hashCode()`
+    #END_RULE

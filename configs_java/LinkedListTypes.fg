@@ -1,0 +1,154 @@
+#INCLUDE "configs_java/utils.fg"
+
+#INCLUDE "configs_java/CollectionListTypesDeclareVars.fg" ($1) (VAR) (Var) (LinkedList)
+#INCLUDE "configs_java/CollectionListTypesDeclareVars.fg" ($1) (VAL) (Val) (LinkedList)
+#INCLUDE "configs_java/CollectionListTypesDeclareVars.fg" ($1) (FIELD_VAR) (FieldVar) (LinkedList)
+#INCLUDE "configs_java/CollectionListTypesDeclareVars.fg" ($1) (FIELD_VAL) (FieldVal) (LinkedList)
+
+@ARRAY_MAX_LENGTH
+@$1_LITERAL
+@TEST_CLASS_NAME
+@FOR_LOOP
+@SET_OR_SET_OP_String
+@String_EXPRESSION
+
+
+@REUSE_ID_$1_LinkedList_FIELD_VAR
+    #BEGIN_RULE:5*&IDsCount(Cls_, $1LinkedListFieldVar_)
+         #LEND_SCOPE_WITH_ID Cls_ $1LinkedListFieldVar_
+            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_ID $1LinkedListFieldVar_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:TestClass*0
+         #LEND_SCOPE Test_
+            `Test.`  #REUSE_LOCAL_ID $1LinkedListFieldVar_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:20*&IDsCount($1LinkedListFieldVar_)
+            #REUSE_ID $1LinkedListFieldVar_
+    #END_RULE
+
+@REUSE_ID_$1_LinkedList_FIELD_VAL
+    #BEGIN_RULE:5*&IDsCount(Cls_, $1LinkedListFieldVal_)
+        #LEND_SCOPE_WITH_ID Cls_ $1LinkedListFieldVal_
+            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID $1LinkedListFieldVal_
+        #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:TestClass*0
+         #LEND_SCOPE Test_
+            `Test.`  #REUSE_LOCAL_ID $1LinkedListFieldVal_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:20*&IDsCount($1LinkedListFieldVal_)
+        #REUSE_ID $1LinkedListFieldVal_
+    #END_RULE
+
+
+
+@REUSE_ID_$1_LinkedList_VAR
+    #BEGIN_RULE:3*&IDsCount($1LinkedListVar_)
+        #REUSE_ID $1LinkedListVar_  
+    #END_RULE
+    #BEGIN_RULE:1*&IDsCount($1LinkedListFieldVar_)+1*&IDsCount(Cls_, $1LinkedListFieldVar_)
+        @REUSE_ID_$1_LinkedList_FIELD_VAR
+    #END_RULE
+
+@REUSE_ID_$1_LinkedList_VAL
+    #BEGIN_RULE:3*&IDsCount($1LinkedListVal_)
+        #REUSE_ID $1LinkedListVal_  
+    #END_RULE
+    #BEGIN_RULE:1*&IDsCount($1LinkedListFieldVal_)+1*&IDsCount(Cls_, $1LinkedListFieldVal_)
+        @REUSE_ID_$1_LinkedList_FIELD_VAL
+    #END_RULE
+
+@REUSE_ID_$1_LinkedList_VAR_OR_VAL
+    #BEGIN_RULE:((&IDsCount($1LinkedListVar_)+&IDsCount($1LinkedListFieldVar_))*10+&IDsCount(Cls_, $1LinkedListFieldVar_))*(1-lambdaVal)
+        @REUSE_ID_$1_LinkedList_VAR
+    #END_RULE
+    #BEGIN_RULE:(&IDsCount($1LinkedListVal_)+&IDsCount($1LinkedListFieldVal_))+&IDsCount(Cls_, $1LinkedListFieldVal_)
+        @REUSE_ID_$1_LinkedList_VAL
+    #END_RULE
+    #BEGIN_RULE:lambdaVal*(1-&IDsCount($1LinkedListVal_)+&IDsCount($1LinkedListFieldVal_)-&IDsCount(Cls_, $1LinkedListFieldVal_))
+        `(new LinkedList<$1>())`
+    #END_RULE
+
+@DECLARE_VAR_OF_TYPE
+#APPEND_RULE:5*Enable$1*localLinkedListVarWeight
+@DECLARE_$1_LinkedList_VAR
+#END_RULE
+#APPEND_RULE:Enable$1*localLinkedListVarWeight
+@DECLARE_$1_LinkedList_VAL
+#END_RULE
+
+@DECLARE_FIELD_VAR_OF_TYPE
+#APPEND_RULE:2*Enable$1*fieldLinkedListVarWeight*(MaxCollectionsFieldsInClassCount-CollectionsFieldsInClassCount)
+    @DECLARE_$1_LinkedList_FIELD_VAR
+    #SET CollectionsFieldsInClassCount=CollectionsFieldsInClassCount+1
+#END_RULE
+#APPEND_RULE:1*Enable$1*fieldLinkedListVarWeight*(MaxCollectionsFieldsInClassCount-CollectionsFieldsInClassCount)
+    @DECLARE_$1_LinkedList_FIELD_VAL
+    #SET CollectionsFieldsInClassCount=CollectionsFieldsInClassCount+1
+#END_RULE
+
+
+@FOR_LinkedList
+    #APPEND_RULE:100*((&IDsCount($1LinkedListVar_)+&IDsCount($1LinkedListFieldVar_)+&IDsCount($1LinkedListVal_)+&IDsCount($1LinkedListFieldVal_))*10+&IDsCount(Cls_, $1LinkedListFieldVar_)+&IDsCount(Cls_, $1LinkedListFieldVal_))*(1-LongLoop)
+        ` /* iterate over LinkedList */ for ($1 `
+            #SET LongLoop=LongLoop+1
+            #BEGIN_SCOPE 
+            #CREATE_ID $1Val_ `: ` @REUSE_ID_$1_LinkedList_VAR_OR_VAL `) { ` \n
+            #SET $1ValDeclared=$1ValDeclared+1
+            @STATEMENTS_SHORT
+            @STATEMENTS_SHORT
+            #SET $1ValDeclared=$1ValDeclared-1
+            #SET LongLoop=LongLoop-1
+            #END_SCOPE 
+        `}` \n
+    #END_RULE
+    #APPEND_RULE
+        @FOR_LOOP
+    #END_RULE
+
+@FOREACH_LinkedList
+    #APPEND_RULE:100*((&IDsCount($1LinkedListVar_)+&IDsCount($1LinkedListFieldVar_)+&IDsCount($1LinkedListVal_)+&IDsCount($1LinkedListFieldVal_))*10+&IDsCount(Cls_, $1LinkedListFieldVar_)+&IDsCount(Cls_, $1LinkedListFieldVal_))*(1-LongLoop)*lambdaFunctionOneArg$1
+            @REUSE_ID_$1_LinkedList_VAR_OR_VAL `.forEach(` #BEGIN_SCOPE #CREATE_ID $1IteratorVar_ #END_SCOPE ` -> `  #REUSE_ID lambdaFunctionOneArg$1_  `.lambdaFunctionOneArg$1(` #GET_LAST_ID $1IteratorVar_  `)); ` \n
+    #END_RULE
+    #APPEND_RULE
+        @FOR_LOOP
+    #END_RULE
+
+@ITERATOR_LOOP_LinkedList
+    #APPEND_RULE:100*((&IDsCount($1LinkedListVar_)+&IDsCount($1LinkedListFieldVar_)+&IDsCount($1LinkedListVal_)+&IDsCount($1LinkedListFieldVal_))*10+&IDsCount(Cls_, $1LinkedListFieldVar_)+&IDsCount(Cls_, $1LinkedListFieldVal_))*(1-LongLoop)
+        ` /* iterate over LinkedList */ `
+            #SET LongLoop=LongLoop+1
+            #BEGIN_SCOPE 
+            `Iterator ` #CREATE_ID $1IteratorVar_ ` = ` @REUSE_ID_$1_LinkedList_VAR_OR_VAL `.` @LIST_ITERATOR_METHOD `; ` \n
+            `while  (` #GET_LAST_ID $1IteratorVar_ `.hasNext()) {` \n 
+            `$1 ` #CREATE_ID $1Val_ ` = ($1)` #GET_LAST_ID $1IteratorVar_ `.next(); ` \n
+            #SET $1ValDeclared=$1ValDeclared+1
+            @STATEMENTS_SHORT
+            @STATEMENTS_SHORT
+            #SET $1ValDeclared=$1ValDeclared-1
+            #SET LongLoop=LongLoop-1
+            #END_SCOPE 
+        `}` \n
+    #END_RULE
+    #APPEND_RULE
+        @FOR_LOOP
+    #END_RULE
+
+
+@LIST_ITERATOR_METHOD
+    #BEGIN_RULE
+        `descendingIterator()`
+    #END_RULE
+    #BEGIN_RULE
+        `listIterator()`
+    #END_RULE
+
+@boolean_EXPRESSION_RECURSIVE
+    #APPEND_RULE:&IDsCount($1LinkedListVar_)+&IDsCount($1LinkedListFieldVar_)+&IDsCount($1LinkedListVal_)+&IDsCount($1LinkedListFieldVal_)
+        @REUSE_ID_$1_LinkedList_VAR_OR_VAL `.contains(` @$1_CAST_OPEN @$1_EXPRESSION     @$1_CAST_CLOSE `)`
+    #END_RULE
+
+        

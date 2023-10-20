@@ -22,7 +22,7 @@
     #END_RULE    
 
 @ASSIGN_METHOD_RESULT
-	#APPEND_RULE:10000*(method_$1_$1Declared+global_method_$1_$1Declared)
+	#APPEND_RULE:10000*(&IDsCount(method_$1_$1_Static_)+&IDsCount(method_$1_$1_Instance_)+&IDsCount(Cls_, method_$1_$1_Static_)+&IDsCount(Cls_, method_$1_$1_Instance_))
 		`$1 ` #CREATE_LAZY_ID $1Val_ ` = ` @REUSE_ID_METHOD_$1_$1 ` ( `@$1_CAST_OPEN  @$1_EXPRESSION @$1_CAST_CLOSE ` ); ` #REGISTER_LAZY_IDS \n
         #SET $1ValDeclared=$1ValDeclared+1
     #END_RULE    

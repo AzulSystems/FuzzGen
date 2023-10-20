@@ -1,0 +1,15 @@
+// $1 - for type, $2 for Var, Val, FieldVar, FieldVal, $3 for VAR, VAL, FIELD_VAR, FIELD_VAL
+
+
+@ARRAY_FILL
+    #APPEND_RULE:&IDsCount($1Array$2_)
+        `Arrays.fill(` #REUSE_ID $1Array$2_ `, ` @$1_CAST_OPEN @$1_EXPRESSION @$1_CAST_CLOSE `);` \n
+    #END_RULE
+    #APPEND_RULE:&IDsCount($1Array$2_)
+        `Arrays.fill(` #REUSE_ID $1Array$2_ `, ` @[0:MaxArrayCount/2] `, ` @[MaxArrayCount/2:MaxArrayCount-1] `, `  @$1_CAST_OPEN @$1_EXPRESSION @$1_CAST_CLOSE `);` \n
+    #END_RULE
+    #APPEND_RULE:100*&IDsCount($1Array$2_)*TryCatchDepth
+        `Arrays.fill(` #REUSE_ID $1Array$2_ `, ` @int_EXPRESSION `, ` @int_EXPRESSION `, `  @$1_CAST_OPEN @$1_EXPRESSION @$1_CAST_CLOSE `);` \n
+    #END_RULE
+
+

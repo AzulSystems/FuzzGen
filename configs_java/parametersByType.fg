@@ -1,5 +1,6 @@
 #SET method_$1_$1Declared=0
 #SET recursive_function_$1_$1Declared=0
+#SET $1ListTmp=0
 
 // beginning of setting var counters to zero
 
@@ -7,7 +8,17 @@
 #SET $1IndArraySafeVarDeclared=0
 #SET $1$2Declared=0
 #SET $1Field$2Declared=0
+#SET $1$4Field$2Declared=0
 #SET $1Array$2Declared=0
+#SET $1ArrayList$2Declared=0
+#SET $1HashSet$2Declared=0
+#SET $1LinkedList$2Declared=0
+#SET $1ArrayField$2Declared=0
+#SET $1ArrayListField$2Declared=0
+#SET $1LinkedListField$2Declared=0
+#SET $1HashSetField$2Declared=0
+#SET $3$1HashMap$2Declared=0
+#SET $3$1HashMapField$2Declared=0
 #SET $1ArrayField$2Declared=0
 #SET $1ListVarDeclared=0
 #SET $1ImmutableSetVarDeclared=0
@@ -16,6 +27,8 @@
 #SET $1UknownZeroVarDeclared=0
 #SET AnotherClassObjVarDeclared=0
 #SET $1MethodObjVarDeclared=0
+#SET $1StaticMethodObjVarDeclared=0
+#SET $1InstanceMethodObjVarDeclared=0
 #SET $1FieldObjVarDeclared=0
 
 #SET $1ArrayFieldValCopyOfDone=0
@@ -51,13 +64,60 @@
 #SET global_recursive_function_$1_$1Declared=0
 #SET global_$1Field$2Declared=0
 #SET global_$1ArrayField$2Declared=0
+#SET global_$1ArrayListField$2Declared=0
+#SET global_$1LinkedListField$2Declared=0
+#SET global_$1HashSetField$2Declared=0
+
+#SET global_Integer$1HashMapField$2Declared=0
+#SET global_Long$1HashMapField$2Declared=0
+#SET global_Byte$1HashMapField$2Declared=0
+#SET global_Short$1HashMapField$2Declared=0
+#SET global_Float$1HashMapField$2Declared=0
+#SET global_Double$1HashMapField$2Declared=0
+#SET global_String$1HashMapField$2Declared=0
+#SET global_IntegerStringHashMapField$2Declared=0
+#SET global_LongStringHashMapField$2Declared=0
+#SET global_ByteStringHashMapField$2Declared=0
+#SET global_ShortStringHashMapField$2Declared=0
+#SET global_FloatStringHashMapField$2Declared=0
+#SET global_DoubleStringHashMapField$2Declared=0
+#SET global_StringStringHashMapField$2Declared=0
+
 #SET global_StringFieldVar=0
 #SET global_StringFieldVal=0
 #SET global_StringArrayFieldVar=0
+#SET global_StringArrayListFieldVar=0
+#SET global_StringLinkedListFieldVar=0
+#SET global_StringHashSetFieldVar=0
 #SET global_StringArrayFieldVal=0
+#SET global_StringArrayListFieldVal=0
+#SET global_StringLinkedListFieldVal=0
+#SET global_StringHashSetFieldVal=0
 //Fake
 #SET global_$1Array$2Declared=0
+#SET global_$1ArrayList$2Declared=0
+#SET global_$1LinkedList$2Declared=0
+
+#SET global_Integer$1HashMap$2Declared=0
+#SET global_Long$1HashMap$2Declared=0
+#SET global_Byte$1HashMap$2Declared=0
+#SET global_Short$1HashMap$2Declared=0
+#SET global_Float$1HashMap$2Declared=0
+#SET global_Double$1HashMap$2Declared=0
+#SET global_String$1HashMap$2Declared=0
+#SET global_IntegerStringHashMap$2Declared=0
+#SET global_LongStringHashMap$2Declared=0
+#SET global_ByteStringHashMap$2Declared=0
+#SET global_ShortStringHashMap$2Declared=0
+#SET global_FloatStringHashMap$2Declared=0
+#SET global_DoubleStringHashMap$2Declared=0
+#SET global_StringStringHashMap$2Declared=0
+
+
+
 #SET global_$1MethodObjVarDeclared=0
+#SET global_$1StaticMethodObjVarDeclared=0
+#SET global_$1InstanceMethodObjVarDeclared=0
 #SET global_$1FieldObjVarDeclared=0
     #END_RULE
 
@@ -65,19 +125,54 @@
 #SET global_recursive_function_$1_$1Declared=0
 #SET global_$1Field$2Declared=0
 #SET global_$1ArrayField$2Declared=0
+#SET global_$1ArrayListField$2Declared=0
+#SET global_$1LinkedListField$2Declared=0
+#SET global_$1HashSetField$2Declared=0
+#SET global_$3$1HashMapField$2Declared=0
 //Fake
 #SET global_$1Array$2Declared=0
+#SET global_$1ArrayList$2Declared=0
+#SET global_$1LinkedList$2Declared=0
+#SET global_$1HashSet$2Declared=0
+#SET global_$3$1HashMap$2Declared=0
+#SET global_$3$1HashSet$2Declared=0
 #SET global_$1MethodObjVarDeclared=0
+#SET global_$1StaticMethodObjVarDeclared=0
+#SET global_$1InstanceMethodObjVarDeclared=0
 #SET global_$1FieldObjVarDeclared=0
 
 #SET $1RecursiveFunction=0
+#SET $1RecursiveFunctionInstance=0
+#SET $1RecursiveFunctionStatic=0
+
+#SET random$1ArrayCount=0
+
+
+
+#SET MethodReturnTypeIs$1=0
+@SET_METHOD_RETURN_TYPE_TO_ZERO
+    #CONCAT_RULE
+        #SET MethodReturnTypeIs$1=0
+    #END_RULE
 
 
 // end of setting var counters to zero
 @SET_DECLARED_FIELDS_FLAG_TO_ZERO_$1_$2
-    #BEGIN_RULE
+    #APPEND_RULE
         #SET $1Field$2Declared=0
+        #SET $1$4Field$2Declared=0
         #SET $1ArrayField$2Declared=0
+        #SET $1ArrayListField$2Declared=0
+        #SET $1LinkedListField$2Declared=0
+        #SET $1HashSetField$2Declared=0
+
+        #SET Integer$1HashMapField$2Declared=0
+        #SET Long$1HashMapField$2Declared=0
+        #SET Byte$1HashMapField$2Declared=0
+        #SET Short$1HashMapField$2Declared=0
+        #SET Float$1HashMapField$2Declared=0
+        #SET Double$1HashMapField$2Declared=0
+        #SET String$1HashMapField$2Declared=0
 #SET StringFieldVar=0
 #SET StringFieldVal=0
 #SET StringArrayFieldVar=0
@@ -96,6 +191,17 @@
         #SET $1IndArraySafeVarDeclared=0
         #SET $1$2Declared=0
         #SET $1Array$2Declared=0
+        #SET $1ArrayList$2Declared=0
+        #SET $1LinkedList$2Declared=0
+        #SET $1HashSet$2Declared=0
+        #SET Integer$1HashMap$2Declared=0
+        #SET Long$1HashMap$2Declared=0
+        #SET Byte$1HashMap$2Declared=0
+        #SET Short$1HashMap$2Declared=0
+        #SET Float$1HashMap$2Declared=0
+        #SET Double$1HashMap$2Declared=0
+        #SET String$1HashMap$2Declared=0
+
         #SET $1ListVarDeclared=0
         #SET $1ImmutableSetVarDeclared=0
         #SET $1LambdaOneArg$2Declared=0
@@ -105,6 +211,8 @@
         #SET $1ArrayValCopyOfDone=0
         #SET $1ArrayVarCopyOfDone=0
         #SET $1MethodObjVarDeclared=0
+        #SET $1StaticMethodObjVarDeclared=0
+        #SET $1InstanceMethodObjVarDeclared=0
         #SET $1FieldObjVarDeclared=0
         #SET StringNumericVarDeclared=0
         #SET String$1NumericVarDeclared=0

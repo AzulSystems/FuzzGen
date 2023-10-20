@@ -1,9 +1,10 @@
 #INCLUDE "configs_java/parameters.fg"
 #INCLUDE "configs_java/synchronizedBlock.fg"
 #INCLUDE "configs_java/methods.fg"
-#INCLUDE "configs_java/mainPrintByType.fg" (int short byte long float double Integer Short Byte Long Float Double String)
+#INCLUDE "configs_java/mainPrintByType.fg" (int char short byte long float double Integer Short Byte Long Float Double String)
 #INCLUDE "configs_java/utils.fg"
-#INCLUDE "configs_java/lambdaByType.fg" (int short byte long float double Integer Short Byte Long Float Double String)
+#INCLUDE "configs_java/lambdaByType.fg" (int char short byte long float double Integer Short Byte Long Float Double String)
+#INCLUDE "configs_java/funcWithGenericTypeArgs.fg"
 
 
 @MAIN
@@ -15,6 +16,8 @@
     @SET_GLOBAL_COUNTERS_TO_ZERO
     #BEGIN_SCOPE
         @LAMBDA_INTERFACES
+        @SUPER_CLASS_A
+        @SUPER_CLASS_B
         @OTHER_CLASSES
         @TEST_CLASS
     #END_SCOPE
@@ -54,9 +57,13 @@
         @SET_DECLARED_METHOD_FLAG_TO_ZERO
         \n \n
         @OTHER_CLASS_COMMENTS 
-        ` class ` @OTHER_CLASS_NAME_DECLARE `{ ` \n
+        ` class ` @OTHER_CLASS_NAME_DECLARE @MAYBE_EXTENDS_SUPER_CLASS `{ ` \n
+        #REGISTER_LAZY_IDS
+            `// extends SprClsA_ ` @[extendsSprClsA:extendsSprClsA+1] \n
+            `// extends SprClsB_ ` @[extendsSprClsB:extendsSprClsB+1] \n
         @TEST_CLASS_FIELDS
         @ADDITIONAL_TEST_CLASS_FIELDS
+        @CONSTRUCTOR_METHOD
         #SET MethodCount=0
         //@SET_METHOD_COUNT_TO_ZERO_1[1]
         @SET_METHOD_COUNT_TO_ZERO
@@ -67,6 +74,8 @@
         #END_SCOPE
 
         ` } ` \n
+        #SET extendsSprClsA=0
+        #SET extendsSprClsB=0
     #END_RULE
 
 @SET_METHOD_COUNT_TO_ZERO_1
@@ -78,7 +87,7 @@
 
 @OTHER_CLASS_NAME_DECLARE
     #BEGIN_RULE
-        #CREATE_ID Cls_
+        #CREATE_LAZY_ID Cls_
     #END_RULE
 
 @REUSE_OTHER_CLASS_NAME
@@ -96,7 +105,7 @@
 ` class ` @UTILS_CLASS_NAME ` { ` \n
 #BEGIN_SCOPE
     @UTILS_FIELDS
-    @UTILS_METHODS
+    @UTILS_METHODS_COMMON
         @DECLARE_CHECKSUM_COLLECTION
         @DECLARE_PRINT_VARS_METHOD
         @DECLARE_PRINT_COLLECTION_VARS_METHOD
@@ -109,10 +118,90 @@
 #END_RULE
 
 
+@SUPER_CLASS_A
+    #BEGIN_RULE
+        @SET_DECLARED_FLAG_TO_ZERO
+        @SET_DECLARED_FIELDS_FLAG_TO_ZERO
+        #BEGIN_SCOPE
+        #SET InSprClsA=1
+        #SET InSprClsB=0
+        `class ` #CREATE_ID Cls_ `{` \n
+         `// ` #CREATE_ID SprClsA_  \n
+            @TEST_CLASS_FIELDS
+        `}` \n
+        #SET InSprClsA=0
+        #SET InSprClsB=0
+        @SET_DECLARED_FLAG_TO_ZERO
+        @SET_DECLARED_FIELDS_FLAG_TO_ZERO
+        @CHILD_CLASSES
+        #SET ToExtendSpClsA=0
+        #END_SCOPE
+    #END_RULE
+
+
+@CHILD_CLASSES
+    #BEGIN_RULE
+        #SET ToExtendSpClsA=1
+        @OTHER_CLASS @CHILD_CLASSES
+    #END_RULE
+    #BEGIN_RULE
+        #SET ToExtendSpClsA=0
+    #END_RULE
+
+
+
+
+@SUPER_CLASS_B
+    #BEGIN_RULE
+        @SET_DECLARED_FLAG_TO_ZERO
+        @SET_DECLARED_FIELDS_FLAG_TO_ZERO
+        #BEGIN_SCOPE
+        #SET InSprClsA=0
+        #SET InSprClsB=1
+        `class  SprClsB {` \n
+        `// ` #CREATE_ID SprClsB_  \n
+            @TEST_CLASS_FIELDS
+        `}` \n
+        #SET InSprClsA=0
+        #SET InSprClsB=0
+        #END_SCOPE
+        @SET_DECLARED_FLAG_TO_ZERO
+        @SET_DECLARED_FIELDS_FLAG_TO_ZERO
+    #END_RULE
+
+@MAYBE_EXTENDS_SUPER_CLASS
+    #BEGIN_RULE:ToExtendSpClsA
+        #LEND_SCOPE_WITH_ID  SprClsA_ Cls_
+        ` extends ` 
+            #GET_LAST_ID Cls_ ` `
+        #RETURN_SCOPE 
+        #SET extendsSprClsA=1
+    #END_RULE
+    #BEGIN_RULE:1-ToExtendSpClsA
+        #LEND_SCOPE SprClsB_
+        ` extends SprClsB /* `  #GET_LAST_ID SprClsB_ ` */ `
+        #RETURN_SCOPE 
+        #SET extendsSprClsB=1
+    #END_RULE
+    #BEGIN_RULE:1-ToExtendSpClsA
+    #END_RULE
+
+
 @TEST_CLASS_NAME
 #BEGIN_RULE
     `Test`
 #END_RULE
+
+
+@ACCESS_MODIFIER
+    #BEGIN_RULE
+        ` public ` 
+    #END_RULE
+    #BEGIN_RULE
+        ` protected ` 
+    #END_RULE
+    #BEGIN_RULE
+    #END_RULE
 
 
 @SET_METHOD_COUNT_TO_ZERO
@@ -120,27 +209,75 @@
         #SET MethodCount=0
 #END_RULE
 
+
+@CONSTRUCTOR_METHOD_NAME
+    #BEGIN_RULE:1-TestClass
+        #REUSE_LOCAL_ID Cls_
+    #END_RULE
+    #BEGIN_RULE:TestClass
+        @TEST_CLASS_NAME
+    #END_RULE
+
+@CONSTRUCTOR_METHOD
+    #BEGIN_RULE:3*(extendsSprClsA+extendsSprClsB)
+        #SET MethodIsInstance=1
+        @CONSTRUCTOR_METHOD_NAME `() ` ` {` \n
+        #BEGIN_SCOPE
+            #SET DontUseOtherClsMembers=1
+            @ASSIGN
+            @ASSIGN
+            @ASSIGN
+            @ASSIGN
+            @ASSIGN
+            #SET DontUseOtherClsMembers=0
+        #END_SCOPE
+            
+        `}` \n
+        #SET MethodIsInstance=0
+    #END_RULE
+    #BEGIN_RULE
+    #END_RULE
+        
+
+
 @TEST_CLASS
-#BEGIN_RULE
+#BEGIN_RULE:IsARegularConfiguration
 #SET TestClass=1
     #BEGIN_SCOPE
         @TEST_CLASS_COMMENTS
-        `//` #CREATE_ID Test_ \n
-        `public class ` @TEST_CLASS_NAME `{ ` \n
+        `//` #CREATE_LAZY_ID Test_ \n
+        `public class ` @TEST_CLASS_NAME @MAYBE_EXTENDS_SUPER_CLASS `{ ` \n
+        #REGISTER_LAZY_IDS
         @SET_DECLARED_FLAG_TO_ZERO
         @SET_DECLARED_FIELDS_FLAG_TO_ZERO
         @SET_DECLARED_METHOD_FLAG_TO_ZERO
-        @BASE_FIELDS
+        @RANDOM_ARRAY
+        @UTILS_METHODS_TEST_SPECIFIC
+        @UTILS_GET_EXPRESSION
+        @funcWithCondListGeneric_DECLARE
+        @funcWithCondListGeneric_BODY
+        @BASE_FIELDS 
         @TEST_CLASS_FIELDS
         @ADDITIONAL_TEST_CLASS_FIELDS
+        @CONSTRUCTOR_METHOD
+        @DECLARE_METHOD_OBJ
+        @DECLARE_METHOD_OBJ
+        @DECLARE_METHOD_OBJ
+        @DECLARE_METHOD_OBJ
+        @DECLARE_METHOD_OBJ
         #SET MethodCount=0
         @SET_METHOD_COUNT_TO_ZERO
         @DECLARE_METHODS
 
         @METHOD_MAIN_TEST
         @METHOD_MAIN
+        #SET extendsSprClsA=0
+        #SET extendsSprClsB=0
     #END_SCOPE
         ` } ` \n
+#END_RULE
+#BEGIN_RULE:1-IsARegularConfiguration
+        @CUSTOM_TEST_CLASS
 #END_RULE
 
         @METHOD_MAIN
@@ -169,17 +306,21 @@
 
 //@TEST_CLASS_FIELDS[0]
 @TEST_CLASS_FIELDS
-#BEGIN_RULE:FieldVarWeight
+#BEGIN_RULE:FieldVarWeight*(MaxFieldsInClass-FieldsInClassCount)
+#SET FieldsInClassCount=FieldsInClassCount+1
 @DECLARE_FIELD_VAR_OF_TYPE @TEST_CLASS_FIELDS
 #END_RULE
 #BEGIN_RULE
     @DECLARE_FIELD_VAR_OF_TYPE
+#SET FieldsInClassCount=0
 #END_RULE
 
 @METHOD_MAIN_TEST
 #BEGIN_RULE
     @METHOD_MAIN_TEST_COMMENTS
     \n `  public void mainTest(String[] strArr1) { ` \n
+#SET MethodIsInstant=1
+#SET MethodIsStatic=0
 #BEGIN_SCOPE
      @MAIN_TEST_OBJECT_BODY
 #END_SCOPE
@@ -205,21 +346,10 @@
 
 @DECLARE_CHECKSUM_COLLECTION
     #BEGIN_RULE
-        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_int
-        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_short
-        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_byte
-        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_long
-        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_float
-        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_double
+        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD
+        
 
-        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Integer
-        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Short
-        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Byte
-        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Long
-        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Float
-        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_Double
-
-        @DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_String
+        @DECLARE_CHECKSUM_LIST_VARS_METHOD
     #END_RULE
 
 @DECLARE_PRINT_VARS_METHOD
@@ -298,9 +428,37 @@
 		@ASSIGN_METHOD_RESULT @ASSIGN_METHODS_RESULTS 
 	#END_RULE
 	#BEGIN_RULE:1
+        #SET ExplicitCallsInMain=ExplicitCallsInMain+1
+        @ASSIGN_METHOD_RESULT
+	#END_RULE
+	#BEGIN_RULE:1-(MaxExplicitCallsInMain-ExplicitCallsInMain)
 	#END_RULE
 
 @ASSIGN_METHOD_RESULT
         #APPEND_RULE:1
 	    #END_RULE
 
+
+//@funcWithCondListGeneric
+//    #BEGIN_RULE
+//        `funcWithCondListGeneric`
+//    #END_RULE
+//
+//@funcWithCondListGeneric_DECLARE
+//    #BEGIN_RULE
+//        \n `public static <T> T ` @funcWithCondListGeneric `(List<T> a, T compareValue)` \n
+//    #END_RULE
+//
+//@funcWithCondListGeneric_BODY
+//    #BEGIN_RULE
+//        ` { ` \n
+//        `    T sum = compareValue; ` \n
+//        ` ListIterator listIter = a.listIterator();` \n
+//        ` while (listIter.hasNext()) {` \n
+//        `       T tmp = (T)listIter.next();` \n
+//        `       if (tmp == compareValue ) sum = tmp;` \n
+//            `}` \n
+//        ` return sum ; ` \n
+//        `}` \n \n
+//
+//    #END_RULE

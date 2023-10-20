@@ -91,16 +91,16 @@
         @DECLARE_$1_ARRAY_$2_DECLARED_FLAG
         #SET global_$1Array$3Declared=global_$1Array$3Declared+1*(1+-1*TestClass)
         @$2_STATIC_MODIFIER @$2_ACCESS_SPECIFIER ` $1 ` @DECLARE_ID_$1_ARRAY_$2 `[]  = new $1 [` @ARRAY_MAX_LENGTH `];` \n
-        @$2_STATIC_BLOCK_OPEN 
             @$2_STATIC_INIT_$1Array$3 
-        @$2_STATIC_BLOCK_CLOSE
     #END_RULE
 
 @$2_STATIC_INIT_$1Array$3 
-    #BEGIN_RULE:IsARegularConfiguration
+    #BEGIN_RULE:(IsARegularConfiguration+$3IsLocal)*(1-InSprClsA)*(1-InSprClsB)
+        @$2_STATIC_BLOCK_OPEN 
             @INIT_ARRAY_METHOD_ID `(` #GET_LAST_ID $1Array$3_ `, ` @$1_CAST_OPEN @$1_LITERAL @$1_CAST_CLOSE `);` \n 
+        @$2_STATIC_BLOCK_CLOSE
     #END_RULE
-    #BEGIN_RULE:1-IsARegularConfiguration
+    #BEGIN_RULE:(1-IsARegularConfiguration)*(1-$3IsLocal)+(InSprClsA+InSprClsB)
     #END_RULE
 
 @DECLARE_$1_ARRAY_$2_DECLARED_FLAG

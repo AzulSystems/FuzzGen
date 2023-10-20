@@ -1,0 +1,45 @@
+#INCLUDE "configs_java/parametersBasic.fg"
+#INCLUDE "configs_java/constants.fg"
+
+@RETURN_TYPE_$1
+//#BEGIN_RULE:1+-1*$1IsFloatingPointType
+//    `long`
+//#END_RULE
+//#BEGIN_RULE:$1IsFloatingPointType
+//    `double`
+//#END_RULE
+
+@CHECKSUM_LIST_VARS_METHOD_SUM_$1
+#BEGIN_RULE:$1IsPrimitiveType*(1+-1*$1IsFloatingPointType)
+    ` sum +=  valuesList.get(i).get(j); ` \n
+#END_RULE
+#BEGIN_RULE:($1IsPrimitiveType)*($1IsFloatingPointType)
+    ` sum +=  ( valuesList.get(i).get(j))` `; `\n
+#END_RULE
+#BEGIN_RULE:(1+-1*$1IsPrimitiveType)*(1+-1*$1IsFloatingPointType)*(1-$1IsStringType)
+    ` sum =  (sum + valuesList.get(i).get(j))` `; `\n
+#END_RULE
+#BEGIN_RULE:(1+-1*$1IsPrimitiveType)*(1+-1*$1IsFloatingPointType)*($1IsStringType)
+    ` sum =  (sum + valuesList.get(i).get(j).length())` `; `\n
+#END_RULE
+#BEGIN_RULE:(1+-1*$1IsPrimitiveType)*($1IsFloatingPointType)
+    ` sum =  (sum + valuesList.get(i).get(j).doubleValue())` `; `\n
+#END_RULE
+
+@CHECKSUM_LIST_VARS_METHOD_BODY_$1
+	#BEGIN_RULE
+         @RETURN_TYPE_$1 ` sum = 0`  `; ` \n
+        ` for (int i = 0; i < valuesList.size(); i++) { ` \n
+                ` for (int j = 0; j < valuesList.get(i).size(); j++)  { ` \n
+                @CHECKSUM_LIST_VARS_METHOD_SUM_$1
+        `    } ` \n
+        ` } ` \n
+        ` return sum; ` \n
+	#END_RULE
+
+@DECLARE_CHECKSUM_LIST_VARS_METHOD
+	#CONCAT_RULE
+        `public static ` @RETURN_TYPE_$1 ` checksumListVarsMethod$1( ` #BEGIN_SCOPE ` ArrayList<List<$1>> valuesList) { ` \n @CHECKSUM_LIST_VARS_METHOD_BODY_$1 \n ` } ` #END_SCOPE \n
+	#END_RULE
+
+

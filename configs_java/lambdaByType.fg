@@ -94,13 +94,15 @@
 
 
 @$1_LAMBDA_EXPRESSION
-    #BEGIN_RULE:lambdaFunctionOneArg$1
+    #BEGIN_RULE:&IDsCount(lambdaFunctionOneArg$1_)
+        #SET lambdaCount=lambdaCount+1
         #REUSE_ID lambdaFunctionOneArg$1_ `.lambdaFunctionOneArg$1(` @$1_CAST_LAMBDA_OPEN  @$1_EXPRESSION @$1_CAST_LAMBDA_CLOSE `)`
     #END_RULE
-    #BEGIN_RULE:lambdaFunctionTwoArgs$1
+    #BEGIN_RULE:&IDsCount(lambdaFunctionTwoArgs$1_)
+        #SET lambdaCount=lambdaCount+1
         #REUSE_ID lambdaFunctionTwoArgs$1_ `.lambdaFunctionTwoArgs$1(` @$1_CAST_LAMBDA_OPEN  @$1_EXPRESSION @$1_CAST_LAMBDA_CLOSE `, ` @$1_CAST_LAMBDA_OPEN  @$1_EXPRESSION @$1_CAST_LAMBDA_CLOSE `)`
     #END_RULE
-    #BEGIN_RULE:1-(lambdaFunctionOneArg$1+lambdaFunctionTwoArgs$1)
+    #BEGIN_RULE:1-(&IDsCount(lambdaFunctionOneArg$1_)+&IDsCount(lambdaFunctionTwoArgs$1_))
         @$1_EXPRESSION
     #END_RULE
 

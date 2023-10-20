@@ -39,25 +39,28 @@
         #SET $1VarDeclared=$1VarDeclared+1
         `$1 ` @DECLARE_ID_$1_VAR ` = ` @$1_CONSTANT `; `\n
     #END_RULE
-    #APPEND_RULE:byteArrayVarDeclared*100
+    #APPEND_RULE:&IDsCount(byteArrayVar_)*100
         #SET $1VarDeclared=$1VarDeclared+1
         `$1 ` @DECLARE_ID_$1_VAR ` = new String(` #REUSE_ID byteArrayVar_ ` , ` @[0:MaxArrayCount/4] `, ` @[0:MaxArrayCount/4] `,  Charset.forName("` @CHARSET `"));  ` \n
     #END_RULE
-    #APPEND_RULE:byteArrayValDeclared*100
+    #APPEND_RULE:&IDsCount(byteArrayVal_)*100
         #SET $1VarDeclared=$1VarDeclared+1
         `$1 ` @DECLARE_ID_$1_VAR ` = new String(` #REUSE_ID byteArrayVal_ ` , ` @[0:MaxArrayCount/4] `, ` @[0:MaxArrayCount/4] `,  Charset.forName("` @CHARSET `"));  ` \n
     #END_RULE
-    #APPEND_RULE:byteArrayFieldVarDeclared*100
+    #APPEND_RULE:&IDsCount(byteArrayFieldVar_)*100
         #SET $1VarDeclared=$1VarDeclared+1
         `$1 ` @DECLARE_ID_$1_VAR ` = new String(` #REUSE_ID byteArrayFieldVar_ ` , ` @[0:MaxArrayCount/4] `, ` @[0:MaxArrayCount/4] `,  Charset.forName("` @CHARSET `"));  ` \n
     #END_RULE
-    #APPEND_RULE:byteArrayValDeclared*100
+    #APPEND_RULE:&IDsCount(byteArrayFieldVal_)*100
         #SET $1VarDeclared=$1VarDeclared+1
         `$1 ` @DECLARE_ID_$1_VAR ` = new String(` #REUSE_ID byteArrayFieldVal_ ` , ` @[0:MaxArrayCount/4] `, ` @[0:MaxArrayCount/4] `,  Charset.forName("` @CHARSET `"));  ` \n
     #END_RULE
+  #APPEND_RULE:2000*(&IDsCount(charArrayVar_)+&IDsCount(charArrayVal_)+&IDsCount(charArrayFieldVar_)+&IDsCount(charArrayFieldVal_))
+     `$1 ` @DECLARE_ID_$1_VAR ` = new String(` #REUSE_ID charArray%_ `);` \n
+  #END_RULE
     #APPEND_RULE:10
         @DECLARE_$1_$3_NUMERIC_VAR
-//        #SET $1VarDeclared=$1VarDeclared+1
+//        #SET &IDsCount($1Var_)=&IDsCount($1Var_)+1
     #END_RULE
 
 @DECLARE_$1_$3_NUMERIC_VAR
@@ -80,7 +83,7 @@
     #END_RULE
     #APPEND_RULE:10
         @DECLARE_$1_$3_NUMERIC_VAL
-  //      #SET $1ValDeclared=$1ValDeclared+1
+  //      #SET &IDsCount($1Val_)=&IDsCount($1Val_)+1
     #END_RULE
 
 @DECLARE_ID_$1_VAR
@@ -112,23 +115,23 @@
     #APPEND_RULE
         #CREATE_ID $1$3NumericVal_
         #SET $1$3NumericValDeclared=$1$3NumericValDeclared+1
-//        #SET $1ValDeclared=$1ValDeclared+1
+//        #SET &IDsCount($1Val_)=&IDsCount($1Val_)+1
     #END_RULE
 
 
 @REUSE_ID_$1_VAR
-    #APPEND_RULE:$1VarDeclared
+    #APPEND_RULE:&IDsCount($1Var_)
         #REUSE_ID $1Var_
     #END_RULE
-    #APPEND_RULE:($1IntegerNumericVarDeclared+$1LongNumericVarDeclared+$1ByteNumericVarDeclared+$1ShortNumericVarDeclared+$1DoubleNumericVarDeclared+$1FloatNumericVarDeclared)+($1intNumericVarDeclared+$1longNumericVarDeclared+$1byteNumericVarDeclared+$1shortNumericVarDeclared+$1doubleNumericVarDeclared+$1floatNumericVarDeclared)
+    #APPEND_RULE:(&IDsCount($1IntegerNumericVar_)+&IDsCount($1LongNumericVar_)+&IDsCount($1ByteNumericVar_)+&IDsCount($1ShortNumericVar_)+&IDsCount($1DoubleNumericVar_)+&IDsCount($1FloatNumericVar_))+(&IDsCount($1intNumericVar_)+&IDsCount($1longNumericVar_)+&IDsCount($1byteNumericVar_)+&IDsCount($1shortNumericVar_)+&IDsCount($1doubleNumericVar_)+&IDsCount($1floatNumericVar_)+&IDsCount($1charNumeriVar_))
         #REUSE_ID $1%NumericVar_
     #END_RULE
 
 @REUSE_ID_$1_VAL
-    #APPEND_RULE:$1ValDeclared
+    #APPEND_RULE:&IDsCount($1Val_)
         #REUSE_ID $1Val_
     #END_RULE
-    #APPEND_RULE:($1IntegerNumericValDeclared+$1LongNumericValDeclared+$1ByteNumericValDeclared+$1ShortNumericValDeclared+$1DoubleNumericValDeclared+$1FloatNumericValDeclared)+($1intNumericVarDeclared+$1longNumericVarDeclared+$1byteNumericVarDeclared+$1shortNumericVarDeclared+$1doubleNumericVarDeclared+$1floatNumericVarDeclared)
+    #APPEND_RULE:(&IDsCount($1IntegerNumericVal_)+&IDsCount($1LongNumericVal_)+&IDsCount($1ByteNumericVal_)+&IDsCount($1ShortNumericVal_)+&IDsCount($1DoubleNumericVal_)+&IDsCount($1FloatNumericVal_))+(&IDsCount($1intNumericVal_)+&IDsCount($1longNumericVal_)+&IDsCount($1byteNumericVal_)+&IDsCount($1shortNumericVal_)+&IDsCount($1doubleNumericVal_)+&IDsCount($1floatNumericVal_)+&IDsCount($1charNumeriVal_))
         #REUSE_ID $1%NumericVal_
     #END_RULE
 
@@ -177,6 +180,9 @@
     #APPEND_RULE
                 `"abc. def."`
     #END_RULE
+    #APPEND_RULE:2
+                `"bb"`
+    #END_RULE
     #APPEND_RULE
                 `"q1w3ertyQWERTY *,.4%abc/w"`
     #END_RULE
@@ -198,6 +204,32 @@
     #APPEND_RULE
                 `" 1+2+3 A x "`
     #END_RULE
+    #APPEND_RULE
+                `"FB"`
+    #END_RULE
+    #APPEND_RULE
+                `"Ea"`
+    #END_RULE
+    #APPEND_RULE
+                `"Aa"`
+    #END_RULE
+    #APPEND_RULE
+                `"BB"`
+    #END_RULE
+    #APPEND_RULE
+                `"AaAa"`
+    #END_RULE
+    #APPEND_RULE
+                `"BBBB"`
+    #END_RULE
+    #APPEND_RULE
+                `"AaBB"`
+    #END_RULE
+    #APPEND_RULE
+                `"BBAa"`
+    #END_RULE
+
+
 
 
 @$1_CONSTANT_SUFFIX
@@ -208,10 +240,10 @@
 //#BEGIN_RULE:5
 //                @$1_CONSTANT @$1_CONSTANT_SUFFIX
 //#END_RULE
-//#BEGIN_RULE:60*$1ValDeclared
+//#BEGIN_RULE:60*&IDsCount($1Val_)
 //                @REUSE_ID_$1_VAL
 //#END_RULE
-//#BEGIN_RULE:60*$1VarDeclared*(1-lambdaVal)
+//#BEGIN_RULE:60*&IDsCount($1Var_)*(1-lambdaVal)
 //                @REUSE_ID_$1_VAR
 //#END_RULE
 
@@ -224,14 +256,14 @@
 
 
 //@ASSIGN_$1_VAR
-//    #BEGIN_RULE:20*$1VarDeclared*0
+//    #BEGIN_RULE:20*&IDsCount($1Var_)*0
 //        @REUSE_ID_$1_VAR ` = ` @$1_EXPRESSION  `; ` \n
 //            #END_RULE
-//    #BEGIN_RULE:(1-$1VarDeclared)
+//    #BEGIN_RULE:(1-&IDsCount($1Var_))
 
 
 @ASSIGN
-    #APPEND_RULE:30*$1VarDeclared*StringVarWeight
+    #APPEND_RULE:30*&IDsCount($1Var_)*StringVarWeight
         //@ASSIGN_$1_VAR
         @REUSE_ID_$1_VAR ` = ` @$1_EXPRESSION  `; ` \n
     #END_RULE
@@ -272,12 +304,13 @@
 
 
 @$3_EXPRESSION_SPECIFIC
-  #APPEND_RULE:1*$1$3NumericVarDeclared*$3IsPrimitiveType*(1-lambdaVal)
-     @$3ToReferenceType `.parse` @$3ToParseNumericType `(` @REUSE_ID_String_$3_NUMERIC_VAR `)`
+  #APPEND_RULE:1*&IDsCount($1$3NumericVar_)*$3IsPrimitiveType*(1-lambdaVal)*(1-$3IscharType)
+     @$3ToReferenceType  @$3ToParseNumericType `(` @REUSE_ID_String_$3_NUMERIC_VAR `)`
          #END_RULE
-  #APPEND_RULE:100*$1$3NumericValDeclared*$3IsPrimitiveType
-     @$3ToReferenceType `.parse` @$3ToParseNumericType `(` @REUSE_ID_String_$3_NUMERIC_VAL `)`
+  #APPEND_RULE:100*&IDsCount($1$3NumericVal_)*$3IsPrimitiveType*(1-$3IscharType)
+     @$3ToReferenceType  @$3ToParseNumericType `(` @REUSE_ID_String_$3_NUMERIC_VAL `)`
          #END_RULE
+
 
 //@DECLARE_BASIC_VAR
 //    #APPEND_RULE:Enable$1
@@ -292,3 +325,31 @@
 @POSTFIX_OP_$1_$1
 #BEGIN_RULE
 #END_RULE
+
+@SET_OR_SET_OP_String
+#BEGIN_RULE:10
+    ` = `
+#END_RULE
+#BEGIN_RULE:10*(1-LoopNest)
+    ` += `
+#END_RULE
+
+
+
+@int_EXPRESSION_RECURSIVE
+    #APPEND_RULE:(&IDsCount($1Var_)+&IDsCount($1Val_)+&IDsCount($1FieldVar_)+&IDsCount($1FieldVal_))*0
+//*(1-IsARegularConfiguration)
+        #REUSE_ID $1%Va%_ `.hashCode()`
+    #END_RULE
+    #APPEND_RULE:&IDsCount($1Var_)*(1-lambdaVal)
+        #REUSE_ID $1Var_ `.hashCode()`
+    #END_RULE
+    #APPEND_RULE:&IDsCount($1Val_)
+        #REUSE_ID $1Val_ `.hashCode()`
+    #END_RULE
+    #APPEND_RULE:&IDsCount($1FieldVar_)*(1-lambdaVal)
+        #REUSE_ID $1FieldVar_ `.hashCode()`
+    #END_RULE
+    #APPEND_RULE:&IDsCount($1FieldVal_)
+        #REUSE_ID $1FieldVal_ `.hashCode()`
+    #END_RULE

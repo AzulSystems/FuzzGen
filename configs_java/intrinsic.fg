@@ -1,48 +1,54 @@
+#INCLUDE "configs_java/intrinsicByType.fg" ($1) (Var) (VAR)
+#INCLUDE "configs_java/intrinsicByType.fg" ($1) (Val) (VAL)
+#INCLUDE "configs_java/intrinsicByType.fg" ($1) (VarField) (VAR_FIELD)
+#INCLUDE "configs_java/intrinsicByType.fg" ($1) (ValField) (VAL_FIELD)
+
+
 @ARRAYCOPY
-    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)
+    #APPEND_RULE:10*(&IDsCount($1ArrayVar_)+&IDsCount($1ArrayFieldVar_))
         ` System.arraycopy(` @REUSE_ID_$1_ARRAY_VAR_OR_VAL `, ` @[0:MaxArrayCount/2] `, ` @REUSE_ID_$1_ARRAY_VAR `, ` @[0:MaxArrayCount/2] `, ` @[0:-1+MaxArrayCount/2] `);` \n
     #END_RULE
-    #APPEND_RULE:100*TryCatchDepth*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)
-        ` System.arraycopy(` @REUSE_ID_$1_ARRAY_VAR_OR_VAL `, (` @int_EXPRESSION `)/20, ` @REUSE_ID_$1_ARRAY_VAR `, ` @int_EXPRESSION `, (` @int_EXPRESSION `) % (4 * ` @ARRAY_MAX_LENGTH `) );` \n
+    #APPEND_RULE:TryCatchDepth*(&IDsCount($1ArrayVar_)+&IDsCount($1ArrayFieldVar_))
+        ` System.arraycopy(` @REUSE_ID_$1_ARRAY_VAR_OR_VAL `, (` @int_EXPRESSION `)/2000, ` @REUSE_ID_$1_ARRAY_VAR `, ` @int_EXPRESSION `, (` @int_EXPRESSION `) % (4 * ` @ARRAY_MAX_LENGTH `) );` \n
     #END_RULE
     #APPEND_RULE:1
     ` /* no arrays declared */ ; ` \n 
     #END_RULE
 
 @ARRAYCOPYOF
-    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$1ArrayVarDeclared*(1+-1*$1ArrayVarCopyOfDone)
+    #APPEND_RULE:10*(&IDsCount($1ArrayVar_)+&IDsCount($1ArrayFieldVar_))*&IDsCount($1ArrayVar_)*(1+-1*$1ArrayVarCopyOfDone)
         #SET $1ArrayVarCopyOfDone=$1ArrayVarCopyOfDone+1 
         @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` #REUSE_ID $1ArrayVar_ `, ` @[7*MaxArrayCount/8:MaxArrayCount+-1] `);` \n
     #END_RULE
-    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$1ArrayVarDeclared*$1ArrayVarCopyOfDone
+    #APPEND_RULE:10*(&IDsCount($1ArrayVar_)+&IDsCount($1ArrayFieldVar_))*&IDsCount($1ArrayVar_)*$1ArrayVarCopyOfDone
         @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` #REUSE_ID $1ArrayVar_ `, ` #GET_LAST_ID $1ArrayVar_ `.length);` \n
     #END_RULE
 
-    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$1ArrayValDeclared*(1+-1*$1ArrayValCopyOfDone)
+    #APPEND_RULE:10*(&IDsCount($1ArrayVar_)+&IDsCount($1ArrayFieldVar_))*&IDsCount($1ArrayVal_)*(1+-1*$1ArrayValCopyOfDone)
         #SET $1ArrayValCopyOfDone=$1ArrayValCopyOfDone+1 
         @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` #REUSE_ID $1ArrayVal_ `, ` @[7*MaxArrayCount/8:MaxArrayCount+-1] `);` \n
     #END_RULE
-    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$1ArrayValDeclared*$1ArrayValCopyOfDone
+    #APPEND_RULE:10*(&IDsCount($1ArrayVar_)+&IDsCount($1ArrayFieldVar_))*&IDsCount($1ArrayVal_)*$1ArrayValCopyOfDone
         @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` #REUSE_ID $1ArrayVal_ `, ` #GET_LAST_ID $1ArrayVal_ `.length);` \n
     #END_RULE
 
-    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$1ArrayFieldVarDeclared*(1+-1*$1ArrayFieldVarCopyOfDone)
+    #APPEND_RULE:10*(&IDsCount($1ArrayVar_)+&IDsCount($1ArrayFieldVar_))*&IDsCount($1ArrayFieldVar_)*(1+-1*$1ArrayFieldVarCopyOfDone)
         #SET $1ArrayFieldVarCopyOfDone=$1ArrayFieldVarCopyOfDone+1 
         @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` #REUSE_ID $1ArrayFieldVar_ `, ` @[7*MaxArrayCount/8:MaxArrayCount+-1] `);` \n
     #END_RULE
-    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$1ArrayFieldVarDeclared*$1ArrayFieldVarCopyOfDone
+    #APPEND_RULE:10*(&IDsCount($1ArrayVar_)+&IDsCount($1ArrayFieldVar_))*&IDsCount($1ArrayFieldVar_)*$1ArrayFieldVarCopyOfDone
         @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` #REUSE_ID $1ArrayFieldVar_ `, ` #GET_LAST_ID $1ArrayFieldVar_ `.length);` \n
     #END_RULE
 
-    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$1ArrayFieldValDeclared*(1+-1*$1ArrayFieldValCopyOfDone)
+    #APPEND_RULE:10*(&IDsCount($1ArrayVar_)+&IDsCount($1ArrayFieldVar_))*&IDsCount($1ArrayFieldVal_)*(1+-1*$1ArrayFieldValCopyOfDone)
         #SET $1ArrayFieldValCopyOfDone=$1ArrayFieldValCopyOfDone+1 
         @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` #REUSE_ID $1ArrayFieldVar_ `, ` @[7*MaxArrayCount/8:MaxArrayCount+-1] `);` \n
     #END_RULE
-    #APPEND_RULE:10*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)*$1ArrayFieldValDeclared*$1ArrayFieldValCopyOfDone
+    #APPEND_RULE:10*(&IDsCount($1ArrayVar_)+&IDsCount($1ArrayFieldVar_))*&IDsCount($1ArrayFieldVal_)*$1ArrayFieldValCopyOfDone
         @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` #REUSE_ID $1ArrayFieldVal_ `, ` #GET_LAST_ID $1ArrayFieldVal_ `.length);` \n
     #END_RULE
 
-    #APPEND_RULE:100*TryCatchDepth*($1ArrayVarDeclared+$1ArrayFieldVarDeclared)
+    #APPEND_RULE:100*TryCatchDepth*(&IDsCount($1ArrayVar_)+&IDsCount($1ArrayFieldVar_))
         @REUSE_ID_$1_ARRAY_VAR ` = Arrays.copyOf(` @REUSE_ID_$1_ARRAY_VAR_OR_VAL `, (` @int_EXPRESSION `) % (4 * ` @ARRAY_MAX_LENGTH `));` \n
     #END_RULE
     #APPEND_RULE:1
@@ -50,7 +56,7 @@
     #END_RULE
 
 @ARRAYEQUALS
-    #APPEND_RULE:100000*($1ArrayVarDeclared+$1ArrayFieldVarDeclared+$1ArrayValDeclared+$1ArrayFieldValDeclared)
+    #APPEND_RULE:100000*(&IDsCount($1ArrayVar_)+&IDsCount($1ArrayFieldVar_)+&IDsCount($1ArrayVal_)+&IDsCount($1ArrayFieldVal_))
         `java.util.Arrays.equals(`@REUSE_ID_$1_ARRAY_VAR_OR_VAL `, ` @REUSE_ID_$1_ARRAY_VAR_OR_VAL `)`
     #END_RULE
     #APPEND_RULE

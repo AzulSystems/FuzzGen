@@ -1,0 +1,140 @@
+#INCLUDE "configs_java/utils.fg"
+
+#INCLUDE "configs_java/CollectionListTypesDeclareVars.fg" ($1) (VAR) (Var) (ArrayList)
+#INCLUDE "configs_java/CollectionListTypesDeclareVars.fg" ($1) (VAL) (Val) (ArrayList)
+#INCLUDE "configs_java/CollectionListTypesDeclareVars.fg" ($1) (FIELD_VAR) (FieldVar) (ArrayList)
+#INCLUDE "configs_java/CollectionListTypesDeclareVars.fg" ($1) (FIELD_VAL) (FieldVal) (ArrayList)
+
+@ARRAY_MAX_LENGTH
+@$1_LITERAL
+@TEST_CLASS_NAME
+@FOR_LOOP
+@SET_OR_SET_OP_String
+@String_EXPRESSION
+@removeElementMethodLinkedList
+
+
+@REUSE_ID_$1_ArrayList_FIELD_VAR
+    #BEGIN_RULE:5*&IDsCount(Cls_, $1ArrayListFieldVar_)
+         #LEND_SCOPE_WITH_ID Cls_ $1ArrayListFieldVar_
+            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_ID $1ArrayListFieldVar_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:TestClass*0
+         #LEND_SCOPE Test_
+            `Test.`  #REUSE_LOCAL_ID $1ArrayListFieldVar_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:20*&IDsCount($1ArrayListFieldVar_)
+            #REUSE_ID $1ArrayListFieldVar_
+    #END_RULE
+
+@REUSE_ID_$1_ArrayList_FIELD_VAL
+    #BEGIN_RULE:5*&IDsCount(Cls_, $1ArrayListFieldVal_)
+        #LEND_SCOPE_WITH_ID Cls_ $1ArrayListFieldVal_
+            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID $1ArrayListFieldVal_
+        #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:TestClass*0
+         #LEND_SCOPE Test_
+            `Test.`  #REUSE_LOCAL_ID $1ArrayListFieldVal_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:20*&IDsCount($1ArrayListFieldVal_)
+        #REUSE_ID $1ArrayListFieldVal_
+    #END_RULE
+
+
+//DEBUG1
+
+@REUSE_ID_$1_ArrayList_VAR
+    #BEGIN_RULE:3*&IDsCount($1ArrayListVar_)
+        #REUSE_ID $1ArrayListVar_  
+    #END_RULE
+    #BEGIN_RULE:1*&IDsCount($1ArrayListFieldVar_)+&IDsCount(Cls_, $1ArrayListFieldVar_)
+        @REUSE_ID_$1_ArrayList_FIELD_VAR
+    #END_RULE
+
+//DEBUG1.1
+@REUSE_ID_$1_ArrayList_VAL
+    #BEGIN_RULE:3*&IDsCount($1ArrayListVal_)
+        #REUSE_ID $1ArrayListVal_  
+    #END_RULE
+    #BEGIN_RULE:1*&IDsCount($1ArrayListFieldVal_)+&IDsCount(Cls_, $1ArrayListFieldVal_)
+        @REUSE_ID_$1_ArrayList_FIELD_VAL
+    #END_RULE
+
+//DEBUG1.2
+@REUSE_ID_$1_ArrayList_VAR_OR_VAL
+    #BEGIN_RULE:((&IDsCount($1ArrayListVar_)+&IDsCount($1ArrayListFieldVar_))*10+&IDsCount(Cls_, $1ArrayListFieldVar_))*(1-lambdaVal)
+        @REUSE_ID_$1_ArrayList_VAR
+    #END_RULE
+//DEBUG1.2.1
+    #BEGIN_RULE:(&IDsCount($1ArrayListVal_)+&IDsCount($1ArrayListFieldVal_))+&IDsCount(Cls_, $1ArrayListFieldVal_)
+        @REUSE_ID_$1_ArrayList_VAL
+    #END_RULE
+//DEBUG1.2.2
+//    #BEGIN_RULE:lambdaVal*(1+(&IDsCount($1ArrayListVal_)+&IDsCount($1ArrayListFieldVal_)+&IDsCount(Cls_, $1ArrayListFieldVal_)))
+//        `(new ArrayList<$1>())`
+//    #END_RULE
+
+//DEBUG1.2.3
+@DECLARE_VAR_OF_TYPE
+#APPEND_RULE:2*Enable$1*localArrayListVarWeight
+@DECLARE_$1_ArrayList_VAR
+#END_RULE
+#APPEND_RULE:Enable$1*localArrayListVarWeight
+@DECLARE_$1_ArrayList_VAL
+#END_RULE
+//DEBUG1.3
+
+@DECLARE_FIELD_VAR_OF_TYPE
+#APPEND_RULE:1*Enable$1*fieldArrayListVarWeight*(MaxCollectionsFieldsInClassCount-CollectionsFieldsInClassCount)
+    @DECLARE_$1_ArrayList_FIELD_VAR
+    #SET CollectionsFieldsInClassCount=CollectionsFieldsInClassCount+1
+#END_RULE
+#APPEND_RULE:1*Enable$1*fieldArrayListVarWeight*(MaxCollectionsFieldsInClassCount-CollectionsFieldsInClassCount)
+    @DECLARE_$1_ArrayList_FIELD_VAL
+    #SET CollectionsFieldsInClassCount=CollectionsFieldsInClassCount+1
+#END_RULE
+
+//DEBUG2
+
+@FOR_ArrayList
+    #APPEND_RULE:100*((&IDsCount($1ArrayListVar_)+&IDsCount($1ArrayListFieldVar_)+&IDsCount($1ArrayListVal_)+&IDsCount($1ArrayListFieldVal_))*10+&IDsCount(Cls_, $1ArrayListFieldVar_)+&IDsCount(Cls_, $1ArrayListFieldVal_))*(1-LongLoop)
+        ` /* iterate over ArayList */ for ($1 `
+            #SET LongLoop=LongLoop+1
+            #BEGIN_SCOPE 
+            //#CREATE_ID $1Val_ `: ` #REUSE_ID $1ArrayList%_ `) { ` \n
+            #CREATE_ID $1Val_ `: ` @REUSE_ID_$1_ArrayList_VAR_OR_VAL `) { ` \n
+            #SET $1ValDeclared=$1ValDeclared+1
+            @STATEMENTS_SHORT
+            @STATEMENTS_SHORT
+            #SET $1ValDeclared=$1ValDeclared-1
+            #SET LongLoop=LongLoop-1
+            #END_SCOPE 
+        `}` \n
+    #END_RULE
+    #APPEND_RULE
+        @FOR_LOOP
+    #END_RULE
+
+//DEBUG3
+@FOREACH_ArrayList
+    #APPEND_RULE:100*((&IDsCount($1ArrayListVar_)+&IDsCount($1ArrayListFieldVar_)+&IDsCount($1ArrayListVal_)+&IDsCount($1ArrayListFieldVal_))*10+&IDsCount(Cls_, $1ArrayListFieldVar_)+&IDsCount(Cls_, $1ArrayListFieldVal_))*(1-LongLoop)*lambdaFunctionOneArg$1
+            //#REUSE_ID $1ArrayList%_ `.forEach(` #BEGIN_SCOPE #CREATE_ID $1IteratorVar_ #END_SCOPE ` -> `  #REUSE_ID lambdaFunctionOneArg$1_  `.lambdaFunctionOneArg$1(` #GET_LAST_ID $1IteratorVar_  `)); ` \n
+            @REUSE_ID_$1_ArrayList_VAR_OR_VAL `.forEach(` #BEGIN_SCOPE #CREATE_ID $1IteratorVar_ #END_SCOPE ` -> `  #REUSE_ID lambdaFunctionOneArg$1_  `.lambdaFunctionOneArg$1(` #GET_LAST_ID $1IteratorVar_  `)); ` \n
+    #END_RULE
+    #APPEND_RULE
+        @FOR_LOOP
+    #END_RULE
+
+
+//DEBUG4
+@boolean_EXPRESSION_RECURSIVE
+    #APPEND_RULE:&IDsCount($1ArrayListVar_)+&IDsCount($1ArrayListFieldVar_)+&IDsCount($1ArrayListVal_)+&IDsCount($1ArrayListFieldVal_)
+        //#REUSE_ID $1ArrayList%_ `.contains(` @$1_CAST_OPEN @$1_EXPRESSION     @$1_CAST_CLOSE `)`
+        @REUSE_ID_$1_ArrayList_VAR_OR_VAL `.contains(` @$1_CAST_OPEN @$1_EXPRESSION     @$1_CAST_CLOSE `)`
+    #END_RULE
+
+        

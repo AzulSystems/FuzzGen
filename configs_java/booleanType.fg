@@ -1,5 +1,5 @@
 #INCLUDE "configs_java/parametersBasic.fg"
-#INCLUDE "configs_java/parametersByType.fg" ($1) (Var Val)
+#INCLUDE "configs_java/parametersByType.fg" ($1) (Var Val) (Integer Short Byte Long Float Double String) (Static Instance)
 
 @BIN_EXPR_$2$2_$1
 
@@ -36,22 +36,22 @@
     #END_RULE
 
 @OP_$2$2_$1
-    #BEGIN_RULE:2
+    #BEGIN_RULE:1
        ` == `
     #END_RULE
-    #BEGIN_RULE:3
+    #BEGIN_RULE:4
        ` != `
     #END_RULE
-    #BEGIN_RULE:3
+    #BEGIN_RULE:4
       ` < `
     #END_RULE
-    #BEGIN_RULE:3
+    #BEGIN_RULE:4
       ` <= `
     #END_RULE
-    #BEGIN_RULE:3
+    #BEGIN_RULE:4
        ` > `
     #END_RULE
-    #BEGIN_RULE:3
+    #BEGIN_RULE:4
        ` >= `
     #END_RULE
 
@@ -71,10 +71,10 @@
     #BEGIN_RULE:2
         @$1_CONSTANT @$1_CONSTANT_SUFFIX
     #END_RULE
-    #BEGIN_RULE:60*$1ValDeclared
+    #BEGIN_RULE:60*&IDsCount($1Val_)
         @REUSE_ID_$1_VAL
     #END_RULE
-    #BEGIN_RULE:60*$1VarDeclared
+    #BEGIN_RULE:60*&IDsCount($1Var_)*(1-lambdaVal)
         @REUSE_ID_$1_VAR
     #END_RULE
 
@@ -91,8 +91,8 @@
         `!`
     #END_RULE
 
-@$1_EXPRESSION_NOT_RECURSIVE
-    #APPEND_RULE:1+5*($2VarDeclared+$2ValDeclared+$2IndVarDeclared+$2IndArraySafeVarDeclared)
+@$1_EXPRESSION_RECURSIVE
+    #APPEND_RULE:Enable$2*(10+5*(&IDsCount($2Var_)+&IDsCount($2Val_)+&IDsCount($2IndVar_)+&IDsCount($2IndArraySafeVar_)))
         @BIN_EXPR_$2$2_$1
     #END_RULE
 

@@ -1,9 +1,12 @@
-#INCLUDE "configs_java/statementsByType.fg" (int short byte long float double Integer Short Byte Long Float Double)
-#INCLUDE "configs_java/loops.fg" (int short byte long) 
+#INCLUDE "configs_java/statementsByType.fg" (int short byte long float double Integer Short Byte Long Float Double String)
+#INCLUDE "configs_java/stream.fg" (Integer Short Byte Long Float Double String)
+#INCLUDE "configs_java/loops.fg" (int char short byte long Integer Short Byte Long) 
 #INCLUDE "configs_java/synchronizedBlock.fg"
-#INCLUDE "configs_java/intrinsic.fg" (int short byte long float double Integer Short Byte Long Float Double)
+#INCLUDE "configs_java/intrinsic.fg" (char int short byte long float double Integer Short Byte Long Float Double)
+//debug2
 
 @Boolean_EXPRESSION
+@char_EXPRESSION
 
 @TEST_STATEMENT
     #BEGIN_RULE
@@ -29,6 +32,17 @@
     #BEGIN_RULE:15
     #END_RULE
 
+@STATEMENTS_VERY_SHORT
+    #BEGIN_RULE:(StatementProb+-2*LoopNest)*(MaxStatementsInMethodCount+-1*StatementsInMethodCount)
+        @STATEMENT @STATEMENTS_VERY_SHORT
+    #END_RULE
+    #BEGIN_RULE:5*(StatementProb+-2*LoopNest)*(MaxStatementsInMethodCount+-1*StatementsInMethodCount)
+        @STATEMENT 
+    #END_RULE
+    #BEGIN_RULE:15
+    #END_RULE
+
+
 
 @STATEMENT
     #BEGIN_RULE
@@ -41,53 +55,88 @@
     #BEGIN_RULE:500
         @ASSIGN
     #END_RULE
-   #BEGIN_RULE:8*(MaxCondCount+-1*CondCount)*(MaxCondNest+-1*CondNest)
+   #BEGIN_RULE:ConditionalWeight*(MaxCondCount+-1*CondCount)*(MaxCondNest+-1*CondNest)
         #SET CondNest=CondNest+1
         #SET CondCount=CondCount+1
         @CONDITIONAL
          #SET CondNest=CondNest+-1
     #END_RULE                                               
   
-    #BEGIN_RULE:1*(MaxLoopCount+-1*LoopCount)*(MaxLoopNest+-1*LoopNest+-1*LongLoop)*(MaxLoopNest+-1*LoopNest+-1*LongLoop)*(1+5*TryCatchDepth)       
+    //#BEGIN_RULE:LoopWeight*(MaxLoopCount+-1*LoopCount)*(MaxLoopNest+-1*LoopNest+-1*LongLoop)*(MaxLoopNest+-1*LoopNest+-1*LongLoop)*(1+5*TryCatchDepth)       
+    #BEGIN_RULE:LoopWeight*(MaxLoopCount*MaxLoopCount-LoopCount*LoopCount)*(MaxLoopNest+-1*LoopNest+-1*LongLoop)*(1+5*TryCatchDepth)       
 	#SET LoopCount=LoopCount+1
         #SET LoopNest=LoopNest+1
         @LOOP
         #SET LoopNest=LoopNest+-1
     #END_RULE
-    #BEGIN_RULE:20*(MaxSynchronizedBlockNestDepth+-1*SynchronizedBlockNestDepth)*AnotherClassObjVarDeclared
+    #BEGIN_RULE:20*(MaxSynchronizedBlockNestDepth+-1*SynchronizedBlockNestDepth)*&IDsCount(AnotherClassObjVar_)
         @SYNCHRONIZED_BLOCK
     #END_RULE
- 
-    #BEGIN_RULE:((MaxLoopCount+-1*LoopCount)+1)*0
-	@MATCH
-    #END_RULE
-
     #BEGIN_RULE:15*(MaxLoopNest+-2*LoopNest)*(MaxTryCatchDepth+-1*TryCatchDepth)
 	    @TRY_CATCH
     #END_RULE
-
     #BEGIN_RULE:10*(MaxLoopNest+-2*LoopNest)*TryCatchDepth
 	    @THROW_EXCEPTION
     #END_RULE
-    
     #BEGIN_RULE:10+TryCatchDepth*30
 	    @ARRAYCOPY
     #END_RULE
-
     #BEGIN_RULE:10+TryCatchDepth*30
 	    @ARRAYCOPYOF
     #END_RULE
-
-    #BEGIN_RULE:8*(20+-1*MethodCallCount)*0
-	#SET MethodCallCount=MethodCallCount+1
-	@METHOD_MAP
+    #BEGIN_RULE:6*(1-LoopNest)
+        @STREAM_STATEMENT
+    #END_RULE
+    #BEGIN_RULE:CollectionStatementWeight
+        @COLLECTION_STATEMENT
+    #END_RULE
+    #BEGIN_RULE:20
+        `// UPDATE_ARRAY ` \n
+        #SET PreferConstant=20
+        @UPDATE_ARRAY
+        #SET PreferConstant=1
     #END_RULE
 
 
-    #BEGIN_RULE:0
-	@COLLECTION_VAL
+@COLLECTION_STATEMENT
+    #BEGIN_RULE:ArrayListWeight
+        @ArrayList_add_remove
+    #END_RULE
+    #BEGIN_RULE:ArrayListWeight*(1-LongLoop)
+        @ArrayList_addAll_removeAll
+    #END_RULE
+//    #BEGIN_RULE:5*ArrayListWeight
+//        @ArrayList_remove
+//    #END_RULE
+    #BEGIN_RULE:ArrayListWeight*(1-LongLoop)*0
+        @ArrayList_add
+    #END_RULE
+    #BEGIN_RULE:ArrayListWeight*(1-LongLoop)
+        @ArrayList_set
+    #END_RULE
+    #BEGIN_RULE:LinkedListWeight
+        @LinkedList_add_remove
+    #END_RULE
+    #BEGIN_RULE:LinkedListWeight*(1-LongLoop)
+        @LinkedList_addAll_removeAll
+    #END_RULE
+//    #BEGIN_RULE:5*LinkedListWeight
+//        @LinkedList_remove
+//    #END_RULE
+    #BEGIN_RULE:LinkedListWeight*(1-LongLoop)*0
+        @LinkedList_add
+    #END_RULE
+    #BEGIN_RULE:LinkedListWeight*(1-LongLoop)
+        @LinkedList_set
+    #END_RULE
+    #BEGIN_RULE:HashMapWeight*(1-LongLoop)
+        @HASHMAP_PUT_AND_REMOVE
+    #END_RULE
+    #BEGIN_RULE:HashMapWeight*(1-LongLoop)
+        @HASHMAP_REMOVE_AND_PUT
     #END_RULE
 
+   
 @STATEMENT1
     #BEGIN_RULE:30*(MaxLoopCount+-1*LoopCount)+3
         @ASSIGN 
@@ -100,10 +149,10 @@
     #END_RULE                                               
 
     @ASSIGN
-        #APPEND_RULE:40*booleanVarDeclared
+        #APPEND_RULE:40*&IDsCount(booleanVar_)
         @ASSIGN_boolean_VAR
     #END_RULE
-        #APPEND_RULE:10*BooleanVarDeclared
+        #APPEND_RULE:10*&IDsCount(BooleanVar_)
         @ASSIGN_Boolean_VAR
     #END_RULE
 
@@ -117,39 +166,58 @@
         @REUSE_ID_boolean_VAR ` = ` @boolean_EXPRESSION `; ` \n
     #END_RULE
 
-   
+@MAYBE_BREAK_CONTINUE_RETURN_IN_CONDITIONAL
+    #BEGIN_RULE
+        @RETURN_IN_CONDITIONAL
+    #END_RULE
+    #BEGIN_RULE:LoopNest
+        `break;` \n
+    #END_RULE
+    #BEGIN_RULE:LoopNest*(1-WhileLoop-DoWhileLoop)
+        `continue;` \n
+    #END_RULE
+    #BEGIN_RULE:10
+    #END_RULE
+
+
+
+#SET ReturnOrBreakOrContinueCount=0
 @IF
     #BEGIN_RULE:10
-        `if ( ` @boolean_EXPRESSION ` ) { ` @STATEMENT ` } else { ` @STATEMENT ` } `  \n
+        `if ( ` @boolean_EXPRESSION ` ) { ` \n @STATEMENT \n @MAYBE_BREAK_CONTINUE_RETURN_IN_CONDITIONAL \n ` } else { ` \n @STATEMENT  \n ` } `  \n
+    #END_RULE
+    #BEGIN_RULE:10
+        `if ( ` @boolean_EXPRESSION ` ) { ` \n @STATEMENT  \n ` } else { ` \n @STATEMENT \n @MAYBE_BREAK_CONTINUE_RETURN_IN_CONDITIONAL \n ` } `  \n
     #END_RULE
     #BEGIN_RULE:7
-        `if ( ` @boolean_EXPRESSION ` ) { ` \n @STATEMENTS  \n ` } ` \n
+        `if ( ` @boolean_EXPRESSION ` ) { ` \n @STATEMENTS_SHORT  \n @MAYBE_BREAK_CONTINUE_RETURN_IN_CONDITIONAL \n ` } ` \n
     #END_RULE
     #BEGIN_RULE:7
-        `if ( ` @boolean_EXPRESSION ` ) { ` \n @STATEMENTS \n ` } else { ` \n @STATEMENTS \n ` } `  \n
+        `if ( ` @boolean_EXPRESSION ` ) { ` \n @STATEMENTS_SHORT \n @MAYBE_BREAK_CONTINUE_RETURN_IN_CONDITIONAL \n ` } else { ` \n @STATEMENTS_SHORT \n ` } `  \n
     #END_RULE  
-    #BEGIN_RULE:2
-        `if ( ` @boolean_EXPRESSION ` ) { ` \n @STATEMENTS \n ` } else ` @IF 
+    #BEGIN_RULE:7
+        `if ( ` @boolean_EXPRESSION ` ) { ` \n @STATEMENTS_SHORT \n ` } else { ` \n @STATEMENTS_SHORT \n @MAYBE_BREAK_CONTINUE_RETURN_IN_CONDITIONAL \n ` } `  \n
     #END_RULE  
+    //#BEGIN_RULE:1
+    //    `if ( ` @boolean_EXPRESSION ` ) { ` \n @STATEMENTS_SHORT \n @MAYBE_BREAK_CONTINUE_RETURN_IN_CONDITIONAL \n ` } else ` \n @IF \n
+    //#END_RULE  
 
 @SWITCH
-    #BEGIN_RULE:10*intVarDeclared
+    #BEGIN_RULE:10*&IDsCount(intVar_)
         @SWITCH_int
     #END_RULE
-    #BEGIN_RULE:10*byteVarDeclared
+    #BEGIN_RULE:10*&IDsCount(byteVar_)
         @SWITCH_byte
     #END_RULE
-    #BEGIN_RULE:10*shortVarDeclared
+    #BEGIN_RULE:10*&IDsCount(shortVar_)
         @SWITCH_short
-    #END_RULE
-    #BEGIN_RULE
     #END_RULE
        
 @CONDITIONAL
-    #BEGIN_RULE:10
+    #BEGIN_RULE:25
         @IF
     #END_RULE  
-    #BEGIN_RULE:1
+    #BEGIN_RULE:(&IDsCount(intVar_)+&IDsCount(byteVar_)+&IDsCount(shortVar_))
         @SWITCH
     #END_RULE
        
@@ -217,11 +285,6 @@
 #END_RULE
 #BEGIN_RULE
     ` NumberFormatException() `
-#END_RULE
-
-@METHOD_MAP
-#APPEND_RULE
-        \n ` ; ` \n
 #END_RULE
 
 

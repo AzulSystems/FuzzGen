@@ -1,52 +1,69 @@
 #INCLUDE "configs_java/constants.fg"
 #INCLUDE "configs_java/parametersBasic.fg"
-#INCLUDE "configs_java/parametersByType.fg" ( $1 ) (Var Val)
+#INCLUDE "configs_java/parametersByType.fg" ( $1 ) (Var Val) (Integer Short Byte Long Float Double String)  (Static Instance)
 #INCLUDE "configs_java/arrayTypes.fg" $1
+//#INCLUDE "configs_java/ArrayListTypes.fg" $1
 #INCLUDE "configs_java/numericFloat.fg" (float double Float Double)
-#INCLUDE "configs_java/numericInteger.fg" (int short byte long Integer Short Byte Long)
+#INCLUDE "configs_java/numericInteger.fg" (int char short byte long Integer Short Byte Long)
 
 @TEST_CLASS_NAME
 @String_CONSTANT
 @String_CONSTANT_SUFFIX
+@ACCESS_MODIFIER
 
-@CREATE_ID_METHOD_$1_$1
+@CREATE_ID_METHOD_$1_$1_$2
     #BEGIN_RULE
-        #CREATE_LAZY_ID method_$1_$1_
+        #CREATE_LAZY_ID method_$1_$1_$2_
 //        #CREATE_ID method_$1_$1_
     #END_RULE
 
 
-@CREATE_ID_RECURSIVE_FUNCTION_$1_$1
+@CREATE_ID_RECURSIVE_FUNCTION_$1_$1_$2
     #BEGIN_RULE
-        #CREATE_ID recursive_function_$1_$1_
+        #CREATE_ID recursive_function_$1_$1_$2_
     #END_RULE
-
-
-
 
 
 @REUSE_ID_METHOD_$1_$1
-    #APPEND_RULE:25*method_$1_$1Declared
-        #REUSE_ID method_$1_$1_
+    //#APPEND_RULE:25*method_$1_$1Declared
+    #APPEND_RULE:50*&IDsAvailable(method_$1_$1_Static_)
+        #REUSE_ID method_$1_$1_Static_
     #END_RULE
-    #APPEND_RULE:2*global_method_$1_$1Declared
-         #LEND_SCOPE_WITH_ID Cls_ method_$1_$1_
-            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID method_$1_$1_
+    #APPEND_RULE:50*&IDsAvailable(method_$1_$1_Instance_)*MethodIsInstance
+        #REUSE_ID method_$1_$1_Instance_
+    #END_RULE
+    #APPEND_RULE:10*&IDsCount(Cls_, method_$1_$1_Static_)
+         #LEND_SCOPE_WITH_ID Cls_ method_$1_$1_Static_
+            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID method_$1_$1_Static_
          #RETURN_SCOPE
     #END_RULE
+    #APPEND_RULE:1*&IDsCount(Cls_, method_$1_$1_Instance_)*MethodIsInstance*(1-DontUseOtherClsMembers)
+         #LEND_SCOPE_WITH_ID Cls_ method_$1_$1_Instance_
+            `new ` #REUSE_LOCAL_ID Cls_ `().`  #REUSE_LOCAL_ID method_$1_$1_Instance_ 
+         #RETURN_SCOPE
+    #END_RULE
+
     #APPEND_RULE:1*0
-         #LEND_SCOPE_WITH_ID Test_ method_$1_$1_
-             `Test.`  #REUSE_LOCAL_ID method_$1_$1_
+         #LEND_SCOPE_WITH_ID Test_ method_$1_$1_$2_
+             `Test.`  #REUSE_LOCAL_ID method_$1_$1_$2_
          #RETURN_SCOPE
     #END_RULE
 
 @REUSE_ID_RECURSIVE_FUNCTION_$1_$1
-    #BEGIN_RULE:25*recursive_function_$1_$1Declared
-        #REUSE_ID recursive_function_$1_$1_
+    #APPEND_RULE:25*&IDsCount(recursive_function_$1_$1_Static_)
+        #REUSE_ID recursive_function_$1_$1_Static_
     #END_RULE
-    #BEGIN_RULE:2*global_recursive_function_$1_$1Declared
-         #LEND_SCOPE_WITH_ID Cls_ recursive_function_$1_$1_
-            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID recursive_function_$1_$1_
+    #APPEND_RULE:25*&IDsCount(recursive_function_$1_$1_$2_)*MethodIsInstance
+        #REUSE_ID recursive_function_$1_$1_Instance_
+    #END_RULE
+    #APPEND_RULE:2*&IDsCount(Cls_, recursive_function_$1_$1_Static_)
+         #LEND_SCOPE_WITH_ID Cls_ recursive_function_$1_$1_Static_
+            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID recursive_function_$1_$1_Static_
+         #RETURN_SCOPE
+    #END_RULE
+    #APPEND_RULE:1*&IDsCount(Cls_, recursive_function_$1_$1_Instance_)*MethodIsInstance*(1-DontUseOtherClsMembers)
+         #LEND_SCOPE_WITH_ID Cls_ recursive_function_$1_$1_Instance_
+            `new ` #REUSE_LOCAL_ID Cls_ `().`  #REUSE_LOCAL_ID recursive_function_$1_$1_Instance_ 
          #RETURN_SCOPE
     #END_RULE
 
@@ -55,6 +72,9 @@
         #SET $1VarDeclared=$1VarDeclared+1
         `$1 ` @DECLARE_ID_$1_VAR ` = ` @$1_CONSTANT @$1_CONSTANT_SUFFIX `; ` \n
     #END_RULE
+    //#APPEND_RULE:$1IsIndexType
+    //    @DECLARE_$1_IND_VAR
+    //#END_RULE
 
 @DECLARE_$1_VAL
     #APPEND_RULE:5
@@ -64,6 +84,9 @@
     #APPEND_RULE // Effectively final
         #SET $1ValDeclared=$1ValDeclared+1
         `$1 ` @DECLARE_ID_$1_VAL ` = ` @$1_CONSTANT @$1_CONSTANT_SUFFIX `; `  \n
+    #END_RULE
+    #APPEND_RULE:$1IsIndexType // Effectively final
+        `$1 ` #CREATE_ID $1ArraySafeIndVar ` = ` @[0:127] @$1_CONSTANT_SUFFIX `; `  \n
     #END_RULE
 
 @DECLARE_ID_$1_VAR
@@ -93,125 +116,252 @@
         #CREATE_LAZY_ID $1Val_
     #END_RULE
 
-@DECLARE_$1_FIELD_VAR
-    #BEGIN_RULE
-        //#SET $1FieldVarDeclared=$1FieldVarDeclared+1
-        @DECLARE_$1_FIELD_VAR_DECLARED
-        #SET global_$1FieldVarDeclared=global_$1FieldVarDeclared+1*(1+-1*TestClass)
-        `public static $1 ` @DECLARE_ID_$1_FIELD_VAR ` = ` @$1_CONSTANT @$1_CONSTANT_SUFFIX `; ` \n
+@DECLARE_$1_$2_FIELD_VAR
+    #BEGIN_RULE:$2IsStatic
+        //#SET $1$2FieldVarDeclared=$1$2FieldVarDeclared+1
+        @DECLARE_$1_$2_FIELD_VAR_DECLARED
+        //#SET global_$1$2FieldVarDeclared=global_$1$2FieldVarDeclared+1*(1+-1*TestClass)
+        @ACCESS_MODIFIER ` static $1 ` @DECLARE_ID_$1_$2_FIELD_VAR ` = ` @$1_CONSTANT @$1_CONSTANT_SUFFIX `; ` \n
+    #END_RULE
+    #BEGIN_RULE:$2IsInstance
+        //*IsARegularConfiguration
+        //#SET $1$2FieldVarDeclared=$1$2FieldVarDeclared+1
+        @DECLARE_$1_$2_FIELD_VAR_DECLARED
+        //#SET global_$1$2FieldVarDeclared=global_$1$2FieldVarDeclared+1*(1+-1*TestClass)
+        @ACCESS_MODIFIER ` $1 ` @DECLARE_ID_$1_$2_FIELD_VAR ` = ` @$1_CONSTANT @$1_CONSTANT_SUFFIX `; ` \n
     #END_RULE
 
-@DECLARE_$1_FIELD_VAR_DECLARED
+@DECLARE_$1_$2_FIELD_VAR_DECLARED
     #BEGIN_RULE
-        #SET $1FieldVarDeclared=$1FieldVarDeclared+1
+        #SET $1$2FieldVarDeclared=$1$2FieldVarDeclared+1
     #END_RULE
 
-@DECLARE_$1_FIELD_VAL
+@MAYBE_FINAL
     #BEGIN_RULE
-        //#SET $1FieldValDeclared=$1FieldValDeclared+1
-        @DECLARE_$1_FIELD_VAL_DECLARED
-        #SET global_$1FieldValDeclared=global_$1FieldValDeclared+1*(1+-1*TestClass)
-        `public static final $1 ` @DECLARE_ID_$1_FIELD_VAL ` = ` @$1_CONSTANT @$1_CONSTANT_SUFFIX `; `  \n
+        ` final `
+    #END_RULE
+    #BEGIN_RULE
     #END_RULE
 
-@DECLARE_$1_FIELD_VAL_DECLARED
-    #BEGIN_RULE
-        #SET $1FieldValDeclared=$1FieldValDeclared+1
+@DECLARE_$1_$2_FIELD_VAL
+    #BEGIN_RULE:$2IsStatic
+        `public static ` @MAYBE_FINAL `  $1 ` @DECLARE_ID_$1_$2_FIELD_VAL ` = ` @$1_CONSTANT @$1_CONSTANT_SUFFIX `; `  \n
+    #END_RULE
+    #BEGIN_RULE:$2IsStatic*$1IsIndexType
+        `public static ` @MAYBE_FINAL `  $1 ` #CREATE_ID $1$2IndArraySafeFieldVar_ ` = ` @[0:127] @$1_CONSTANT_SUFFIX `; `  \n
     #END_RULE
 
-@DECLARE_ID_$1_FIELD_VAR
-    #BEGIN_RULE
-        #CREATE_ID $1FieldVar_
+//@DECLARE_$1_Instance_FIELD_VAL
+    #BEGIN_RULE:$2IsInstance
+        //*IsARegularConfiguration
+   //     @DECLARE_$1_Instance_FIELD_VAL_DECLARED
+       // #SET global_$1$2FieldValDeclared=global_$1$2FieldValDeclared+1*(1+-1*TestClass)
+        `public ` @MAYBE_FINAL ` $1 ` @DECLARE_ID_$1_$2_FIELD_VAL ` = ` @$1_CONSTANT @$1_CONSTANT_SUFFIX `; `  \n
     #END_RULE
 
-@DECLARE_ID_$1_FIELD_VAL[0]
+
+@DECLARE_$1_$2_FIELD_VAL_DECLARED
     #BEGIN_RULE
-        #CREATE_ID $1FieldVal_
+        #SET $1$2FieldValDeclared=$1$2FieldValDeclared+1
+    #END_RULE
+
+@DECLARE_ID_$1_$2_FIELD_VAR
+    #BEGIN_RULE
+        #CREATE_ID $1$2FieldVar_
+    #END_RULE
+
+@DECLARE_ID_$1_$2_FIELD_VAL
+    #BEGIN_RULE
+        #CREATE_ID $1$2FieldVal_
     #END_RULE
 
 
-@REUSE_ID_$1_FIELD_VAR
-    #APPEND_RULE:2*global_$1FieldVarDeclared
-         #LEND_SCOPE_WITH_ID Cls_ $1FieldVar_
-            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID $1FieldVar_
+@REUSE_ID_$1_Instance_FIELD_VAR
+    #BEGIN_RULE:2*&IDsCount(Cls_, $1InstanceFieldVar_)*(MethodIsInstance)*(1-DontUseOtherClsMembers)
+         #LEND_SCOPE_WITH_ID Cls_ $1InstanceFieldVar_
+            ` new ` #REUSE_LOCAL_ID Cls_ `().`  #REUSE_LOCAL_ID $1InstanceFieldVar_
          #RETURN_SCOPE
     #END_RULE
-    #APPEND_RULE:20*$1FieldVarDeclared
-            #REUSE_ID $1FieldVar_
+    #BEGIN_RULE:20*&IDsCount($1InstanceFieldVar_)*(MethodIsInstance)
+            #REUSE_ID $1InstanceFieldVar_
     #END_RULE
-    #APPEND_RULE:TestClass*0
-         #LEND_SCOPE_WITH_ID Test_ $1FieldVar_
-             `Test.`  #REUSE_LOCAL_ID $1FieldVar_
+    #BEGIN_RULE:20*extendsSprClsB*&IDsCount(SprClsB_, $1InstanceFieldVar_)*(MethodIsInstance)
+         #LEND_SCOPE_WITH_ID SprClsB_ $1InstanceFieldVar_
+             #REUSE_LOCAL_ID $1InstanceFieldVar_
          #RETURN_SCOPE
     #END_RULE
 
-@REUSE_ID_$1_FIELD_VAL
-    #APPEND_RULE:2*global_$1FieldValDeclared
-         #LEND_SCOPE_WITH_ID Cls_ $1FieldVal_
-            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID $1FieldVal_
+
+
+@REUSE_ID_$1_Static_FIELD_VAR
+    #BEGIN_RULE:20*&IDsCount($1StaticFieldVar_)
+            #REUSE_ID $1StaticFieldVar_
+    #END_RULE
+    #BEGIN_RULE:2*&IDsCount(Cls_, $1StaticFieldVar_)
+         #LEND_SCOPE_WITH_ID Cls_ $1StaticFieldVar_
+            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID $1StaticFieldVar_
          #RETURN_SCOPE
     #END_RULE
-    #APPEND_RULE:TestClass*0
-         #LEND_SCOPE_WITH_ID Test_ $1FieldVal_
-             `Test.`  #REUSE_LOCAL_ID $1FieldVal_
+    #BEGIN_RULE:TestClass*0
+         #LEND_SCOPE_WITH_ID Test_ $1StaticFieldVar_
+             `Test.`  #REUSE_LOCAL_ID $1StaticFieldVar_
          #RETURN_SCOPE
     #END_RULE
-    #APPEND_RULE:20*$1FieldValDeclared
-            #REUSE_ID $1FieldVal_
+    #BEGIN_RULE:20*extendsSprClsB*&IDsCount(SprClsB_, $1StaticFieldVar_)
+         #LEND_SCOPE_WITH_ID SprClsB_ $1StaticFieldVar_
+             #REUSE_LOCAL_ID $1StaticFieldVar_
+         #RETURN_SCOPE
     #END_RULE
+
+
+@REUSE_ID_$1_Instance_FIELD_VAL
+    #BEGIN_RULE:2*&IDsCount(Cls_, $1InstanceFieldVal_)*(MethodIsInstance)*(1-DontUseOtherClsMembers)
+//*(MethodIsInstance)
+         #LEND_SCOPE_WITH_ID Cls_ $1InstanceFieldVal_
+            `new ` #REUSE_LOCAL_ID Cls_ `().`  #REUSE_LOCAL_ID $1InstanceFieldVal_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:20*extendsSprClsB*&IDsCount(SprClsB_, $1InstanceFieldVal_)*(MethodIsInstance)
+         #LEND_SCOPE_WITH_ID SprClsB_ $1InstanceFieldVal_
+             #REUSE_LOCAL_ID $1InstanceFieldVal_
+         #RETURN_SCOPE
+    #END_RULE
+
+    #BEGIN_RULE:20*&IDsCount($1InstanceFieldVal_)
+            //*(MethodIsInstance)
+            #REUSE_ID $1InstanceFieldVal_
+    #END_RULE
+
+@REUSE_ID_$1_Static_FIELD_VAL
+    #BEGIN_RULE:2*&IDsCount(Cls_, $1StaticFieldVal_)
+         #LEND_SCOPE_WITH_ID Cls_ $1StaticFieldVal_
+            #REUSE_LOCAL_ID Cls_ `.`  #REUSE_LOCAL_ID $1StaticFieldVal_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:TestClass*0
+         #LEND_SCOPE_WITH_ID Test_ $1StaticFieldVal_
+             `Test.`  #REUSE_LOCAL_ID $1StaticFieldVal_
+         #RETURN_SCOPE
+    #END_RULE
+    #BEGIN_RULE:20*&IDsCount($1StaticFieldVal_)
+//*(MethodIsInstance+MethodIsStatic)
+            #REUSE_ID $1StaticFieldVal_
+    #END_RULE
+    #BEGIN_RULE:20*extendsSprClsB*&IDsCount(SprClsB_, $1StaticFieldVal_)
+         #LEND_SCOPE_WITH_ID SprClsB_ $1StaticFieldVal_
+             #REUSE_LOCAL_ID $1StaticFieldVal_
+         #RETURN_SCOPE
+    #END_RULE
+
+
+
 
 
 @REUSE_ID_$1_VAR
-    #APPEND_RULE:8*$1VarDeclared
+    #APPEND_RULE:&IDsCount($1Var_)
         #REUSE_ID $1Var_
     #END_RULE
-    #APPEND_RULE:1*$1FieldVarDeclared+1*global_$1FieldVarDeclared
-        @REUSE_ID_$1_FIELD_VAR
+    //#APPEND_RULE:&IDsCount($1$2FieldVar_)+&IDsCount(Cls_, $1$2FieldVar_)
+    #APPEND_RULE:(&IDsCount($1StaticFieldVar_)+&IDsCount(Cls_, $1StaticFieldVar_))*(1+20*InConstructorMethod)*(1+100*(extendsSprClsA+extendsSprClsB))
+        @REUSE_ID_$1_Static_FIELD_VAR
+    #END_RULE
+    //#APPEND_RULE:MethodIsInstance*(&IDsCount($1StaticFieldVar_)+&IDsCount($1InstanceFieldVar_)+&IDsCount(Cls_, $1StaticFieldVar_)+&IDsCount(Cls_, $1InstanceFieldVar_))
+    #APPEND_RULE:MethodIsInstance*(&IDsCount($1InstanceFieldVar_)+&IDsCount(Cls_, $1InstanceFieldVar_)*(1-DontUseOtherClsMembers))*(1+20*InConstructorMethod)*(1+100*(extendsSprClsA+extendsSprClsB))
+        @REUSE_ID_$1_Instance_FIELD_VAR
+    #END_RULE
+    #APPEND_RULE:10*TestClass*extendsSprClsB*&IDsCount(SprClsB_, $1StaticFieldVar_)*IsMethodObjArg
+        #LEND_SCOPE_WITH_ID Test_ $1StaticFieldVar_
+            `obj.` #REUSE_LOCAL_ID $1StaticFieldVar_ 
+        #RETURN_SCOPE
+    #END_RULE
+    #APPEND_RULE:MethodIsInstance*10*TestClass*extendsSprClsB*&IDsCount(SprClsB_, $1InstanceFieldVar_)*IsMethodObjArg
+        #LEND_SCOPE_WITH_ID Test_ $1InstanceFieldVar_
+            `obj.` #REUSE_LOCAL_ID $1InstanceFieldVar_ 
+        #RETURN_SCOPE
     #END_RULE
 
 @REUSE_ID_$1_VAL
-    #APPEND_RULE:8*$1ValDeclared
+    #APPEND_RULE:&IDsCount($1Val_)
         #REUSE_ID $1Val_
     #END_RULE
-    #APPEND_RULE:1*$1FieldValDeclared+1*global_$1FieldValDeclared
-        @REUSE_ID_$1_FIELD_VAL
+    //#APPEND_RULE:&IDsCount($1$2FieldVal_)+&IDsCount(Cls_, $1$2FieldVal_)
+    #APPEND_RULE:(&IDsCount($1StaticFieldVal_)+&IDsCount(Cls_, $1StaticFieldVal_))*(1+50*InConstructorMethod)
+        @REUSE_ID_$1_Static_FIELD_VAL
+    #END_RULE
+    //#APPEND_RULE:MethodIsInstance*(&IDsCount($1StaticFieldVal_)+&IDsCount($1InstanceFieldVal_)+&IDsCount(Cls_, $1StaticFieldVal_)+&IDsCount(Cls_, $1InstanceFieldVal_))
+    #APPEND_RULE:MethodIsInstance*(&IDsCount($1InstanceFieldVal_)+&IDsCount(Cls_, $1InstanceFieldVal_)*(1-DontUseOtherClsMembers))*(1+20*InConstructorMethod)*(1+100*(extendsSprClsA+extendsSprClsB))
+        @REUSE_ID_$1_Instance_FIELD_VAL
     #END_RULE
     #APPEND_RULE:100*lambdaVal$1
         #REUSE_ID lambdaVal$1_
     #END_RULE
+    #APPEND_RULE:20*(&IDsCount($1IndVar_)+&IDsCount($1IndArraySafeVar_))*(1-lambdaVal)
+        #REUSE_ID $1Ind%Var_
+    #END_RULE
+    #APPEND_RULE:10*TestClass*extendsSprClsB*&IDsCount(SprClsB_, $1StaticFieldVal_)*IsMethodObjArg
+        #LEND_SCOPE_WITH_ID Test_ $1StaticFieldVal_
+            `obj.` #REUSE_LOCAL_ID $1StaticFieldVal_ 
+        #RETURN_SCOPE
+    #END_RULE
+    #APPEND_RULE:MethodIsInstance*10*TestClass*extendsSprClsB*&IDsCount(SprClsB_, $1InstanceFieldVal_)*IsMethodObjArg
+        #LEND_SCOPE_WITH_ID Test_ $1InstanceFieldVal_
+            `obj.` #REUSE_LOCAL_ID $1InstanceFieldVal_ 
+        #RETURN_SCOPE
+    #END_RULE
+
+//no ckecks, dangerous!
+@REUSE_ID_$1_VAR_OR_VAL
+    #BEGIN_RULE:(&IDsCount($1Var_)+&IDsCount($1$2FieldVar_)+&IDsCount(Cls_, $1$2FieldVar_)+MethodIsInstance*(&IDsCount($1InstanceFieldVar_)+&IDsCount(Cls_, $1InstanceFieldVar_))*(1+20*InConstructorMethod)*(1+100*(extendsSprClsA+extendsSprClsB))+TestClass*extendsSprClsB*&IDsCount(SprClsB_, $1StaticFieldVar_)*IsMethodObjArg+MethodIsInstance*10*TestClass*extendsSprClsB*&IDsCount(SprClsB_, $1InstanceFieldVar_)*IsMethodObjArg)*(1-lambdaVal)
+        @REUSE_ID_$1_VAR
+    #END_RULE
+    #BEGIN_RULE:&IDsCount($1Val_)+&IDsCount($1$2FieldVal_)+&IDsCount(Cls_, $1$2FieldVal_)+MethodIsInstance*(&IDsCount($1InstanceFieldVal_)+&IDsCount(Cls_, $1InstanceFieldVal_))*(1+20*InConstructorMethod)*(1+100*(extendsSprClsA+extendsSprClsB))+TestClass*extendsSprClsB*&IDsCount(SprClsB_, $1StaticFieldVal_)*IsMethodObjArg+MethodIsInstance*10*TestClass*extendsSprClsB*&IDsCount(SprClsB_, $1InstanceFieldVal_)*IsMethodObjArg
+        @REUSE_ID_$1_VAL
+    #END_RULE
+
+
 
 
 @DECLARE_FIELD_VAR_OF_TYPE
-#APPEND_RULE:10*Enable$1*fieldArrayVarWeight
-    @DECLARE_$1_FIELD_VAR
+#APPEND_RULE:5*Enable$1*FieldVarWeight*(1-$1IsStringType)
+    @DECLARE_$1_$2_FIELD_VAR
 #END_RULE
-#APPEND_RULE:Enable$1*fieldArrayVarWeight
-    @DECLARE_$1_FIELD_VAL
+#APPEND_RULE:10*Enable$1*FieldVarWeight*($1IsStringType)*(MaxStringFieldsInClassCount-StringFieldsInClassCount)
+    @DECLARE_$1_$2_FIELD_VAR
+#SET StringFieldsInClassCount=StringFieldsInClassCount+1
+#END_RULE
+#APPEND_RULE:Enable$1*FieldVarWeight*(1-$1IsStringType)
+    @DECLARE_$1_$2_FIELD_VAL
+#END_RULE
+#APPEND_RULE:Enable$1*FieldVarWeight*($1IsStringType)*(MaxStringFieldsInClassCount-StringFieldsInClassCount)
+    @DECLARE_$1_$2_FIELD_VAL
+    #SET StringFieldsInClassCount=StringFieldsInClassCount+1
 #END_RULE
 
 @DECLARE_VAR_OF_TYPE
-#APPEND_RULE:10*Enable$1
+#APPEND_RULE:50*Enable$1
     @DECLARE_$1_VAR
 #END_RULE
-#APPEND_RULE:Enable$1
+#APPEND_RULE:5*Enable$1
     @DECLARE_$1_VAL
 #END_RULE
-#APPEND_RULE:2*Enable$1*localArrayVarWeight
+#APPEND_RULE:8*Enable$1*localArrayVarWeight
     @DECLARE_$1_ARRAY_VAR
 #END_RULE
-#APPEND_RULE:1*Enable$1*localArrayVarWeight
+#APPEND_RULE:4*Enable$1*localArrayVarWeight
     @DECLARE_$1_ARRAY_VAL
 #END_RULE
 
 
 @$1_LITERAL
-    #APPEND_RULE:1
+    #APPEND_RULE:1*PreferConstant
 @$1_CONSTANT @$1_CONSTANT_SUFFIX
     #END_RULE
-    #APPEND_RULE:40*$1ValDeclared
+    #APPEND_RULE:20*(&IDsCount($1Val_)+&IDsCount($1$2FieldVal_)+&IDsCount(Cls_, $1$2FieldVal_)+MethodIsInstance*(&IDsCount($1InstanceFieldVal_)+&IDsCount(Cls_, $1InstanceFieldVal_))*(1+20*InConstructorMethod)*(1+100*(extendsSprClsA+extendsSprClsB))+TestClass*extendsSprClsB*&IDsCount(SprClsB_, $1StaticFieldVal_)*IsMethodObjArg+MethodIsInstance*10*TestClass*extendsSprClsB*&IDsCount(SprClsB_, $1InstanceFieldVal_)*IsMethodObjArg)
+//    #APPEND_RULE:40*&IDsCount($1Val_)
         @REUSE_ID_$1_VAL
     #END_RULE
-    #APPEND_RULE:60*$1VarDeclared*(1-lambdaVal)
+    #APPEND_RULE:(&IDsCount($1Var_)+&IDsCount($1$2FieldVar_)+&IDsCount(Cls_, $1$2FieldVar_)+MethodIsInstance*(&IDsCount($1InstanceFieldVar_)+&IDsCount(Cls_, $1InstanceFieldVar_))*(1+20*InConstructorMethod)*(1+100*(extendsSprClsA+extendsSprClsB))+TestClass*extendsSprClsB*&IDsCount(SprClsB_, $1StaticFieldVar_)*IsMethodObjArg+MethodIsInstance*10*TestClass*extendsSprClsB*&IDsCount(SprClsB_, $1InstanceFieldVar_)*IsMethodObjArg)*(1-lambdaVal)
+//    #APPEND_RULE:60*&IDsCount($1Var_)*(1-lambdaVal)
         @REUSE_ID_$1_VAR
     #END_RULE
     #APPEND_RULE:50*lambdaVal$1
@@ -224,3 +374,22 @@
 #END_RULE
 
 
+
+//@RANDOM_$1_ARRAY_BODY
+//    #BEGIN_RULE:MaxArrayCount-random$1ArrayCount
+//        @RANDOM_$1_ARRAY_BODY @RANDOM_$1_ARRAY_BODY_
+//            #END_RULE
+//            #BEGIN_RULE:random$1ArrayCount-MaxArrayCount+1
+//            #END_RULE
+//
+//        @RANDOM_$1_ARRAY_BODY_
+//            #BEGIN_RULE
+//                #SET random$1ArrayCount=random$1ArrayCount+1
+//                @$1_CONSTANT @$1_SUFFIX `, `
+//                    #END_RULE
+//
+//                @RANDOM_$1_ARRAY
+//                    ` public static $1 random$1Array = new $1[] {`
+//                            @RANDOM_$1_ARRAY_BODY
+//                                        `}; ` \n
+//

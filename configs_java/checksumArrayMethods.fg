@@ -2,11 +2,15 @@
 #INCLUDE "configs_java/constants.fg"
 
 @RETURN_TYPE_$1
-#BEGIN_RULE:1+-1*$1IsFloatingPointType
+#BEGIN_RULE:(1+-1*$1IsFloatingPointType)*(1-$1IsStringType)
     `long`
 #END_RULE
 #BEGIN_RULE:$1IsFloatingPointType
     `double`
+#END_RULE
+#BEGIN_RULE:$1IsStringType
+    //`String`
+    `long`
 #END_RULE
 
 @CHECKSUM_COLLECTION_VARS_METHOD_SUM_$1
@@ -34,8 +38,8 @@
         ` return sum; ` \n
 	#END_RULE
 
-@DECLARE_CHECKSUM_COLLECTION_VARS_METHOD_$1
-	#BEGIN_RULE
+@DECLARE_CHECKSUM_COLLECTION_VARS_METHOD
+	#CONCAT_RULE
         `public static ` @RETURN_TYPE_$1 ` checksumCollectionVarsMethod$1( ` #BEGIN_SCOPE ` $1[][] valuesList) { ` \n @CHECKSUM_COLLECTION_VARS_METHOD_BODY_$1 \n ` } ` #END_SCOPE \n
 	#END_RULE
 
