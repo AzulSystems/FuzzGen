@@ -14,23 +14,26 @@
 #BEGIN_RULE:5
     @CONST_$1
 #END_RULE
-#BEGIN_RULE
+#BEGIN_RULE:(1-IsAliveConfiguration)
     `undef`
 #END_RULE
-#BEGIN_RULE:10*NUM_VALUES_$1
+#BEGIN_RULE:10*&IDsCount(val_$1_)
     `%` #REUSE_ID val_$1_
 #END_RULE
 
 @POINTER_$1
-#BEGIN_RULE
+#BEGIN_RULE:100*&IDsCount(ptr_$1_)
     `%` #REUSE_ID ptr_$1_
+#END_RULE
+#BEGIN_RULE:1
+    `null` 
 #END_RULE
 
 @LITERAL_$1
 #BEGIN_RULE:5
     @CONST_$1
 #END_RULE
-#BEGIN_RULE:10*NUM_VALUES_$1
+#BEGIN_RULE:10*&IDsCount(val_$1_)
     `%` #REUSE_ID val_$1_
 #END_RULE
 

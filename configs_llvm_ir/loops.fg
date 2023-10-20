@@ -1,0 +1,138 @@
+#INCLUDE "configs_llvm_ir/expressions.fg"
+#INCLUDE "configs_llvm_ir/basic_block.fg"
+#INCLUDE "configs_llvm_ir/pointer_instructions_typed.fg" (i1 i8 i16 i32 i64)
+
+@INSTRUCTIONS
+@BASIC_BLOCK
+@BASIC_BLOCK_INTERNALS
+
+@LOOP[20]
+#APPEND_RULE
+//:&IDsCount(loop_cnt_$1_)
+    @PREHEADER_$1
+    @LOOP_CONTENTS_$1
+#END_RULE
+
+@LOOP_CONTENTS_$1[20]
+#BEGIN_RULE 
+    @HEADER_$1
+//    @LOOP_BODY
+    @BASIC_BLOCK
+    @BACKEDGE
+#END_RULE
+
+@PREHEADER_$1[20]
+#BEGIN_RULE
+    #BEGIN_SCOPE
+        #CREATE_ID prhdr_loop_ `:`\n
+        @PREHEADER_CONTENTS_$1
+    #END_SCOPE
+#END_RULE
+
+@PREHEADER_CONTENTS_$1[20]
+#BEGIN_RULE
+    @PREHEADER_INTERNALS_$1
+    @PREHEADER_TERMINATOR
+#END_RULE
+
+@PREHEADER_INTERNALS_$1
+#BEGIN_RULE
+    @LOOP_COUNTER_INIT_$1
+    @BASIC_BLOCK_INTERNALS
+#END_RULE
+
+@PREHEADER_TERMINATOR[30]
+// All kind of TERMINATOR's should have the same stage; on this stage siblings are linked, also linked with and ENTRY_BLOCK with alloca's
+#BEGIN_RULE
+    `  br label %` #REUSE_ID_AND_LINK loop_ \n
+#END_RULE
+
+@LOOP_COUNTER_INIT
+#APPEND_RULE:LOOP_ENABLE_$1+NUM_LOOP_CNTRS_$1
+    @LOOP_COUNTER_INIT_$1
+#END_RULE
+
+@LOOP_COUNTER_INIT_$1
+#BEGIN_RULE:LOOP_ENABLE_$1
+    `  store $1 `
+    @[1:LOOP_CNTR_RANGE_$1]
+    `, ptr `
+    `%` #REUSE_ID loop_cnt_$1_ \n
+#END_RULE
+
+@HEADER_$1[20]
+#BEGIN_RULE
+    #BEGIN_SCOPE
+        #CREATE_ID loop_ `:`\n
+        @HEADER_CONTENTS_$1
+    #END_SCOPE
+#END_RULE
+
+@HEADER_CONTENTS_$1[20]
+#BEGIN_RULE
+    @HEADER_INTERNALS_$1
+    @HEADER_TERMINATOR
+#END_RULE
+
+@HEADER_INTERNALS_$1
+#BEGIN_RULE
+    @LOOP_COUNTER_ITERATOR_$1
+    @BASIC_BLOCK_INTERNALS
+#END_RULE
+
+@HEADER_TERMINATOR[30]
+// All kind of TERMINATOR's should have the same stage; on this stage siblings are linked, also linked with and ENTRY_BLOCK with alloca's
+#BEGIN_RULE
+    `  br i1 ` @EXPRESSION_i1 ` , label %` #REUSE_ID_AND_LINK be_`, label %` #REUSE_ID_AND_LINK loop_exit_ \n
+#END_RULE
+
+@LOOP_COUNTER_ITERATOR
+#APPEND_RULE:5*LOOP_ENABLE_$1
+    @LOOP_COUNTER_ITERATOR_$1
+#END_RULE
+
+@LOOP_COUNTER_ITERATOR_$1
+#BEGIN_RULE
+    `  %`
+    #CREATE_LAZY_ID val_$1_
+    ` = load $1, ptr %`
+    #GET_LAST_ID loop_cnt_$1_ \n
+    #REGISTER_LAZY_IDS
+    `  %`
+    #CREATE_LAZY_ID val_$1_
+    ` = add $1 %`
+    #GET_LAST_ID val_$1_ 
+    `, 1` \n
+    #REGISTER_LAZY_IDS
+    `  store $1 %`
+    #GET_LAST_ID val_$1_
+    `, ptr `
+    `%` #GET_LAST_ID loop_cnt_$1_ \n
+#END_RULE
+
+@BACKEDGE[20]
+#BEGIN_RULE
+    #BEGIN_SCOPE
+        #CREATE_ID be_ `:`\n
+        @BACKEDGE_CONTENTS
+    #END_SCOPE
+#END_RULE
+
+@BACKEDGE_CONTENTS[20]
+#BEGIN_RULE
+    @BACKEDGE_INTERNALS
+    @BACKEDGE_TERMINATOR
+#END_RULE
+
+@BACKEDGE_INTERNALS
+#BEGIN_RULE
+    @BASIC_BLOCK_INTERNALS
+#END_RULE
+
+@BACKEDGE_TERMINATOR[30]
+//BACKEDGE is kind of terminator
+#BEGIN_RULE
+//   `  br label %` #GET_LAST_ID loop_ \n
+    `  br i1 ` @EXPRESSION_i1 `, label %` #REUSE_ID_AND_LINK loop_`, label %` #REUSE_ID_AND_LINK loop_exit_ \n
+#END_RULE
+

@@ -7,7 +7,7 @@
         #CREATE_LAZY_ID val_$1_
         ` = `
 
-        ` atomicrmw ` @VOLATILE_MAYBE @ATOMICRMW_OPS ` $1* %` #REUSE_ID ptr_$1_ `, $1 ` @LITERAL_$1 @SYNCSCOPE_MAYBE @ORDERING
+        ` atomicrmw ` @VOLATILE_MAYBE @ATOMICRMW_OPS ` ptr %` #REUSE_ID ptr_$1_ `, $1 ` @LITERAL_$1 @SYNCSCOPE_MAYBE @ORDERING
         #REGISTER_LAZY_IDS
         #SET NUM_VALUES_$1=NUM_VALUES_$1+1
     #END_RULE
@@ -47,10 +47,12 @@
 #APPEND_RULE
     @FENCE
 #END_RULE
-#APPEND_RULE:NUM_PTRS_$1*$1_IS_BYTE_SIZED
+//#APPEND_RULE:NUM_PTRS_$1*$1_IS_BYTE_SIZED
+#APPEND_RULE:&IDsCount(ptr_$1_)*$1_IS_BYTE_SIZED
     @ATOMICRMW_$1
 #END_RULE
-#APPEND_RULE:NUM_PTRS_$1*NUM_VALUES_$1*$1_IS_BYTE_SIZED
+//#APPEND_RULE:NUM_PTRS_$1*NUM_VALUES_$1*$1_IS_BYTE_SIZED
+#APPEND_RULE:&IDsCount(ptr_$1_)*&IDsCount(val_$1_)*$1_IS_BYTE_SIZED
     @CMPXCHG_$1
 #END_RULE
 
@@ -103,7 +105,7 @@
         `  %`
         #CREATE_LAZY_ID struct_val_$1_
         ` = `
-        ` cmpxchg ` @WEAK_MAYBE @VOLATILE_MAYBE ` $1* %` #REUSE_ID ptr_$1_ `, $1 ` @LITERAL_$1 `, $1 %` #REUSE_ID val_$1_ @SYNCSCOPE_MAYBE @ORDERING @ORDERING ` ; yields  { $1, i1 }` \n
+        ` cmpxchg ` @WEAK_MAYBE @VOLATILE_MAYBE ` ptr %` #REUSE_ID ptr_$1_ `, $1 ` @LITERAL_$1 `, $1 %` #REUSE_ID val_$1_ @SYNCSCOPE_MAYBE @ORDERING @ORDERING ` ; yields  { $1, i1 }` \n
         #REGISTER_LAZY_IDS
         #SET NUM_VALUES_$1=NUM_VALUES_$1+1
         `  %`

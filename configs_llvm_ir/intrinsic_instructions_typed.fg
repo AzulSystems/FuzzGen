@@ -48,7 +48,7 @@
     #END_RULE
 
 @INTRINSIC_INSTRUCTION
-    #APPEND_RULE:NUM_VALUES_$1
+    #APPEND_RULE:&IDsCount(val_$1_)
         @INTRINSIC_$1
     #END_RULE
 
