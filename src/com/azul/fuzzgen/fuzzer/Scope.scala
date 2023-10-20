@@ -189,7 +189,26 @@ class Scope(parent: Option[Scope], rnd: Random) {
 
   }
 
-  private def collectIDs(prefix: String, candidates: ArrayBuffer[String], lookupParentScopes: Boolean): Unit = {
+  private def foundMatchingValuesFromMap(prefix : String, tmap: mutable.TreeMap[String, ArrayBuffer[String]]) : Boolean = {
+   // var matches = new ArrayBuffer[String]()
+
+    if (prefix.contains("%")) {
+      val pattern = prefix.replace("%", ".*")
+
+      for (s <- tmap.keys ) {
+        if (s.matches(pattern)) {
+          return true
+        }
+      }
+     return false
+    } else {
+      return tmap.contains(prefix)
+    }
+
+  }
+
+
+   def collectIDs(prefix: String, candidates: ArrayBuffer[String], lookupParentScopes: Boolean): Unit = {
     if (lookupParentScopes) {
       val dom = getImmediateDominator()
       if (dom.isDefined)
@@ -201,6 +220,35 @@ class Scope(parent: Option[Scope], rnd: Random) {
       return
     candidates ++= maybeMap.get
   }
+
+  def collectIDsLight(prefix: String, lookupParentScopes: Boolean): Boolean = {
+    if (foundMatchingValuesFromMap(prefix, map)) return true
+    if (lookupParentScopes) {
+      val dom = getImmediateDominator()
+      if (dom.isDefined) {
+        if (dom.get.collectIDsLight(prefix, lookupParentScopes)) return true
+      }
+    }
+    return false
+  }
+
+
+   def IDsCount(prefix: String, candidates: ArrayBuffer[String], lookupParentScopes: Boolean): Int = {
+    if (lookupParentScopes) {
+      val dom = getImmediateDominator()
+      if (dom.isDefined)
+        dom.get.collectIDs(prefix, candidates, lookupParentScopes)
+
+    }
+    //val maybeMap = map.get(prefix)
+    val maybeMap = getMatchingValuesFromMap(prefix, map)
+    if (maybeMap.isEmpty) {
+      return 0
+    }
+     candidates ++= maybeMap.get
+    return candidates.length
+  }
+
 
   def getID(prefix: String, lookupParentScopes: Boolean): Option[TerminalFuzzNode] = {
     val candidates = new ArrayBuffer[String]()

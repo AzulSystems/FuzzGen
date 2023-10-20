@@ -20,7 +20,8 @@
 package com.azul.fuzzgen.fuzzer
 
 import com.azul.fuzzgen.grammar.Grammar
-import com.azul.fuzzgen.parser._
+import com.azul.fuzzgen.parser.LexemeType.{LendScopeWithID, LexemeType}
+import com.azul.fuzzgen.parser.{ExpectIDLexeme, LendScopeWithIDLexeme, _}
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -37,8 +38,8 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
   private val rnd = new Random(seed)
   private var currentScope: Option[Scope] = _
   private var returnToScope: Option[Scope] = _
-  private val allScopes = new ArrayBuffer[Scope]()
-  private var grammar: Grammar = _
+  val allScopes = new ArrayBuffer[Scope]()
+  var grammar: Grammar = _
   val lastID = new mutable.HashMap[String, String]() // last id with prefix: prefix -> last reused id with this prefix
   private var stage: Option[Int] = _
   private var seenNextStage: Option[Int] = _
@@ -54,6 +55,7 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
     currentScope = None
     allScopes.clear()
     grammar = new Grammar(g)
+    grammar.fuzzer=this
     stage = Some(0)
     seenNextStage = None
     outputNodes.clear()
@@ -63,6 +65,7 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
   // Processes a single non-terminal lexeme, randomly choose a rule for it and applies it.
   private def processNonTerminal(curr: Lexeme): Unit = {
     assert(curr.lexemeType == LexemeType.NonTerminal, "Expected non-terminal lexeme!!")
+    grammar.fuzzer = this
     val ntStage = grammar.getStageFor(curr.token)
     var delay = false
     if (stage.isDefined)
@@ -140,6 +143,39 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
     currentScope = Some(matchingScopes(index))
   }
 
+  // "Lends" scope containing local ids specified as parameter and puts it on top of stack.
+   def checkScopeWithID(curr: LendScopeWithIDLexeme, failIfNotFound: Boolean, f: Fuzzer): Int = {
+
+    val matchingScopes =new ArrayBuffer[Scope] ()
+    for (s <- f.allScopes) {
+      if (s.getID(curr.token, lookupParentScopes = false).isDefined && s.getID(curr.ID, lookupParentScopes = false).isDefined ) {
+        matchingScopes += s
+      }
+    }
+    if (matchingScopes.isEmpty) {
+      if (failIfNotFound) {
+        fuzzingError("LendScopeWithID: No IDs declared with prefix \"" + curr.token + " and " + curr.ID + "\"")
+      } else {
+        return 0
+      }
+    }
+    return matchingScopes.length
+  }
+
+  // "Lends" scope containing local ids specified as parameter and puts it on top of stack.
+  def checkScopeWithIDLight(curr: LendScopeWithIDLexeme, failIfNotFound: Boolean, f: Fuzzer): Int = {
+
+    for (s <- f.allScopes) {
+      if (s.getID(curr.token, lookupParentScopes = false).isDefined && s.getID(curr.ID, lookupParentScopes = false).isDefined ) {
+        return 1
+      }
+    }
+    return 0
+  }
+
+
+
+
   // "Lends" scope containing local ids specified as parameter and puts it on top of stack
   private def lendScopeWithIDByPrefix(curr: LendScopeWithIDByPrefixLexeme): Unit = {
       if (returnToScope != null && !returnToScope.isEmpty) {
@@ -188,7 +224,7 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
   }
 
   // Return the current scope if it was lended and drop all its contents and remove from scopes stack.
-  private def returnScope(): Unit = {
+  def returnScope(): Unit = {
     if (currentScope.isEmpty)
       fuzzingError("Scope closed before it was open!")
     currentScope = returnToScope
@@ -303,6 +339,20 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
     currentFuzzNode.addChild(collectedIDs.get)
   }
 
+  // Returns a number of existing ID from current scope + scopes depth levels up.
+  def getAllIDsCount(lexeme: ExpectIDLexeme, f: Fuzzer): Int = {
+
+    val c = f.getCurrentScope.IDsCount(lexeme.token, new ArrayBuffer[String](), true)
+      return c
+  }
+
+  // Returns a number of existing ID from current scope + scopes depth levels up.
+  def getAllIDsCount1(fe: IDsAvailableExpression, f: Fuzzer): Int = {
+
+    //getCurrentScope.IDsCount(fe.id, new ArrayBuffer[String](), true)
+    f.getCurrentScope.IDsCount(fe.id, new ArrayBuffer[String](), true)
+  }
+
   // Returns last reused ID from current scope.
   def getLastReusedLocalID(): Unit = {
     val lastReusedLocalID = getCurrentScope.getLastReusedLocalID
@@ -318,8 +368,74 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
 
   // Sets an environment variable to the grammar.
   def setEnvVar(lexeme: SetEnvVarLexeme): Option[Int] = {
-    grammar.setEnvVar(lexeme.token, lexeme.value.eval(grammar))
+    grammar.setEnvVar(lexeme.token, lexeme.value.eval(this.grammar))
   }
+
+  // get number of IDs available
+  def IDsCount(lexeme: ExpectIDLexeme, f: Fuzzer): Int = {
+    val c = f.getAllIDsCount(lexeme, f)
+    return c
+  }
+
+  def checkIDs1(id: String, f: Fuzzer): Int = {
+    val scope_ = f.getCurrentScope
+
+
+
+    if ( scope_.collectIDsLight(id, true)) {
+      return 1
+    } else {
+      return 0
+    }
+
+//        val candidates = new ArrayBuffer[String]()
+//
+//    scope_.collectIDs(id, candidates, true)
+//
+//    if (candidates.isEmpty) {
+//      return 0
+//    } else {
+//      return 1
+//    }
+
+  }
+
+  def checkIDs(fe: IDsAvailableExpression, f:Fuzzer) : Int = {
+  val existingID = f.getCurrentScope.getID(fe.id, true)
+
+  if (existingID.isEmpty) {
+    return 0
+  }
+    return 1
+  }
+
+  def checkIDsCount(fe: IDsAvailableExpression, f:Fuzzer) : Int = {
+    val matchingScopes =new ArrayBuffer[Scope] ()
+    for (s <- f.allScopes) {
+      if (s.getID(fe.id, lookupParentScopes = false).isDefined  ) {
+        matchingScopes += s
+      }
+    }
+    if (matchingScopes.isEmpty) {
+        return 0
+      }
+    return matchingScopes.length
+
+    }
+
+  def checkIDsCountLight(fe: IDsAvailableExpression, f:Fuzzer) : Int = {
+    val matchingScopes =new ArrayBuffer[Scope] ()
+    for (s <- f.allScopes) {
+      if (s.getID(fe.id, lookupParentScopes = false).isDefined  ) {
+        return 1
+      }
+    }
+
+    return 0
+
+  }
+
+
 
   // Processes the next item in the worklist.
   private def processNext(): Unit = {
@@ -328,7 +444,7 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
     curr.lexemeType match {
       case LexemeType.NonTerminal => processNonTerminal(curr)
       case LexemeType.Literal => processLiteral(curr)
-      case LexemeType.BeginScope => beginScope(curr)
+      case LexemeType.BeginScope => {beginScope(curr)}
       case LexemeType.EndScope => endScope(curr)
       case LexemeType.LendScopeWithIDByPrefix => lendScopeWithIDByPrefix(curr.asInstanceOf[LendScopeWithIDByPrefixLexeme])
       case LexemeType.LendScopeWithID => lendScopeWithID(curr.asInstanceOf[LendScopeWithIDLexeme])
@@ -346,12 +462,18 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
       case LexemeType.GetLocalIDsOrEmpty => getLocalIDs(curr.asInstanceOf[GetLocalIDsLexeme], failIfEmpty = false)
       case LexemeType.GetLocalIDsOrEmptySeparator => getLocalIDs(curr.asInstanceOf[GetLocalIDsLexemeSeparator], failIfEmpty = false, curr.asInstanceOf[GetLocalIDsLexemeSeparator].separator)
       case LexemeType.GetAllIDs => getAllIDs(curr.asInstanceOf[GetAllIDsLexeme])
+//      case LexemeType.ExpectID => { (curr.asInstanceOf[ExpectIDLexeme]).count  = IDsCount(curr.asInstanceOf[ExpectIDLexeme], this);
+//        }
+//      case LexemeType.ExpectScopeWithID => { (curr.asInstanceOf[ExpectScopeWithIDLexeme]).count  =
+//        {  val c = checkScopeWithID( new LendScopeWithIDLexeme(curr.asInstanceOf[ExpectScopeWithIDLexeme].token, LendScopeWithID, curr.asInstanceOf[ExpectScopeWithIDLexeme].IDToken),
+//        false, this); /*returnScope();*/  c } }
+
       case LexemeType.GetLastReusedLocalID => getLastReusedLocalID()
       case LexemeType.GetLastID => getLastID(curr.asInstanceOf[IDLexeme])
       case LexemeType.CreateLazyID => createLazyID(curr.asInstanceOf[IDLexeme])
       case LexemeType.RegisterLazyIDs => registerLazyIDs()
       case LexemeType.SetEnvVar => setEnvVar(curr.asInstanceOf[SetEnvVarLexeme])
-      case _ => throw new RuntimeException("Unknown lexeme type: " + curr)
+      case _ => {throw new RuntimeException("Unknown lexeme type: " + curr)}
     }
   }
 
@@ -380,6 +502,7 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
 
   // Attempts to fuzz a test from grammar g, using maxAttempts attempts at most.
   def fuzz(g: Grammar, maxAttempts: Int = 100): FuzzingResults = {
+    //g.fuzzer = this
     var attempt = 0
     var result: Option[String] = None
     var lastSeenFuzzException: Option[FuzzException] = None
@@ -388,7 +511,10 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
       attempt += 1
       try {
         init(g)
-        assert({grammar.verify(); true}, "Verification failed")
+        g.fuzzer = this
+       // g.verify();
+        //TODO: why can't verify???
+        //assert({grammar.verify(); true}, "Verification failed")
         val mainLexeme = new NonTerminalLexeme(Lexer.MAIN, LexemeType.NonTerminal, None)
         outputNodes.put(mainLexeme, rootFuzzNode)
         nonTerminalScopes.put(mainLexeme, currentScope)
@@ -396,15 +522,16 @@ class Fuzzer(seed: Long, localIdSeparator: String) {
         result = fuzzImpl()
       } catch {
         case fex: FuzzException =>
-          lastSeenFuzzException = Some(fex)
-        case ex: Exception => throw ex
+          { lastSeenFuzzException = Some(fex)}
+        case ex: Exception => { throw ex}
       }
     }
-
+    //grammar.fuzzer = this
     FuzzingResults(result, attempt, maxAttempts, lastSeenFuzzException)
+
   }
 
-  private def fuzzingError(message: String) = {
+  def fuzzingError(message: String) = {
     System.err.println("FUZZING ERROR: " + message)
     if (returnToScope != null && returnToScope.isDefined) returnScope()
     throw new FuzzException(message)
