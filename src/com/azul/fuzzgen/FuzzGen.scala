@@ -147,7 +147,10 @@ object FuzzGen {
         println("Generating test #" + smartNum + " with seed " + currSeed + ", " + fuzzAttempts + " attempts per fuzz.")
         startTime = System.currentTimeMillis()
       }
-      val result = new Fuzzer(currSeed, localIdSeparator).fuzz(grammar, fuzzAttempts)
+      val fuzzer = new Fuzzer(currSeed, localIdSeparator)
+      grammar.fuzzer = fuzzer
+
+      val result = fuzzer.fuzz(grammar, fuzzAttempts)
       if (verbose) {
         val duration = System.currentTimeMillis() - startTime
         println("Generation of test #" + smartNum + " took " + duration + "ms")

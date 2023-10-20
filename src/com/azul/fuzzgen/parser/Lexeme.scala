@@ -141,6 +141,7 @@ class GetLocalIDsLexeme(token: String, lexemeType: LexemeType, fail: Boolean)
   val failIfEmpty: Boolean = fail
 }
 
+
 final class GetLocalIDsLexemeSeparator(token: String, lexemeType: LexemeType, fail: Boolean, sep: String)
   extends GetLocalIDsLexeme(token, lexemeType, fail) {
   val separator: String = sep
@@ -148,6 +149,18 @@ final class GetLocalIDsLexemeSeparator(token: String, lexemeType: LexemeType, fa
 
 final class GetAllIDsLexeme(token: String, lexemeType: LexemeType)
   extends Lexeme(token, lexemeType) {
+}
+//was a copy of GetAllIDsLexeme
+class ExpectIDLexeme(token: String, lexemeType: LexemeType, count_ : Int)
+  extends Lexeme(token, lexemeType) {
+   var count = count_
+
+}
+
+final class ExpectScopeWithIDLexeme(scopeToken: String, IDToken_ : String, lexemeType: LexemeType, count_ : Int)
+  extends ExpectIDLexeme(scopeToken, lexemeType, count_) {
+  var IDToken = IDToken_
+
 }
 
 final class GetLastIDLexeme(token: String, lexemeType: LexemeType)

@@ -46,6 +46,31 @@ class RulesParser(filename: String, params: String) {
     nonTerminal.addRule(rule)
   }
 
+
+  private def parseExpectedID(weight: Expression): Expression = {
+    // println("parseExpectedID")
+    var weight_ = weight
+    var lex = if (lexer.hasMoreLexemes) lexer.nextLexeme else lexer.currLexeme
+    var functionExpressionFound = false
+
+    //if ( lex.lexemeType == FunctionExpression) {
+    while (lexer.hasMoreLexemes && (lex.lexemeType == ExpectID || lex.lexemeType == ExpectScopeWithID)) {
+      // println("DEBUG: " + lex.asInstanceOf[FunctionExpressionLexeme].token)
+      functionExpressionFound = true
+      val tmpWeight = new MulExpression()
+      tmpWeight.addOperand(weight)
+      //tmpWeight.addOperand(ConstantExpression(lex.asInstanceOf[ExpectIDLexeme].count))
+      tmpWeight.addOperand(IDsAvailableExpression(lex.asInstanceOf[ExpectIDLexeme].token))
+      weight_ = tmpWeight
+      //lex.asInstanceOf[FunctionExpressionLexeme].count
+      lex = lexer.nextLexeme
+      // }
+    }
+    //if (!functionExpressionFound)
+    lexer.prevLexeme
+    return weight_
+  }
+
   private def parseNonTerminal(): Unit = {
     val nonTerminalLexeme = lexer.nextLexeme.asInstanceOf[NonTerminalLexeme]
     val nonTerminal = new NonTerminal(nonTerminalLexeme.token, nonTerminalLexeme.stage)
@@ -53,11 +78,15 @@ class RulesParser(filename: String, params: String) {
 
     var appendRuleFound: Boolean = false
     var beginRuleFound: Boolean = false
+    var concatRuleFound: Boolean = false
 
     //Looking for BEGIN_RULE
     while (lexer.hasMoreLexemes && lexer.currLexeme.lexemeType == BeginRule) {
       beginRuleFound = true
-      val weight = expect(BeginRule).asInstanceOf[BeginRuleLexeme].weightExpression
+      var weight = expect(BeginRule).asInstanceOf[BeginRuleLexeme].weightExpression
+      weight = parseExpectedID(weight)
+      //weight = parseExpectedID(weight, ExpectScopeWithID)
+      //println("begin rule: weight" + weight.toString)
       parseRule(nonTerminal, weight)
       nonTerminal.appendable = false
       expect(EndRule)
@@ -66,35 +95,72 @@ class RulesParser(filename: String, params: String) {
     // Looking for APPEND_RULE
     while (lexer.hasMoreLexemes && lexer.currLexeme.lexemeType == AppendRule) {
       appendRuleFound = true
-      val weight = expect(AppendRule).asInstanceOf[BeginRuleLexeme].weightExpression
-
+      var weight = expect(AppendRule).asInstanceOf[BeginRuleLexeme].weightExpression
+      weight = parseExpectedID(weight)
       parseRule(nonTerminal, weight)
       nonTerminal.appendable = true
       expect(EndRule)
     }
 
-    if (beginRuleFound && appendRuleFound) {
-      error("Trying to append rules to non-appendable nonterminal " + nonTerminal)
+    // Looking for CONCAT_RULE
+    while (lexer.hasMoreLexemes && lexer.currLexeme.lexemeType == ConcatRule) {
+      concatRuleFound = true
+      expect(ConcatRule)
+
+      if (!alreadyExists) {
+        nonTerminal.singleRuleOnly = true
+        parseRule(nonTerminal, ConstantExpression(1))
+      } else if (alreadyExists && !grammar.nonTerminals(nonTerminal.id).singleRuleOnly) {
+        error("Trying to concat lexemes to non-concat rule: " + nonTerminal.id + ", " + "nonterminal singleRuleOnly == " + nonTerminal.singleRuleOnly)
+      } else if (alreadyExists && grammar.nonTerminals(nonTerminal.id).singleRuleOnly) { // If nonterminal already exists and is concat rule, then append
+        if (grammar.nonTerminals(nonTerminal.id).rules.length != 1) {
+          error("Expecting concat nonterminal " + nonTerminal.id + " to have just one rule, but it has more: " +
+            grammar.nonTerminals(nonTerminal.id).rules.length + ", see " +
+            grammar.nonTerminals(nonTerminal.id).rules.mkString("; "))
+        } else
+        {
+
+          while (lexer.hasMoreLexemes && lexer.currLexeme.lexemeType != EndRule) {
+            var l = lexer.nextLexeme
+            grammar.nonTerminals(nonTerminal.id).rules(0).addLexeme(l)
+          }
+        }
+
+      }
+      expect(EndRule)
+    }
+
+
+    if ((beginRuleFound && (appendRuleFound || concatRuleFound)) ||
+      (appendRuleFound && (beginRuleFound || concatRuleFound)) ||
+      (concatRuleFound && (beginRuleFound || appendRuleFound))) {
+      error("Trying to append rules to non-appendable or concat (single rule) nonterminal " + nonTerminal)
     }
 
     // Not expecting to have either BEGIN_RULE or APPEND_RULE further
-    if (appendRuleFound || beginRuleFound) {
-      if (lexer.hasMoreLexemes && (lexer.currLexeme.lexemeType == AppendRule || lexer.currLexeme.lexemeType == BeginRule)) {
-        error("Both APPEND_RULE and BEGIN_RULE found for nonterminal " + nonTerminal)
+    if (appendRuleFound || beginRuleFound || concatRuleFound) {
+      if (lexer.hasMoreLexemes && (lexer.currLexeme.lexemeType == AppendRule ||
+        lexer.currLexeme.lexemeType == BeginRule ||
+        lexer.currLexeme.lexemeType == ConcatRule)) {
+        error("Both APPEND_RULE and BEGIN_RULE or CONCAT_RULE found for nonterminal " + nonTerminal)
       }
     }
 
-    if (!appendRuleFound && !beginRuleFound) { // no BEGIN_RULE or APPEND_RULE after NonTerminal - fwd declaration
+    if (!appendRuleFound && !beginRuleFound && !concatRuleFound) { // no BEGIN_RULE or APPEND_RULE after NonTerminal - fwd declaration
       grammar.addFwDeclaration(nonTerminal) //it's OK to have duplicates?
       // Probably later we will need to understand in which grammar file this forward declaration was met
     } else {
       if (beginRuleFound && alreadyExists && !nonTerminal.isEqual(grammar.getNonTerminal(nonTerminal.id))) {
         error("Redefinition of nonTerminal " + nonTerminal)
+      } else if (concatRuleFound && alreadyExists) {
+        //do nothing
       } else if (beginRuleFound && alreadyExists) {
         if (grammar.nonTerminals(nonTerminal.id).appendable) {
           error("There is a non-appendable declaration of nonterminal " + nonTerminal + " in file  " + grammar.getFilename + " while an appendable nonterminal with the same name already exists")
         }
       } else if (beginRuleFound && !alreadyExists) {
+        grammar.addNonTerminal(nonTerminal)
+      } else if (concatRuleFound && !alreadyExists) {
         grammar.addNonTerminal(nonTerminal)
       } else if (appendRuleFound && alreadyExists) { // If nonterminal already exists and is appendable, then append found rules
         if (!grammar.nonTerminals(nonTerminal.id).appendable) {

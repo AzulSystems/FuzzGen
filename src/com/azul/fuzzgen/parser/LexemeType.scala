@@ -27,10 +27,12 @@ object LexemeType extends Enumeration {
   val
   NonTerminal, Literal,
   BeginScope, EndScope,
-  BeginRule, EndRule, AppendRule,
+  BeginRule, EndRule, AppendRule, ConcatRule,
   CreateID, CreateIDFromLastID, ReuseID, ReuseLocalID, ReuseIDAndLink,
   GetLocalIDs, GetLocalIDsOrEmpty, GetLocalIDsOrEmptySeparator,
   GetAllIDs,
+  ExpectID,
+  ExpectScopeWithID,
   GetLastReusedLocalID,
   GetLastID,
   CreateLazyID, RegisterLazyIDs,

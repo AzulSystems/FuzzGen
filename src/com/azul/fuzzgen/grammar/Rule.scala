@@ -34,7 +34,7 @@ class Rule(val weightExpr: Expression) {
 
   def getLexemes: Seq[Lexeme] = lexemes.toList
 
-  def weight(grammar: Grammar): Int = weightExpr.eval(grammar)
+  def weight(grammar: Grammar): Int = {weightExpr.eval(grammar)}
 
   override def toString: String = lexemes.mkString(", ")
 }

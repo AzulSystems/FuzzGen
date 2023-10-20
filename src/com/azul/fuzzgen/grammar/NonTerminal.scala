@@ -27,6 +27,7 @@ import scala.collection.mutable.ArrayBuffer
 class NonTerminal(val id: String, val stage: Option[Int]) {
   val rules = new ArrayBuffer[Rule]() // can't be private because we can now append rules
   var appendable: Boolean = false
+  var singleRuleOnly: Boolean = false
 
   def addRule(rule: Rule): Unit = {
     rules += rule

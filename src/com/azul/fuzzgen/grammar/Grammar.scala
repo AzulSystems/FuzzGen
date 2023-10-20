@@ -19,6 +19,7 @@
 
 package com.azul.fuzzgen.grammar
 
+import com.azul.fuzzgen.fuzzer.Fuzzer
 import com.azul.fuzzgen.parser.LexemeType
 
 import java.util
@@ -36,6 +37,7 @@ class Grammar(private val filename: String) {
     this.includes ++= other.includes
     this.includeLexemes ++= other.includeLexemes
     this.fwDeclarations ++= other.fwDeclarations
+    this.fuzzer = other.fuzzer
   }
 
   val nonTerminals = new mutable.TreeMap[String, NonTerminal]() // can't be private because we can now append rules
@@ -44,6 +46,7 @@ class Grammar(private val filename: String) {
   private val includeLexemes = new mutable.TreeMap[String, (String, String)]() // (current, (parent, params))
   private val fwDeclarations = new mutable.TreeMap[String, NonTerminal]() // TODO: add filename?
   private val verbose = false
+  var fuzzer: Fuzzer = _
 
   private def log(message: String): Unit = {
     if (verbose)
@@ -53,6 +56,7 @@ class Grammar(private val filename: String) {
   def +(other: Grammar): Grammar = {
     val newGrammar = new Grammar(this)
     newGrammar.envVars ++= other.envVars
+    newGrammar.fuzzer = other.fuzzer
 
     for (nt <- other.nonTerminals) {
       if (this.nonTerminals.contains(nt._1)) { // upper level grammar already contains nonterminal with the same name
@@ -138,10 +142,14 @@ class Grammar(private val filename: String) {
 
   def getRuleFor(token: String, rnd: Random): Rule = {
     val nt: NonTerminal = nonTerminals.get(token).orElse(error(s"Non-terminal $token is not declared!")).get
+    //println("DEBUG: getRuleFor ALL weights for token:" + token + ", weights:" + nt.rules.map(_.weight(this)).mkString(","))
     val rules = nt.getValidRules(this)
-    if (rules.isEmpty)
-      error(s"No valid rules found for $token")
+    if (rules.isEmpty) {
+      fuzzer.fuzzingError(s"No valid rules found for $token")
+      //error(s"No valid rules found for $token")
+    }
     val ruleWeights = rules.map(_.weight(this))
+   // println("DEBUG: getRuleFor weights for token:" + token + ", valid weights:" + ruleWeights.mkString(","))
     if (ruleWeights.exists(_ < 0))
       error("Rule with negative weight has been found!")
     val sumWeight = ruleWeights.sum

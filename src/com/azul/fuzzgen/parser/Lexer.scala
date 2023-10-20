@@ -193,9 +193,68 @@ class Lexer() {
     inParentheses
   }
 
+  private def parseIDsAvailableExpression: Expression = {
+    var functionName: String = "IDsAvailable"
+    var functionNameAlias : String = "IDsCount"
+    nextChar
+    if (!lookup(functionName) && !lookup(functionNameAlias)) {
+      error("Expected names not found after &: " + functionName + " or " + functionNameAlias)
+    }
+
+    skipWhiteSpaces()
+    if (!lookup("(")) {
+      error("Expected \"(\" not found after " + functionName )
+    }
+
+    skipWhiteSpaces()
+    val id = parseID
+    skipWhiteSpaces()
+    val nc = nextChar
+    if ((nc != ')') && (nc != ',') ) {
+      error("Expected = symbol!")
+    }
+    if (nc == ')') {
+      return new IDsAvailableExpression(id)
+    } else {
+        val scope = parseID
+      skipWhiteSpaces()
+
+      if ((nextChar != ')')  ) {
+        error("Expected = symbol!")
+      }
+      return new ScopeWithIDsAvailableExpression(scope, id)
+    }
+
+
+    //(new IDsAvailableExpression(id, 199))
+
+
+
+    /*
+    return new SetEnvVarLexeme(id, parseExpression)
+
+
+
+
+    if (currChar != '(') {
+      error("Expected \"(\" not found after function name IDsAvailable ")
+    }
+
+
+
+    while (hasCurrChar && isExtendedDigit(currChar)) {
+      functionName += nextChar
+    }
+    if ()
+*/
+  }
+
+
   private def parseExpression3: Expression = {
     if (currChar == '(')
       return parseExpressionInParentheses
+    if (currChar == '&')
+      return parseIDsAvailableExpression
 
     if (isExtendedDigit(currChar)) {
       val s = parseIntegerOrFail
@@ -382,11 +441,12 @@ class Lexer() {
       return new Lexeme(Lexer.RETURN_SCOPE, ReturnScope)
 
 
-    if (lookup(Lexer.BEGIN_RULE))
+    if (lookup(Lexer.BEGIN_RULE) )
       return new BeginRuleLexeme(
         Lexer.BEGIN_RULE, BeginRule, if (hasCurrChar && currChar == ':') {
           nextChar
           parseExpression
+          //ExpressionLexeme?
         } else ConstantExpression(1))
 
     if (lookup(Lexer.APPEND_RULE))
@@ -396,8 +456,28 @@ class Lexer() {
           parseExpression
         } else ConstantExpression(1))
 
+
+    if (lookup(Lexer.CONCAT_RULE))
+      return new BeginRuleLexeme(
+        Lexer.CONCAT_RULE, ConcatRule, if (hasCurrChar && currChar == ':') {
+          nextChar
+          parseExpression
+        } else ConstantExpression(1))
+
+
     if (lookup(Lexer.END_RULE))
       return new Lexeme(Lexer.END_RULE, EndRule)
+
+
+    if (lookup("#EXPECT_SCOPE_WITH_ID")) {
+      return new ExpectScopeWithIDLexeme({nextChar ; parseID }, { skipWhiteSpaces(); parseID }, ExpectScopeWithID, 0)
+    }
+
+    if (lookup(Lexer.EXPECT_ID)) {
+      //println("DEBUGGGG")
+
+      return new ExpectIDLexeme({nextChar ; parseID}, ExpectID, 0)
+    }
 
 
     if (lookup(Lexer.CREATE_ID_FROM_LAST_ID)) {
@@ -533,6 +613,9 @@ class Lexer() {
     currentLexemeIndex += 1
     ret
   }
+  def prevLexeme: Unit = {
+    currentLexemeIndex -=1
+  }
 }
 
 object Lexer {
@@ -545,6 +628,8 @@ object Lexer {
   val BEGIN_RULE = "#BEGIN_RULE"
   val END_RULE = "#END_RULE"
   val APPEND_RULE = "#APPEND_RULE"
+  val CONCAT_RULE = "#CONCAT_RULE"
+  val EXPECT_ID= "#EXPECT_ID"
   val CREATE_ID = "#CREATE_ID"
   val CREATE_ID_FROM_LAST_ID = "#CREATE_ID_FROM_LAST_ID"
   val CREATE_LAZY_ID = "#CREATE_LAZY_ID"
